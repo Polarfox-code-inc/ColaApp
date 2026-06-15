@@ -1,48 +1,41 @@
 ---
 phase: 02-core-scraper
-verified: 2026-06-15T00:00:00Z
-status: human_needed
+verified: 2026-06-15T17:30:00Z
+status: passed
 score: 5/5 must-haves verified
 overrides_applied: 0
-human_verification:
-  - test: "Confirm WR-01 (fault-isolation hole) is acceptable for v1"
-    expected: "Team acknowledges that a single offer with malformed validityDates (undefined from/to) throws RangeError out of selectForStore, which the per-store try/catch in index.mjs catches and marks the WHOLE store as error — even if other valid offers exist in that store's bucket. This is weaker isolation than intended by the phase goal."
-    why_human: "berlinDay(undefined) throws RangeError (confirmed empirically). The fix (safeBerlinDay + filter) is straightforward and described in WR-01 of 02-REVIEW.md. Whether this is a blocking defect or an acceptable v1 limitation is a human judgment call."
-  - test: "Confirm WR-02 (validation drift leaves zero files written) is acceptable for v1"
-    expected: "Team acknowledges that parseCurrentOffers/parseStatusFile run before any write at index.mjs:133-134. If a schema drift causes either to throw, the run exits non-zero and writes NOTHING — breaking the 'always writes all 3 files' invariant for that specific failure path. The prior data/ files remain untouched, which is safe, but status.json is NOT updated to reflect the failure."
-    why_human: "This is a deliberate 'fail loud rather than corrupt' tradeoff documented in WR-02 of 02-REVIEW.md. The REVIEW suggests writing a minimal error status.json or at least adding an explicit comment. The decision of whether to fix this now or defer it is a human call."
+re_verification:
+  previous_status: human_needed
+  previous_score: 5/5
+  gaps_closed:
+    - "WR-01: per-offer fault-isolation hole — safeBerlinDay + filter now skips malformed ranges per-offer, never poisons the whole store"
+    - "WR-02: schema-drift writes zero files — writeErrorStatus now atomically writes a minimal valid status.json on drift before rethrowing"
+    - "WR-03: bootstrap-key island regex over-tight — loosened to tolerate extra attributes and whitespace, ReDoS-safe"
+    - "WR-04: no total wall-clock cap on fetchOffers — shared 20s AbortSignal.timeout(TOTAL_DEADLINE_MS) spans both chained calls"
+  gaps_remaining: []
+  regressions: []
 ---
 
 # Phase 2: Core Scraper Verification Report
 
 **Phase Goal:** A scheduled, fault-isolated ETL produces real data files on the frozen schema — fetching the 12x1L case automatically, normalizing it, and maintaining a clean append-only price history.
-**Verified:** 2026-06-15
-**Status:** human_needed
-**Re-verification:** No — initial verification
+**Verified:** 2026-06-15T17:30:00Z
+**Status:** passed
+**Re-verification:** Yes — after WR-01/WR-02/WR-03/WR-04 gap closure (commits ddd9711, 7d878c5, b69714c, 9943d22)
 
 ## Goal Achievement
 
 ### Observable Truths
 
-| #  | Truth                                                                                                                                                 | Status     | Evidence                                                                                                     |
-|----|-------------------------------------------------------------------------------------------------------------------------------------------------------|------------|--------------------------------------------------------------------------------------------------------------|
-| 1  | Running the scraper auto-fetches the 12x1L case and writes current-offers.json conforming to the frozen schema                                       | VERIFIED   | `run() OK` spot-check; e2e test Case A passes; `npm test` 84/84 green                                       |
-| 2  | Each offer is normalized to price (excluding Pfand), EUR/litre, store, and valid-from/valid-to dates                                                 | VERIFIED   | scraper/normalize.mjs: `Math.round(price*100)`, `Math.round(price/12)`, `Intl.DateTimeFormat Europe/Berlin`; 8 normalize assertions pass |
-| 3  | Re-running the scraper appends new prices without creating duplicate entries                                                                          | VERIFIED   | scraper/dedup.mjs: `keyOf` frozen key; e2e test Case C (cross-run dedup); 6 dedup assertions pass          |
-| 4  | A failed or unavailable store fetch is isolated: run completes, last-known data preserved, store marked stale (with caveat — see WR-01/WR-02)        | VERIFIED   | index.mjs wraps fetch+per-store build in try/catch; e2e test Cases D and E pass; merge.mjs carry-forward confirmed |
-| 5  | Every run records per-store fetch status and a last-updated timestamp                                                                                 | VERIFIED   | merge.mjs: file-level `lastUpdated` always bumps; per-store `lastUpdated` frozen on error, bumped on success; e2e test Case F passes |
+| #  | Truth                                                                                                                          | Status     | Evidence                                                                                                     |
+|----|--------------------------------------------------------------------------------------------------------------------------------|------------|--------------------------------------------------------------------------------------------------------------|
+| 1  | Running the scraper auto-fetches the 12x1L case and writes current-offers.json conforming to the frozen schema                | VERIFIED   | `run()` e2e test Case A passes; 96/96 green                                                                 |
+| 2  | Each offer is normalized to price (excluding Pfand), EUR/litre, store, and valid-from/valid-to dates                          | VERIFIED   | scraper/normalize.mjs: integer cents, pricePerLitre, Intl Berlin dates, no pfand key; 8 normalize assertions pass |
+| 3  | Re-running the scraper appends new prices without creating duplicate entries                                                   | VERIFIED   | scraper/dedup.mjs: frozen `store\|price\|validFrom` key; e2e Case C cross-run dedup passes                 |
+| 4  | A failed or unavailable store fetch is isolated: run completes, last-known data preserved, store marked stale                 | VERIFIED   | WR-01 fixed: per-offer isolation confirmed by 3 new tests; WR-02 fixed: error status.json written on drift; e2e Cases D/E pass |
+| 5  | Every run records per-store fetch status and a last-updated timestamp                                                          | VERIFIED   | merge.mjs two-timestamp semantics; e2e Case F (file-level lastUpdated = injected now) passes                |
 
 **Score:** 5/5 truths verified
-
-### Fault-Isolation Caveats (from 02-REVIEW.md Warnings)
-
-Truth #4 is VERIFIED with two unresolved warnings from the code review that affect the completeness of the fault-isolation guarantee:
-
-**WR-01 (Warning):** `berlinDay(undefined)` throws `RangeError: Invalid time value` — confirmed empirically. In `select.mjs:berlinRanges`, if a marktguru offer has a `validityDates` entry with `from` or `to` as `undefined`, `berlinDay(r?.from)` throws. This throw propagates out of `selectForStore` and is caught by the per-store try/catch in `index.mjs:118`, marking the **entire store** as `error` — even if other valid offers exist in that store's bucket. One drifted offer suppresses a real available offer.
-
-**WR-02 (Warning):** `parseCurrentOffers`/`parseStatusFile` run at `index.mjs:133-134` BEFORE any `writeAtomic`. If a schema drift causes either to throw, the run exits non-zero and writes zero files. The prior `data/` files remain (safe), but `status.json` is never updated to signal the failure. This breaks the "always writes all 3 files" invariant for the schema-drift path specifically.
-
-Both were identified by the code reviewer and are documented in `02-REVIEW.md`. Neither is a data-loss path. They require a human decision on whether to fix before closing this phase.
 
 ### Deferred Items
 
@@ -52,15 +45,15 @@ None. All phase-2 requirements are fully addressed in this phase.
 
 | Artifact              | Expected                                                                    | Status     | Details                                                      |
 |-----------------------|-----------------------------------------------------------------------------|------------|--------------------------------------------------------------|
-| `scraper/clock.mjs`   | Injectable now() seam (systemNow/makeClock)                                 | VERIFIED   | 10 lines; exports `systemNow`; used in index.mjs             |
-| `scraper/normalize.mjs` | toStoreOffer + berlinDay (Intl Berlin, no slice, no pfand)                | VERIFIED   | 55 lines; Intl.DateTimeFormat present; no UTC slice; exports both |
-| `scraper/filter.mjs`  | filterToAllowList -> Map<store, rawOffer[]> 5-slug allow-list               | VERIFIED   | 35 lines; exports `filterToAllowList`; pre-seeds all 4 keys  |
-| `scraper/select.mjs`  | selectForStore active-first/upcoming/lowest-price/needsReview ladder        | VERIFIED   | 104 lines; exports `selectForStore`; imports `classify` from contract/matcher.mjs; no `new Date()` call |
-| `scraper/dedup.mjs`   | historyLinesToAppend + keyOf, frozen-key dedup, needsReview excluded        | VERIFIED   | 52 lines; exports both; imports `parseHistoryLine` for pre-emit validation |
-| `scraper/fetch.mjs`   | withRetry + getKeys + searchOffers + fetchOffers (native fetch, AbortSignal.timeout) | VERIFIED | 147 lines; exports `withRetry`, `fetchOffers`; `AbortSignal.timeout(10_000)` inside the retry loop (line 46); no axios/node-fetch |
-| `scraper/io.mjs`      | readPrior, writeAtomic, appendLines (temp+rename, ENOENT-tolerant)          | VERIFIED   | 90 lines; exports all 3; same-dir temp (`grep -c tmpdir == 0`); uses `appendFile` for history; `io.mjs OK` spot-check passes |
-| `scraper/merge.mjs`   | mergeWithPrior carry-forward/cold-start/two-timestamp/Wasgau                | VERIFIED   | 105 lines; exports `mergeWithPrior`; 8 merge assertions pass  |
-| `scraper/index.mjs`   | run() orchestrator + CLI entry; fault-isolated per-store loop; always writes all 3 files (with WR-02 caveat) | VERIFIED | 178 lines; exports `run`; imports and wires all 7 scraper modules + both contract modules |
+| `scraper/clock.mjs`   | Injectable now() seam (systemNow/makeClock)                                 | VERIFIED   | exports `systemNow`; used in index.mjs                       |
+| `scraper/normalize.mjs` | toStoreOffer + berlinDay (Intl Berlin, no slice, no pfand)                | VERIFIED   | Intl.DateTimeFormat present; no UTC slice; exports both      |
+| `scraper/filter.mjs`  | filterToAllowList -> Map<store, rawOffer[]> 5-slug allow-list               | VERIFIED   | exports `filterToAllowList`; pre-seeds all 4 keys            |
+| `scraper/select.mjs`  | selectForStore active-first/upcoming/lowest-price ladder + WR-01 fix       | VERIFIED   | 119 lines; `safeBerlinDay` (lines 17-20) + `berlinRanges` filter (line 34) present; 3 new WR-01 tests pass |
+| `scraper/dedup.mjs`   | historyLinesToAppend + keyOf, frozen-key dedup, needsReview excluded        | VERIFIED   | exports both; imports `parseHistoryLine` for pre-emit validation |
+| `scraper/fetch.mjs`   | withRetry + getKeys + searchOffers + fetchOffers; WR-03 loosened regex; WR-04 shared deadline | VERIFIED | 183 lines; island regex loosened at line 106; `TOTAL_DEADLINE_MS = 20_000` + shared `deadline` signal at lines 178-180; 8 new WR-03/WR-04 tests pass |
+| `scraper/io.mjs`      | readPrior, writeAtomic, appendLines (temp+rename, ENOENT-tolerant)          | VERIFIED   | exports all 3; same-dir temp; uses `appendFile` for history  |
+| `scraper/merge.mjs`   | mergeWithPrior carry-forward/cold-start/two-timestamp/Wasgau                | VERIFIED   | exports `mergeWithPrior`; 8 merge assertions pass            |
+| `scraper/index.mjs`   | run() orchestrator; fault-isolated per-store loop; writeErrorStatus on drift (WR-02) | VERIFIED | 224 lines; `writeErrorStatus()` function at lines 86-99; try/catch wraps parseCurrentOffers/parseStatusFile at lines 168-180; 1 new WR-02 test passes |
 | `package.json`        | npm run scrape -> node scraper/index.mjs                                    | VERIFIED   | `"scrape": "node scraper/index.mjs"` confirmed               |
 
 ### Key Link Verification
@@ -68,30 +61,34 @@ None. All phase-2 requirements are fully addressed in this phase.
 | From                  | To                       | Via                                          | Status   | Details                                                      |
 |-----------------------|--------------------------|----------------------------------------------|----------|--------------------------------------------------------------|
 | `scraper/index.mjs`   | `scraper/fetch.mjs`      | injected `fetchOffers` (default real)        | WIRED    | `import { fetchOffers as realFetchOffers }` + used as default |
-| `scraper/index.mjs`   | `contract/schema.mjs`    | parse* validation before every write         | WIRED    | `parseCurrentOffers`/`parseStatusFile` at lines 133-134     |
-| `scraper/merge.mjs`   | prior current-offers.json | verbatim carry-forward on error             | WIRED    | `{ ...priorOffer }` spread at merge.mjs:64; confirmed by e2e Case D |
-| `scraper/select.mjs`  | `contract/matcher.mjs`   | `classify()` gate over candidates            | WIRED    | `import { classify } from "../contract/matcher.mjs"` line 9; used at line 58 |
-| `scraper/dedup.mjs`   | `scraper/normalize.mjs`  | `berlinDay` for observation date             | WIRED    | `import { berlinDay }` at dedup.mjs:16; used at line 33     |
-| `scraper/fetch.mjs`   | `AbortSignal.timeout`    | fresh per-attempt timeout signal             | WIRED    | `AbortSignal.timeout(10_000)` at fetch.mjs:46 inside the loop; confirmed distinct-signal test passes |
-| `scraper/io.mjs`      | `node:fs/promises rename` | atomic temp+rename write                   | WIRED    | `rename` imported line 17; used at io.mjs:70; `io.mjs OK` spot-check passes |
+| `scraper/index.mjs`   | `contract/schema.mjs`    | parse* validation before every write         | WIRED    | `parseCurrentOffers`/`parseStatusFile` at lines 169-170; drift path calls `writeErrorStatus` before rethrowing |
+| `scraper/index.mjs`   | `writeErrorStatus`       | drift catch block (WR-02)                    | WIRED    | lines 171-179: catch block calls `writeErrorStatus(dataDir, now)`, best-effort wraps its own await, then rethrows original drift error |
+| `scraper/merge.mjs`   | prior current-offers.json | verbatim carry-forward on error             | WIRED    | `{ ...priorOffer }` spread at merge.mjs confirmed; e2e Case D |
+| `scraper/select.mjs`  | `contract/matcher.mjs`   | `classify()` gate over candidates            | WIRED    | `import { classify }` line 9; used in selectForStore loop    |
+| `scraper/select.mjs`  | `safeBerlinDay` (WR-01)  | `berlinRanges` filter drops null from/to     | WIRED    | `safeBerlinDay` defined lines 17-20; called inside `berlinRanges` map (lines 30-33); `.filter((r) => r.from && r.to)` at line 34 |
+| `scraper/dedup.mjs`   | `scraper/normalize.mjs`  | `berlinDay` for observation date             | WIRED    | `import { berlinDay }` at dedup.mjs line 16; used at line 33 |
+| `scraper/fetch.mjs`   | `AbortSignal.timeout` (per-attempt) | fresh per-attempt signal inside withRetry | WIRED | `AbortSignal.timeout(PER_ATTEMPT_TIMEOUT_MS)` at fetch.mjs line 64; distinct-signal test passes |
+| `scraper/fetch.mjs`   | `AbortSignal.timeout` (shared deadline, WR-04) | `TOTAL_DEADLINE_MS` shared across both chained calls | WIRED | `const deadline = AbortSignal.timeout(TOTAL_DEADLINE_MS)` at line 178; passed to `withRetry(getKeys, { deadline })` and `withRetry((signal) => searchOffers(keys, signal), { deadline })`; 3 new WR-04 tests pass |
+| `scraper/io.mjs`      | `node:fs/promises rename` | atomic temp+rename write                   | WIRED    | `rename` imported line 17; used at io.mjs:70                 |
 
 ### Data-Flow Trace (Level 4)
 
 | Artifact             | Data Variable       | Source                              | Produces Real Data | Status    |
 |----------------------|---------------------|-------------------------------------|--------------------|-----------|
-| `scraper/index.mjs`  | `results`           | `fetchOffers()` -> marktguru API    | Yes (or [] on failure, fault-isolated) | FLOWING |
+| `scraper/index.mjs`  | `results`           | `fetchOffers()` -> marktguru API    | Yes (or [] on total failure, fault-isolated) | FLOWING |
 | `scraper/index.mjs`  | `currentOffers`     | `mergeWithPrior(storeResults, ...)` | Yes — built from normalized results or verbatim prior | FLOWING |
 | `scraper/index.mjs`  | `lines`             | `historyLinesToAppend(currentOffers.stores, existingKeys, now)` | Yes — deduped JSONL lines | FLOWING |
-| Written files        | all 3 data files    | `writeAtomic` + `appendLines`       | Yes — validated before write (T-02-08) | FLOWING |
+| Written files        | all 3 data files    | `writeAtomic` + `appendLines`       | Yes — validated before write (T-02-08); error status.json written on drift (WR-02) | FLOWING |
 
 ### Behavioral Spot-Checks
 
-| Behavior                                     | Command                                        | Result                | Status |
-|----------------------------------------------|------------------------------------------------|-----------------------|--------|
-| `run()` with empty fetch writes 5-store valid docs | `node --input-type=module` inline verify   | `run() OK`            | PASS   |
-| `io.mjs` atomic write + append + cold-start null | `node --input-type=module` inline verify   | `io.mjs OK`           | PASS   |
-| `berlinDay(undefined)` throws (WR-01 probe)  | empirical node eval                            | `RangeError: Invalid time value` | CONFIRMED (WARNING) |
-| Full test suite 84/84                        | `npm test`                                     | 84 pass, 0 fail       | PASS   |
+| Behavior                                            | Command                  | Result                | Status |
+|-----------------------------------------------------|--------------------------|-----------------------|--------|
+| Full test suite including all 12 new WR fix tests   | `npm test`               | 96 pass, 0 fail       | PASS   |
+| WR-01: malformed range skipped, not store-poisoning | test enumerated (3 tests) | all 3 pass           | PASS   |
+| WR-02: drift writes valid error status.json         | test enumerated (1 test)  | passes                | PASS   |
+| WR-03: loosened island regex matches Next.js shape  | test enumerated (4 tests) | all 4 pass           | PASS   |
+| WR-04: shared deadline bounds total fetch           | test enumerated (3 tests) | all 3 pass           | PASS   |
 
 ### Probe Execution
 
@@ -101,45 +98,32 @@ No conventional `scripts/*/tests/probe-*.sh` probes declared for this phase. Pha
 
 | Requirement | Source Plan | Description                                                                | Status    | Evidence                                                     |
 |-------------|-------------|----------------------------------------------------------------------------|-----------|--------------------------------------------------------------|
-| DATA-01     | 02-01, 02-02, 02-03 | Auto-fetch 12x1L offers for 5 stores, write current-offers.json conforming to schema | SATISFIED | scraper/index.mjs wires fetch->filter->select->normalize->merge->validate->write; e2e test Case A (84 tests pass) |
-| DATA-03     | 02-01       | Normalize each offer to price (ex-Pfand), EUR/litre, store, valid dates    | SATISFIED | scraper/normalize.mjs: integer cents, pricePerLitre, Intl Berlin dates, no pfand key; 6 normalize assertions |
+| DATA-01     | 02-01, 02-02, 02-03 | Auto-fetch 12x1L offers for 5 stores, write current-offers.json conforming to schema | SATISFIED | Full scraper pipeline wired; 96 tests pass |
+| DATA-03     | 02-01       | Normalize each offer to price (ex-Pfand), EUR/litre, store, valid dates    | SATISFIED | scraper/normalize.mjs: integer cents, pricePerLitre, Intl Berlin dates, no pfand key |
 | DATA-04     | 02-01, 02-03 | Append price history deduplicated on re-run                               | SATISFIED | scraper/dedup.mjs: frozen `store\|price\|validFrom` key; e2e Case C cross-run dedup passes |
-| DATA-05     | 02-02, 02-03 | Failed store fetch isolated; run completes; last-known data preserved      | SATISFIED (with WR-01/WR-02 caveats) | index.mjs per-store + total-fetch try/catch; merge.mjs carry-forward; e2e Cases D and E pass |
-| DATA-06     | 02-03       | Per-store fetch status and last-updated timestamp on every run             | SATISFIED | merge.mjs two-timestamp semantics; e2e Case F (file-level lastUpdated = injected now) passes |
+| DATA-05     | 02-02, 02-03 | Failed store fetch isolated; run completes; last-known data preserved      | SATISFIED | WR-01 now isolates per-offer (not just per-store); WR-02 writes error status.json on drift; e2e Cases D/E pass |
+| DATA-06     | 02-03       | Per-store fetch status and last-updated timestamp on every run             | SATISFIED | merge.mjs two-timestamp semantics; e2e Case F passes         |
 
-**Coverage:** 5/5 Phase-2 requirements satisfied. No orphaned requirements found — DATA-01, DATA-03, DATA-04, DATA-05, DATA-06 all claimed and verified.
+**Coverage:** 5/5 Phase-2 requirements satisfied. No orphaned requirements found.
 
 ### Anti-Patterns Found
 
-| File                  | Line | Pattern         | Severity    | Impact                                                       |
-|-----------------------|------|-----------------|-------------|--------------------------------------------------------------|
+| File | Line | Pattern | Severity | Impact |
+|------|------|---------|----------|--------|
 | No TBD/FIXME/XXX/TODO markers found in any modified scraper module | — | — | — | Clean |
 
-No debt markers, no hardcoded empty returns masquerading as implementations, no stubs found. The `return null` in `io.mjs:34` (cold-start ENOENT) and `return null` at `select.mjs:67,86` (no usable range for an offer) are intentional logic gates, not stubs — both are backed by data-fetching paths that populate the variable or tested fallback behaviors.
+No debt markers, no hardcoded empty returns masquerading as implementations, no stubs found. All WR fixes include explanatory comments (WR-01 comment block at select.mjs lines 12-16 and 22-26; WR-02 doc-comment at index.mjs lines 74-99; WR-03 comment at fetch.mjs lines 99-103; WR-04 comment at fetch.mjs lines 173-177).
 
 ### Human Verification Required
 
-#### 1. WR-01: Accept or fix the per-offer fault-isolation hole in select.mjs
-
-**Test:** Confirm whether a malformed `validityDates` entry (e.g. `{from: undefined, to: "2026-06-21T00:00:00Z"}`) from marktguru is acceptable to silently suppress a whole store's offers in v1, or whether the `safeBerlinDay` fix from 02-REVIEW.md should be applied before closing this phase.
-
-**Expected:** Either (a) team accepts WR-01 as a known v1 limitation — marktguru data quality is generally good and the per-store try/catch still prevents a crash — or (b) apply the fix: guard `berlinRanges` with `safeBerlinDay` that returns `null` on Invalid Date and filter out ranges with null from/to.
-
-**Why human:** The empirical probe confirms the throw is real (`RangeError: Invalid time value` from `berlinDay(undefined)`). Whether it blocks v1 depends on risk tolerance and expected marktguru data quality — not determinable from a static code check.
-
-#### 2. WR-02: Accept or fix the validation-drift / zero-files path in index.mjs
-
-**Test:** Confirm whether the schema-validation-throws-before-write path (index.mjs:132-134) is acceptable as a "hard stop on drift" or whether a minimal error `status.json` should be written so the operator gets a machine-readable failure signal.
-
-**Expected:** Either (a) team accepts the current behavior (prior data files remain untouched; only the log shows a failure) with an explicit comment at line 132 documenting "no files written on drift" — OR (b) apply the REVIEW suggestion: catch validation errors separately and write a minimal error `status.json` before re-throwing.
-
-**Why human:** This is a deliberate "fail loud rather than corrupt" tradeoff. Both options are defensible. The decision affects operational observability but not data correctness.
+None. All previously deferred human decisions (WR-01, WR-02) were resolved by code fixes. All 4 warnings are now closed with tests.
 
 ### Gaps Summary
 
-No BLOCKER gaps found. The pipeline is fully wired and the test suite is 84/84 green. Two WARNING-level findings from the code review (WR-01, WR-02) touch the "fault-isolated" and "always writes all 3 files" claims in the phase goal but do not constitute data loss or corruption. Human decision required before closing.
+No gaps. All 4 WR warnings from the initial code review are fixed and verified by the expanded test suite (96/96 green, up from 84/84). The phase goal is fully achieved: the ETL is scheduled-capable, fault-isolated at per-offer granularity, produces valid data files on the frozen schema, and maintains a clean append-only price history with deduplication.
 
 ---
 
-_Verified: 2026-06-15_
+_Verified: 2026-06-15T17:30:00Z_
 _Verifier: Claude (gsd-verifier)_
+_Re-verification after: /gsd-code-review 02 --fix (commits ddd9711, 7d878c5, b69714c, 9943d22)_
