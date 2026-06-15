@@ -24,7 +24,10 @@ import { parseCurrentOffers, parseStatusFile } from "../../../contract/schema.mj
 // Default base path for the live data files (served from web/public/data/).
 const DEFAULT_BASE = "./data/";
 
-const FILES = {
+// Default file names under the base. The ?state= dev switch overrides individual
+// names (e.g. current-offers.offer.json, status.stale.json) without moving the
+// base directory — every fixture lives alongside the live files in public/data/.
+const DEFAULT_FILES = {
   currentOffers: "current-offers.json",
   status: "status.json",
   history: "price-history.jsonl",
@@ -92,9 +95,10 @@ function validateOrDegrade(parser, parsed, label) {
  * file: any fetch/parse/validation failure leaves that slice null/empty with an
  * entry in `errors` rather than throwing. History reuses parseHistoryJsonl.
  *
- * @param {{ base?: string }} [opts]
- *   base — directory the three files live under (default './data/'); the ?state=
- *   dev switch in main.js overrides this to point at a fixture set.
+ * @param {{ base?: string, files?: Partial<typeof DEFAULT_FILES> }} [opts]
+ *   base — directory the three files live under (default './data/').
+ *   files — per-file name overrides used by the ?state= dev switch (e.g.
+ *           { currentOffers: 'current-offers.offer.json', status: 'status.stale.json' }).
  * @returns {Promise<{
  *   currentOffers: object|null,
  *   status: object|null,
@@ -104,13 +108,14 @@ function validateOrDegrade(parser, parsed, label) {
  */
 export async function loadData(opts = {}) {
   const base = opts.base ?? DEFAULT_BASE;
+  const files = { ...DEFAULT_FILES, ...(opts.files ?? {}) };
   const errors = {};
 
   // Fetch all three in parallel; each resolves to text or null (never throws).
   const [offersText, statusText, historyText] = await Promise.all([
-    fetchTextOrNull(joinPath(base, FILES.currentOffers)),
-    fetchTextOrNull(joinPath(base, FILES.status)),
-    fetchTextOrNull(joinPath(base, FILES.history)),
+    fetchTextOrNull(joinPath(base, files.currentOffers)),
+    fetchTextOrNull(joinPath(base, files.status)),
+    fetchTextOrNull(joinPath(base, files.history)),
   ]);
 
   // --- current-offers.json ---

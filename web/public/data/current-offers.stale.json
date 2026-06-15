@@ -1,0 +1,36 @@
+{
+  "lastUpdated": "2026-06-05T04:00:00Z",
+  "stores": [
+    {
+      "store": "REWE",
+      "displayName": "REWE",
+      "status": "offer",
+      "needsReview": false,
+      "price": 1049,
+      "currency": "EUR",
+      "pricePerLitre": 87,
+      "validFrom": "2026-06-08",
+      "validTo": "2026-06-13"
+    },
+    {
+      "store": "Edeka",
+      "displayName": "Edeka",
+      "status": "no_offer"
+    },
+    {
+      "store": "Lidl",
+      "displayName": "Lidl",
+      "status": "no_offer"
+    },
+    {
+      "store": "Kaufland",
+      "displayName": "Kaufland",
+      "status": "no_offer"
+    },
+    {
+      "store": "Wasgau",
+      "displayName": "Wasgau",
+      "status": "unavailable"
+    }
+  ]
+}
