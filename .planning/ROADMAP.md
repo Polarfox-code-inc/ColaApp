@@ -54,7 +54,16 @@ Decimal phases appear between their surrounding integers in numeric order.
   4. A failed or unavailable store fetch is isolated: the run completes, last-known data is preserved, and the affected store is marked stale rather than aborting the whole run
   5. Every run records per-store fetch status and a last-updated timestamp
 
-**Plans**: TBD
+**Plans**: 3 plans
+
+**Wave 1**
+
+- [ ] 02-01-PLAN.md — Pure-transform core: filter to the 5-store allow-list, normalize to integer cents/€-litre/Berlin dates, active-first/upcoming/lowest-price selection, frozen-key dedup, injectable clock (Wave 1)
+- [ ] 02-02-PLAN.md — I/O boundary: retrying single marktguru fetch with per-attempt timeout + key hygiene, and atomic temp+rename writes / append-only history / cold-start-tolerant read-prior (Wave 1)
+
+**Wave 2** *(blocked on Wave 1 completion)*
+
+- [ ] 02-03-PLAN.md — Orchestrator + merge: fault-isolated per-store build, carry-forward/cold-start serialization, two-timestamp status, schema-validated atomic writes, `npm run scrape`, end-to-end fixture test (Wave 2)
 
 ### Phase 3: PWA Frontend
 
@@ -95,6 +104,6 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Data Contract & Source Spike | 3/3 | Complete    | 2026-06-15 |
-| 2. Core Scraper | 0/TBD | Not started | - |
+| 2. Core Scraper | 0/3 | Planned | - |
 | 3. PWA Frontend | 0/TBD | Not started | - |
 | 4. Live Integration, All Stores & Hardening | 0/TBD | Not started | - |
