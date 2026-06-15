@@ -100,3 +100,218 @@ body {
 .price {
   font-variant-numeric: tabular-nums;
 }
+
+/* =========================================================================
+ * Component layer (Plan 04 render modules). Tokens above are the only source
+ * of color/spacing; components reference them via var() / data-state, never
+ * inline hex (UI-SPEC token contract).
+ * ========================================================================= */
+
+/* ---- Hero (OFFR-01 / D-05/06/07) ---- */
+.hero__title {
+  font-size: var(--font-heading);
+  font-weight: var(--weight-semibold);
+  line-height: 1.25;
+  margin: 0 0 var(--space-md);
+}
+.hero__card {
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-lg);
+}
+/* 3px accent-green left edge on the active best-deal hero (D-05). */
+.hero__card--active {
+  border-left: 3px solid var(--color-accent);
+}
+.hero__price {
+  font-size: var(--font-display);
+  font-weight: var(--weight-semibold);
+  line-height: 1.2;
+  color: var(--color-accent);
+  margin: 0;
+}
+.hero__store {
+  font-size: var(--font-heading);
+  font-weight: var(--weight-semibold);
+  margin: var(--space-xs) 0 0;
+}
+.hero__support {
+  font-size: var(--font-body);
+  color: var(--color-text-muted);
+  margin: var(--space-sm) 0 0;
+}
+.hero__empty {
+  font-size: var(--font-heading);
+  font-weight: var(--weight-semibold);
+  margin: 0;
+}
+.hero__body {
+  font-size: var(--font-body);
+  color: var(--color-text-muted);
+  margin: var(--space-sm) 0 0;
+}
+
+/* ---- Store cards ×5 (OFFR-02/03/04 / D-08/09/10/13/18) ---- */
+.section--cards {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg); /* 24px between cards */
+}
+.card {
+  background: var(--color-surface);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+  /* 1px left state-edge colored per data-state (default neutral). */
+  border-left: 3px solid var(--color-border);
+}
+.card__row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+.card__row--head {
+  justify-content: space-between;
+}
+.card__row--price,
+.card__row--upcoming {
+  margin-top: var(--space-sm);
+  flex-wrap: wrap;
+}
+.card__store {
+  font-size: var(--font-heading);
+  font-weight: var(--weight-semibold);
+  margin: 0;
+}
+.card__chips {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+.card__price {
+  font-size: var(--font-heading);
+  font-weight: var(--weight-semibold);
+  color: var(--color-accent);
+}
+.card__perlitre,
+.card__validity {
+  font-size: var(--font-body);
+  color: var(--color-text-muted);
+}
+
+/* State left-edge colors (each card data-state). */
+.card[data-state="active"] {
+  border-left-color: var(--color-accent);
+}
+.card[data-state="upcoming"] {
+  border-left-color: var(--color-info);
+}
+.card[data-state="no_offer"] {
+  border-left-color: var(--color-muted);
+}
+.card[data-state="unavailable"] {
+  border-left-color: var(--color-info);
+}
+.card[data-state="error"] {
+  border-left-color: var(--color-warning);
+}
+
+/* ---- State chips: icon + label, color never alone (D-10 / WCAG 1.4.1) ---- */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-label);
+  font-weight: var(--weight-semibold);
+  line-height: 1.3;
+  white-space: nowrap;
+}
+.chip__icon {
+  font-weight: var(--weight-semibold);
+}
+/* Per-state color + tint (the three distinct states + active + upcoming + stale). */
+.chip[data-state="active"] {
+  color: var(--color-active);
+  background: var(--color-active-tint);
+  border: 1px solid var(--color-active);
+}
+.chip[data-state="upcoming"] {
+  color: var(--color-info);
+  background: var(--color-info-tint);
+}
+.chip[data-state="no_offer"] {
+  color: var(--color-muted);
+  background: var(--color-muted-tint);
+}
+.chip[data-state="unavailable"] {
+  color: var(--color-info);
+  background: var(--color-info-tint);
+}
+.chip[data-state="error"] {
+  color: var(--color-warning);
+  background: var(--color-warning-tint);
+}
+.chip[data-state="stale"] {
+  color: var(--color-warning);
+  background: var(--color-warning-tint);
+}
+
+/* ---- Freshness footer (OFFR-06 / D-17) ---- */
+.footer__updated {
+  margin: 0;
+}
+
+/* ---- Price-history chart (Plan 03 render surface) ---- */
+.section--graph .hero__title,
+.graph__title {
+  font-size: var(--font-heading);
+  font-weight: var(--weight-semibold);
+}
+.chart-empty {
+  padding: var(--space-3xl) var(--space-md);
+  text-align: center;
+  color: var(--color-text-muted);
+}
+.chart-empty__title {
+  font-size: var(--font-heading);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text);
+  margin: 0 0 var(--space-sm);
+}
+.chart-empty__body {
+  font-size: var(--font-body);
+  margin: 0;
+}
+.chart-legend {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-md);
+  padding: 0;
+  margin: var(--space-md) 0 0;
+  font-size: var(--font-label);
+}
+.chart-legend__item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+.chart-legend__swatch {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+  display: inline-block;
+}
+.chart-legend__item--unavailable {
+  color: var(--color-text-muted);
+}
+.chart-legend__name--struck {
+  text-decoration: line-through;
+}
+.chart-legend__note {
+  font-style: italic;
+}
