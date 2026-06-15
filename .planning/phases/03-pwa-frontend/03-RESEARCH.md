@@ -497,19 +497,19 @@ Not applicable — this is a greenfield phase (new `web/` directory, no rename/m
 | A4 | `registerType:'autoUpdate'` gives the desired fresh-shell behavior without a prompt | Pattern 6 / Pitfall 5 | If updates feel too aggressive/janky, switch to `prompt` with a tiny update UI. Low risk for single-user. |
 | A5 | Optional runtime zod validation is acceptable bundle cost (or restrict to tests) | Supporting stack | If bundle size matters, validate only in tests. Low risk. |
 
-## Open Questions
+## Open Questions (RESOLVED in PLAN)
 
-1. **Workspace layout vs standalone `web/package.json`**
+1. **Workspace layout vs standalone `web/package.json`** — **RESOLVED** (03-01-T1): standalone `web/package.json`, importing the frozen `../../contract/*` via Vite `server.fs.allow:['..']`. Single source of truth, no DRY loss, Pages-deploy-friendly.
    - What we know: contract is ESM `.mjs` + `.d.ts`, importable relatively; root has `zod`.
    - What's unclear: whether to use npm workspaces (share zod + contract) or an isolated `web/` (copy/relative-import).
    - Recommendation: planner picks; default to npm workspaces so `web/` reuses root `zod` and imports `../contract` directly, with `server.fs.allow:['..']` if Vite complains.
 
-2. **Where the PWA reads data in this phase (mocks vs committed `data/`)**
+2. **Where the PWA reads data in this phase (mocks vs committed `data/`)** — **RESOLVED** (03-01-T1 + 03-04-T3): serve copies under `web/public/data/`; add a `?state=` dev switch so each of the six UI states renders for visual + unit verification.
    - What we know: both `mocks/*.json` and `data/*.json(l)` are valid fixtures; no live feed until Phase 4.
    - What's unclear: which to wire as the dev/default source and how to exercise all six states.
    - Recommendation: serve copies under `web/public/data/`; add a dev mechanism (e.g. `?state=upcoming`) or per-state test fixtures so each UI state (offer/no_offer/upcoming/error/stale/unavailable) renders for visual + unit verification.
 
-3. **Point shape double-encoding for color-blind legibility (UI-SPEC marker shapes)**
+3. **Point shape double-encoding for color-blind legibility (UI-SPEC marker shapes)** — **RESOLVED** (03-03-T2): ship color + consistent point + legend in v1; custom marker shapes are a nice-to-have, not a hard requirement.
    - What we know: UI-SPEC assigns circle/square/triangle/diamond per store.
    - What's unclear: uPlot's default points are circles; custom shapes need a `points.show` draw callback.
    - Recommendation: ship with color + consistent point + legend in v1; treat distinct marker shapes as a nice-to-have (a custom `points.show` function) if time allows. Not a hard requirement.
