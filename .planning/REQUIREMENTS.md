@@ -13,7 +13,7 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **DATA-02**: System matches strictly the 12×1L case and excludes other Cola SKUs (1.25L 6-packs, can trays, Zero/light unless the 12×1L case, store-brand colas)
 - [x] **DATA-03**: System normalizes each offer to price (excluding Pfand), €/litre, store, and valid-from/valid-to dates
 - [x] **DATA-04**: System appends each offer's price to a price history, deduplicated so repeated runs do not create duplicate entries
-- [ ] **DATA-05**: A failed or unavailable store fetch is isolated — the run continues, last-known data is preserved, and the affected store is marked stale
+- [x] **DATA-05**: A failed or unavailable store fetch is isolated — the run continues, last-known data is preserved, and the affected store is marked stale
 - [ ] **DATA-06**: System records per-store fetch status and a last-updated timestamp
 
 ### Offers View
@@ -88,7 +88,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | DATA-02 | Phase 1 | Complete |
 | DATA-03 | Phase 2 | Complete |
 | DATA-04 | Phase 2 | Complete |
-| DATA-05 | Phase 2 | Pending |
+| DATA-05 | Phase 2 | Complete |
 | DATA-06 | Phase 2 | Pending |
 | OFFR-01 | Phase 3 | Pending |
 | OFFR-02 | Phase 3 | Pending |

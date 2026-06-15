@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-last_updated: "2026-06-15T16:36:29.302Z"
+last_updated: "2026-06-15T16:41:58.375Z"
 last_activity: 2026-06-15
 progress:
   total_phases: 4
   completed_phases: 1
   total_plans: 6
-  completed_plans: 4
+  completed_plans: 5
   percent: 25
 ---
 
@@ -25,11 +25,11 @@ See: .planning/PROJECT.md (updated 2026-06-15)
 ## Current Position
 
 Phase: 02 (core-scraper) — EXECUTING
-Plan: 2 of 3
+Plan: 3 of 3
 Status: Ready to execute
 Last activity: 2026-06-15
 
-Progress: [███████░░░] 67%
+Progress: [████████░░] 83%
 
 ## Performance Metrics
 
@@ -55,6 +55,7 @@ Progress: [███████░░░] 67%
 | Phase 01 P02 | ~5 min | 3 tasks | 13 files |
 | Phase 01 P01-03 | 12 min | 2 tasks | 15 files |
 | Phase 02 P01 | 10 min | 3 tasks | 8 files |
+| Phase 02 P02 | ~3 min | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -73,6 +74,8 @@ Recent decisions affecting current work:
 - [Phase 01-02]: Six UI-state mocks (offer/no_offer/upcoming/error/stale/unavailable) + 23-test node:test suite prove the contract represents every state and rejects float price/unknown status
 - [Phase ?]: [Phase 01-03] Strict 12x1L matcher (contract/matcher.mjs): pure classify(offer)->accept|reject|review over normalized brand+title+description text (NOT title-only); brand gate first then size gate; mixed-brand/Kasten-no-size -> needsReview (D-08); Pfand ignored (D-10); ReDoS-safe regexes; 15-test suite, full 38/38 green
 - [Phase ?]: [Phase 02-01] Scraper pure-transform core (clock/normalize/filter/select/dedup) built TDD; reuses frozen classify + parseHistoryLine verbatim; Berlin-day via Intl never UTC slice (D-09); dedup on frozen D-14 key
+- [Phase ?]: [Phase 02-02] fetch.mjs: withRetry fresh AbortSignal.timeout per attempt (undici #1926); single key-hygienic offers/search call returns results[] (D-01/D-11/D-12)
+- [Phase ?]: [Phase 02-02] io.mjs: atomic same-dir temp+rename (EXDEV-safe); readPrior ENOENT-tolerant cold start; history append-only (DATA-05/D-02/D-06)
 
 ### Pending Todos
 
@@ -92,6 +95,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-06-15T16:36:10.509Z
+Last session: 2026-06-15T16:41:41.218Z
 Stopped at: Phase 2 context gathered
 Resume file: None
