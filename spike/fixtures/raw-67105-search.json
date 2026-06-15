@@ -1,0 +1,1742 @@
+{
+  "filters": {
+    "retailers": [
+      {
+        "id": 127093,
+        "name": "EDEKA",
+        "resultsCount": 7
+      },
+      {
+        "id": 126802,
+        "name": "REWE",
+        "resultsCount": 3
+      },
+      {
+        "id": 127130,
+        "name": "Scheck-in Center",
+        "resultsCount": 3
+      },
+      {
+        "id": 126735,
+        "name": "Netto Marken-Discount",
+        "resultsCount": 2
+      },
+      {
+        "id": 126765,
+        "name": "PENNY",
+        "resultsCount": 2
+      },
+      {
+        "id": 126876,
+        "name": "Thomas Philipps",
+        "resultsCount": 2
+      },
+      {
+        "id": 126654,
+        "name": "Kaufland",
+        "resultsCount": 1
+      }
+    ],
+    "brands": [
+      {
+        "id": 104494,
+        "name": "Coca-Cola",
+        "resultsCount": 18
+      },
+      {
+        "id": 149844,
+        "name": "Bacardi & Coca-Cola",
+        "resultsCount": 1
+      },
+      {
+        "id": 149847,
+        "name": "Jack Daniel’s & Coca-Cola",
+        "resultsCount": 1
+      }
+    ],
+    "categories": [
+      {
+        "id": 359,
+        "name": "Softdrinks",
+        "resultsCount": 18
+      },
+      {
+        "id": 496,
+        "name": "Cocktails",
+        "resultsCount": 2
+      }
+    ]
+  },
+  "totalResults": 20,
+  "skippedResults": 0,
+  "results": [
+    {
+      "brand": {
+        "uniqueName": "coca-cola",
+        "indexOffer": true,
+        "indexLeaflet": false,
+        "id": 104494,
+        "name": "Coca-Cola",
+        "industryId": 1023
+      },
+      "advertisers": [
+        {
+          "uniqueName": "netto-marken-discount",
+          "indexOffer": true,
+          "indexLeaflet": true,
+          "id": "retailers/126735",
+          "name": "Netto Marken-Discount",
+          "industryId": 1023
+        }
+      ],
+      "categories": [
+        {
+          "uniqueName": null,
+          "indexOffer": false,
+          "indexLeaflet": false,
+          "id": 359,
+          "name": "Softdrinks",
+          "description": "Märkte wie beispielsweise der [toom Getränkemarkt](https://www.marktguru.de/rp/toom-getraenkemarkt-prospekte) halten eine große Auswahl an [alkoholfreien Getränken](https://www.marktguru.de/c/getraenke-alkoholfrei) bereit. Dazu zählen [Coca-Cola](https://www.marktguru.de/b/coca-cola), Säfte von [Granini](https://www.marktguru.de/b/granini) oder Energydrinks von [Red Bull](https://www.marktguru.de/b/red-bull).",
+          "parentId": 69
+        }
+      ],
+      "id": 23611760,
+      "description": "Zero oder Fanta 18 x 0,33 l teilw. koffeinhaltig, versch. Sorten zzgl. Pfand 4.50",
+      "volume": 0.33,
+      "quantity": 18,
+      "isMultiProduct": true,
+      "price": 8.88,
+      "oldPrice": null,
+      "referencePrice": 1.49,
+      "requiresLoyalityMembership": false,
+      "leafletFlightId": 282296,
+      "validityDates": [
+        {
+          "from": "2026-06-14T22:00:00Z",
+          "to": "2026-06-20T21:59:00Z"
+        }
+      ],
+      "externalId": null,
+      "externalTrackingUrls": [],
+      "externalTrackings": [],
+      "externalUrl": null,
+      "trackFlightImpression": null,
+      "type": "standard",
+      "industries": [
+        {
+          "id": 1023,
+          "name": "Discounter"
+        }
+      ],
+      "product": {
+        "id": 1208796,
+        "name": "Cola XXL",
+        "description": ""
+      },
+      "unit": {
+        "shortName": "l",
+        "id": 1,
+        "name": "Liter"
+      },
+      "images": {
+        "count": 1,
+        "isCdnSuccessfullyPurged": null,
+        "metadata": [
+          {
+            "aspectRatio": 2.110169491525424,
+            "width": 1,
+            "height": 0.4738955823293173
+          }
+        ]
+      },
+      "imageType": "offer"
+    },
+    {
+      "brand": {
+        "uniqueName": "coca-cola",
+        "indexOffer": true,
+        "indexLeaflet": false,
+        "id": 104494,
+        "name": "Coca-Cola",
+        "industryId": 1023
+      },
+      "advertisers": [
+        {
+          "uniqueName": "penny",
+          "indexOffer": true,
+          "indexLeaflet": true,
+          "id": "retailers/126765",
+          "name": "PENNY",
+          "industryId": 1023
+        }
+      ],
+      "categories": [
+        {
+          "uniqueName": null,
+          "indexOffer": false,
+          "indexLeaflet": false,
+          "id": 359,
+          "name": "Softdrinks",
+          "description": "Märkte wie beispielsweise der [toom Getränkemarkt](https://www.marktguru.de/rp/toom-getraenkemarkt-prospekte) halten eine große Auswahl an [alkoholfreien Getränken](https://www.marktguru.de/c/getraenke-alkoholfrei) bereit. Dazu zählen [Coca-Cola](https://www.marktguru.de/b/coca-cola), Säfte von [Granini](https://www.marktguru.de/b/granini) oder Energydrinks von [Red Bull](https://www.marktguru.de/b/red-bull).",
+          "parentId": 69
+        }
+      ],
+      "id": 23645537,
+      "description": "MEZZO MIX oder FANTA* Erfrischungs-getränk, versch. Sorten, tw. koffeinhaltig, zzgl. 0.25 Pfand, je 0,33l",
+      "volume": 0.33,
+      "quantity": 1,
+      "isMultiProduct": false,
+      "price": 0.79,
+      "oldPrice": null,
+      "referencePrice": 2.39,
+      "requiresLoyalityMembership": false,
+      "leafletFlightId": 282584,
+      "validityDates": [
+        {
+          "from": "2026-06-14T22:00:00Z",
+          "to": "2026-06-20T21:59:00Z"
+        }
+      ],
+      "externalId": null,
+      "externalTrackingUrls": [
+        "https://servedby.flashtalking.com/imp/2/302255;10379609;201;pixel;SevenOneMediaDE;nnCPSevenOneMediaDEMarktguruA4CLEProspektnnAdgapId01984610141314757001/?gdpr=${GDPR}&gdpr_consent=${GDPR_CONSENT_78}&pbMethods=&cachebuster=[CACHEBUSTER]"
+      ],
+      "externalTrackings": [
+        {
+          "type": "click",
+          "url": "https://servedby.flashtalking.com/imp/2/302255;10379609;201;pixel;SevenOneMediaDE;nnCPSevenOneMediaDEMarktguruA4CLEProspektnnAdgapId01984610141314757001/?gdpr=${GDPR}&gdpr_consent=${GDPR_CONSENT_78}&pbMethods=&cachebuster=[CACHEBUSTER]",
+          "ugpctfet": 100
+        }
+      ],
+      "externalUrl": null,
+      "trackFlightImpression": null,
+      "type": "standard",
+      "industries": [
+        {
+          "id": 1023,
+          "name": "Discounter"
+        }
+      ],
+      "product": {
+        "id": 351468,
+        "name": "Cola",
+        "description": "~twxus~ ~twxnam~"
+      },
+      "unit": {
+        "shortName": "l",
+        "id": 1,
+        "name": "Liter"
+      },
+      "images": {
+        "count": 1,
+        "isCdnSuccessfullyPurged": null,
+        "metadata": [
+          {
+            "aspectRatio": 1.0365853658536586,
+            "width": 1,
+            "height": 0.9647058823529412
+          }
+        ]
+      },
+      "imageType": "offer"
+    },
+    {
+      "brand": {
+        "uniqueName": "coca-cola",
+        "indexOffer": true,
+        "indexLeaflet": false,
+        "id": 104494,
+        "name": "Coca-Cola",
+        "industryId": 1009
+      },
+      "advertisers": [
+        {
+          "uniqueName": "edeka",
+          "indexOffer": true,
+          "indexLeaflet": true,
+          "id": "retailers/127093",
+          "name": "EDEKA",
+          "industryId": 1009
+        }
+      ],
+      "categories": [
+        {
+          "uniqueName": null,
+          "indexOffer": false,
+          "indexLeaflet": false,
+          "id": 359,
+          "name": "Softdrinks",
+          "description": "Märkte wie beispielsweise der [toom Getränkemarkt](https://www.marktguru.de/rp/toom-getraenkemarkt-prospekte) halten eine große Auswahl an [alkoholfreien Getränken](https://www.marktguru.de/c/getraenke-alkoholfrei) bereit. Dazu zählen [Coca-Cola](https://www.marktguru.de/b/coca-cola), Säfte von [Granini](https://www.marktguru.de/b/granini) oder Energydrinks von [Red Bull](https://www.marktguru.de/b/red-bull).",
+          "parentId": 69
+        }
+      ],
+      "id": 23645087,
+      "description": "Mezzo-Mix, Fanta Orange und weitere Sorten (Koffeinhaltig) 1,25 L, zzgl. 0,25 Pfand",
+      "volume": 1.25,
+      "quantity": 1,
+      "isMultiProduct": true,
+      "price": 0.99,
+      "oldPrice": null,
+      "referencePrice": 0.79,
+      "requiresLoyalityMembership": false,
+      "leafletFlightId": 282551,
+      "validityDates": [
+        {
+          "from": "2026-06-14T22:00:00Z",
+          "to": "2026-06-20T21:59:00Z"
+        }
+      ],
+      "externalId": null,
+      "externalTrackingUrls": [],
+      "externalTrackings": [],
+      "externalUrl": null,
+      "trackFlightImpression": null,
+      "type": "standard",
+      "industries": [
+        {
+          "id": 1009,
+          "name": "Supermarkt"
+        }
+      ],
+      "product": {
+        "id": 351468,
+        "name": "Cola",
+        "description": "~twxus~ ~twxnam~"
+      },
+      "unit": {
+        "shortName": "l",
+        "id": 1,
+        "name": "Liter"
+      },
+      "images": {
+        "count": 1,
+        "isCdnSuccessfullyPurged": null,
+        "metadata": [
+          {
+            "aspectRatio": 0.5756541524459613,
+            "width": 1,
+            "height": 1.7371541501976284
+          }
+        ]
+      },
+      "imageType": "offer"
+    },
+    {
+      "brand": {
+        "uniqueName": "coca-cola",
+        "indexOffer": true,
+        "indexLeaflet": false,
+        "id": 104494,
+        "name": "Coca-Cola",
+        "industryId": 1009
+      },
+      "advertisers": [
+        {
+          "uniqueName": "edeka",
+          "indexOffer": true,
+          "indexLeaflet": true,
+          "id": "retailers/127093",
+          "name": "EDEKA",
+          "industryId": 1009
+        }
+      ],
+      "categories": [
+        {
+          "uniqueName": null,
+          "indexOffer": false,
+          "indexLeaflet": false,
+          "id": 359,
+          "name": "Softdrinks",
+          "description": "Märkte wie beispielsweise der [toom Getränkemarkt](https://www.marktguru.de/rp/toom-getraenkemarkt-prospekte) halten eine große Auswahl an [alkoholfreien Getränken](https://www.marktguru.de/c/getraenke-alkoholfrei) bereit. Dazu zählen [Coca-Cola](https://www.marktguru.de/b/coca-cola), Säfte von [Granini](https://www.marktguru.de/b/granini) oder Energydrinks von [Red Bull](https://www.marktguru.de/b/red-bull).",
+          "parentId": 69
+        }
+      ],
+      "id": 23644898,
+      "description": "Mezzo-Mix, Fanta Orange und weitere Sorten (koffeinhaltig), 1,25 L, zzgl. 0,25 Pfand",
+      "volume": 1.25,
+      "quantity": 1,
+      "isMultiProduct": true,
+      "price": 0.99,
+      "oldPrice": null,
+      "referencePrice": 0.79,
+      "requiresLoyalityMembership": false,
+      "leafletFlightId": 282551,
+      "validityDates": [
+        {
+          "from": "2026-06-14T22:00:00Z",
+          "to": "2026-06-20T21:59:00Z"
+        }
+      ],
+      "externalId": null,
+      "externalTrackingUrls": [],
+      "externalTrackings": [],
+      "externalUrl": null,
+      "trackFlightImpression": null,
+      "type": "standard",
+      "industries": [
+        {
+          "id": 1009,
+          "name": "Supermarkt"
+        }
+      ],
+      "product": {
+        "id": 351468,
+        "name": "Cola",
+        "description": "~twxus~ ~twxnam~"
+      },
+      "unit": {
+        "shortName": "l",
+        "id": 1,
+        "name": "Liter"
+      },
+      "images": {
+        "count": 1,
+        "isCdnSuccessfullyPurged": null,
+        "metadata": [
+          {
+            "aspectRatio": 0.3333333333333333,
+            "width": 1,
+            "height": 3
+          }
+        ]
+      },
+      "imageType": "offer"
+    },
+    {
+      "brand": {
+        "uniqueName": "coca-cola",
+        "indexOffer": true,
+        "indexLeaflet": false,
+        "id": 104494,
+        "name": "Coca-Cola",
+        "industryId": 1009
+      },
+      "advertisers": [
+        {
+          "uniqueName": "edeka",
+          "indexOffer": true,
+          "indexLeaflet": true,
+          "id": "retailers/127093",
+          "name": "EDEKA",
+          "industryId": 1009
+        }
+      ],
+      "categories": [
+        {
+          "uniqueName": null,
+          "indexOffer": false,
+          "indexLeaflet": false,
+          "id": 359,
+          "name": "Softdrinks",
+          "description": "Märkte wie beispielsweise der [toom Getränkemarkt](https://www.marktguru.de/rp/toom-getraenkemarkt-prospekte) halten eine große Auswahl an [alkoholfreien Getränken](https://www.marktguru.de/c/getraenke-alkoholfrei) bereit. Dazu zählen [Coca-Cola](https://www.marktguru.de/b/coca-cola), Säfte von [Granini](https://www.marktguru.de/b/granini) oder Energydrinks von [Red Bull](https://www.marktguru.de/b/red-bull).",
+          "parentId": 69
+        }
+      ],
+      "id": 23644301,
+      "description": "auch Zero, Mezzo Mix, Fanta und weitere Sorten, (koffeinhaltig), 0,33 L, zzgl. 0,25 Pfand, ab 6 Dosen je 0.65",
+      "volume": 0.33,
+      "quantity": 1,
+      "isMultiProduct": true,
+      "price": 0.79,
+      "oldPrice": null,
+      "referencePrice": 2.39,
+      "requiresLoyalityMembership": false,
+      "leafletFlightId": 282551,
+      "validityDates": [
+        {
+          "from": "2026-06-14T22:00:00Z",
+          "to": "2026-06-20T21:59:00Z"
+        }
+      ],
+      "externalId": null,
+      "externalTrackingUrls": [],
+      "externalTrackings": [],
+      "externalUrl": null,
+      "trackFlightImpression": null,
+      "type": "standard",
+      "industries": [
+        {
+          "id": 1009,
+          "name": "Supermarkt"
+        }
+      ],
+      "product": {
+        "id": 351468,
+        "name": "Cola",
+        "description": "~twxus~ ~twxnam~"
+      },
+      "unit": {
+        "shortName": "l",
+        "id": 1,
+        "name": "Liter"
+      },
+      "images": {
+        "count": 1,
+        "isCdnSuccessfullyPurged": null,
+        "metadata": [
+          {
+            "aspectRatio": 0.4625158831003812,
+            "width": 1,
+            "height": 2.162087912087912
+          }
+        ]
+      },
+      "imageType": "offer"
+    },
+    {
+      "brand": {
+        "uniqueName": "coca-cola",
+        "indexOffer": true,
+        "indexLeaflet": false,
+        "id": 104494,
+        "name": "Coca-Cola",
+        "industryId": 1009
+      },
+      "advertisers": [
+        {
+          "uniqueName": "scheck-in-center",
+          "indexOffer": true,
+          "indexLeaflet": true,
+          "id": "retailers/127130",
+          "name": "Scheck-in Center",
+          "industryId": 1009
+        }
+      ],
+      "categories": [
+        {
+          "uniqueName": null,
+          "indexOffer": false,
+          "indexLeaflet": false,
+          "id": 359,
+          "name": "Softdrinks",
+          "description": "Märkte wie beispielsweise der [toom Getränkemarkt](https://www.marktguru.de/rp/toom-getraenkemarkt-prospekte) halten eine große Auswahl an [alkoholfreien Getränken](https://www.marktguru.de/c/getraenke-alkoholfrei) bereit. Dazu zählen [Coca-Cola](https://www.marktguru.de/b/coca-cola), Säfte von [Granini](https://www.marktguru.de/b/granini) oder Energydrinks von [Red Bull](https://www.marktguru.de/b/red-bull).",
+          "parentId": 69
+        }
+      ],
+      "id": 23633549,
+      "description": "Mezzo-Mix , Fanta Orange und weitere Sorten (koffeinhaltig), 1,25 L zzgl. 0,25 Pfand",
+      "volume": 1.25,
+      "quantity": 1,
+      "isMultiProduct": true,
+      "price": 0.99,
+      "oldPrice": null,
+      "referencePrice": 0.79,
+      "requiresLoyalityMembership": false,
+      "leafletFlightId": 282536,
+      "validityDates": [
+        {
+          "from": "2026-06-14T22:00:00Z",
+          "to": "2026-06-20T21:59:00Z"
+        }
+      ],
+      "externalId": null,
+      "externalTrackingUrls": [],
+      "externalTrackings": [],
+      "externalUrl": null,
+      "trackFlightImpression": null,
+      "type": "standard",
+      "industries": [
+        {
+          "id": 1009,
+          "name": "Supermarkt"
+        }
+      ],
+      "product": {
+        "id": 351468,
+        "name": "Cola",
+        "description": "~twxus~ ~twxnam~"
+      },
+      "unit": {
+        "shortName": "l",
+        "id": 1,
+        "name": "Liter"
+      },
+      "images": {
+        "count": 1,
+        "isCdnSuccessfullyPurged": null,
+        "metadata": [
+          {
+            "aspectRatio": 0.5571260306242638,
+            "width": 1,
+            "height": 1.7949260042283297
+          }
+        ]
+      },
+      "imageType": "offer"
+    },
+    {
+      "brand": {
+        "uniqueName": "coca-cola",
+        "indexOffer": true,
+        "indexLeaflet": false,
+        "id": 104494,
+        "name": "Coca-Cola",
+        "industryId": 1009
+      },
+      "advertisers": [
+        {
+          "uniqueName": "scheck-in-center",
+          "indexOffer": true,
+          "indexLeaflet": true,
+          "id": "retailers/127130",
+          "name": "Scheck-in Center",
+          "industryId": 1009
+        }
+      ],
+      "categories": [
+        {
+          "uniqueName": null,
+          "indexOffer": false,
+          "indexLeaflet": false,
+          "id": 359,
+          "name": "Softdrinks",
+          "description": "Märkte wie beispielsweise der [toom Getränkemarkt](https://www.marktguru.de/rp/toom-getraenkemarkt-prospekte) halten eine große Auswahl an [alkoholfreien Getränken](https://www.marktguru.de/c/getraenke-alkoholfrei) bereit. Dazu zählen [Coca-Cola](https://www.marktguru.de/b/coca-cola), Säfte von [Granini](https://www.marktguru.de/b/granini) oder Energydrinks von [Red Bull](https://www.marktguru.de/b/red-bull).",
+          "parentId": 69
+        }
+      ],
+      "id": 23633525,
+      "description": "auch Zero, Mezzo Mix, Fanta und weitere Sorten, (²koffeinhaltig), 0,33 L, zzgl. 0,25 Pfand Ab Der 6. Dose Je 0.65",
+      "volume": 0.33,
+      "quantity": 1,
+      "isMultiProduct": true,
+      "price": 0.79,
+      "oldPrice": null,
+      "referencePrice": 2.39,
+      "requiresLoyalityMembership": false,
+      "leafletFlightId": 282536,
+      "validityDates": [
+        {
+          "from": "2026-06-14T22:00:00Z",
+          "to": "2026-06-20T21:59:00Z"
+        }
+      ],
+      "externalId": null,
+      "externalTrackingUrls": [],
+      "externalTrackings": [],
+      "externalUrl": null,
+      "trackFlightImpression": null,
+      "type": "standard",
+      "industries": [
+        {
+          "id": 1009,
+          "name": "Supermarkt"
+        }
+      ],
+      "product": {
+        "id": 351468,
+        "name": "Cola",
+        "description": "~twxus~ ~twxnam~"
+      },
+      "unit": {
+        "shortName": "l",
+        "id": 1,
+        "name": "Liter"
+      },
+      "images": {
+        "count": 1,
+        "isCdnSuccessfullyPurged": null,
+        "metadata": [
+          {
+            "aspectRatio": 0.6991150442477876,
+            "width": 1,
+            "height": 1.4303797468354431
+          }
+        ]
+      },
+      "imageType": "offer"
+    },
+    {
+      "brand": {
+        "uniqueName": "coca-cola",
+        "indexOffer": true,
+        "indexLeaflet": false,
+        "id": 104494,
+        "name": "Coca-Cola",
+        "industryId": 1009
+      },
+      "advertisers": [
+        {
+          "uniqueName": "rewe",
+          "indexOffer": true,
+          "indexLeaflet": true,
+          "id": "retailers/126802",
+          "name": "REWE",
+          "industryId": 1009
+        }
+      ],
+      "categories": [
+        {
+          "uniqueName": null,
+          "indexOffer": false,
+          "indexLeaflet": false,
+          "id": 359,
+          "name": "Softdrinks",
+          "description": "Märkte wie beispielsweise der [toom Getränkemarkt](https://www.marktguru.de/rp/toom-getraenkemarkt-prospekte) halten eine große Auswahl an [alkoholfreien Getränken](https://www.marktguru.de/c/getraenke-alkoholfrei) bereit. Dazu zählen [Coca-Cola](https://www.marktguru.de/b/coca-cola), Säfte von [Granini](https://www.marktguru.de/b/granini) oder Energydrinks von [Red Bull](https://www.marktguru.de/b/red-bull).",
+          "parentId": 69
+        }
+      ],
+      "id": 23630285,
+      "description": "oder Coca-Cola Zero Friendspack koffeinhaltig, je 10 x 0,33-l-DosenPckg.  zzgl. 2.50 Pfand",
+      "volume": 0.33,
+      "quantity": 10,
+      "isMultiProduct": true,
+      "price": 5.99,
+      "oldPrice": null,
+      "referencePrice": 1.82,
+      "requiresLoyalityMembership": false,
+      "leafletFlightId": 282422,
+      "validityDates": [
+        {
+          "from": "2026-06-14T22:00:00Z",
+          "to": "2026-06-20T21:59:00Z"
+        }
+      ],
+      "externalId": null,
+      "externalTrackingUrls": [
+        "https://servedby.flashtalking.com/imp/2/302017;10367284;201;pixel;SevenOneMediaDE;nnCPSevenOneMediaDEKaufDAMeinProspektA4CLEProspektnnAdgapId01984610141314295001/?gdpr=${GDPR}&gdpr_consent=${GDPR_CONSENT_78}&pbMethods=&cachebuster=[CACHEBUSTER]%22"
+      ],
+      "externalTrackings": [
+        {
+          "type": "click",
+          "url": "https://servedby.flashtalking.com/imp/2/302017;10367284;201;pixel;SevenOneMediaDE;nnCPSevenOneMediaDEKaufDAMeinProspektA4CLEProspektnnAdgapId01984610141314295001/?gdpr=${GDPR}&gdpr_consent=${GDPR_CONSENT_78}&pbMethods=&cachebuster=[CACHEBUSTER]%22",
+          "ugpctfet": 100
+        }
+      ],
+      "externalUrl": null,
+      "trackFlightImpression": null,
+      "type": "standard",
+      "industries": [
+        {
+          "id": 1009,
+          "name": "Supermarkt"
+        }
+      ],
+      "product": {
+        "id": 351468,
+        "name": "Cola",
+        "description": "~twxus~ ~twxnam~"
+      },
+      "unit": {
+        "shortName": "l",
+        "id": 1,
+        "name": "Liter"
+      },
+      "images": {
+        "count": 1,
+        "isCdnSuccessfullyPurged": null,
+        "metadata": [
+          {
+            "aspectRatio": 1.5534441805225654,
+            "width": 1,
+            "height": 0.6437308868501529
+          }
+        ]
+      },
+      "imageType": "offer"
+    },
+    {
+      "brand": {
+        "uniqueName": "coca-cola",
+        "indexOffer": true,
+        "indexLeaflet": false,
+        "id": 104494,
+        "name": "Coca-Cola",
+        "industryId": 1009
+      },
+      "advertisers": [
+        {
+          "uniqueName": "rewe",
+          "indexOffer": true,
+          "indexLeaflet": true,
+          "id": "retailers/126802",
+          "name": "REWE",
+          "industryId": 1009
+        }
+      ],
+      "categories": [
+        {
+          "uniqueName": null,
+          "indexOffer": false,
+          "indexLeaflet": false,
+          "id": 359,
+          "name": "Softdrinks",
+          "description": "Märkte wie beispielsweise der [toom Getränkemarkt](https://www.marktguru.de/rp/toom-getraenkemarkt-prospekte) halten eine große Auswahl an [alkoholfreien Getränken](https://www.marktguru.de/c/getraenke-alkoholfrei) bereit. Dazu zählen [Coca-Cola](https://www.marktguru.de/b/coca-cola), Säfte von [Granini](https://www.marktguru.de/b/granini) oder Energydrinks von [Red Bull](https://www.marktguru.de/b/red-bull).",
+          "parentId": 69
+        }
+      ],
+      "id": 23630219,
+      "description": "HINWEIS: MIT APP 0,20 € REWE BONUS, koffeinhaltig, je 6 x 0,33-l-Fl.-Pckg.  zzgl. 1.50 Pfand",
+      "volume": 0.33,
+      "quantity": 6,
+      "isMultiProduct": false,
+      "price": 3.99,
+      "oldPrice": null,
+      "referencePrice": 2.02,
+      "requiresLoyalityMembership": false,
+      "leafletFlightId": 282422,
+      "validityDates": [
+        {
+          "from": "2026-06-14T22:00:00Z",
+          "to": "2026-06-20T21:59:00Z"
+        }
+      ],
+      "externalId": null,
+      "externalTrackingUrls": [
+        "https://servedby.flashtalking.com/imp/2/302017;10367284;201;pixel;SevenOneMediaDE;nnCPSevenOneMediaDEKaufDAMeinProspektA4CLEProspektnnAdgapId01984610141314295001/?gdpr=${GDPR}&gdpr_consent=${GDPR_CONSENT_78}&pbMethods=&cachebuster=[CACHEBUSTER]%22"
+      ],
+      "externalTrackings": [
+        {
+          "type": "click",
+          "url": "https://servedby.flashtalking.com/imp/2/302017;10367284;201;pixel;SevenOneMediaDE;nnCPSevenOneMediaDEKaufDAMeinProspektA4CLEProspektnnAdgapId01984610141314295001/?gdpr=${GDPR}&gdpr_consent=${GDPR_CONSENT_78}&pbMethods=&cachebuster=[CACHEBUSTER]%22",
+          "ugpctfet": 100
+        }
+      ],
+      "externalUrl": null,
+      "trackFlightImpression": null,
+      "type": "standard",
+      "industries": [
+        {
+          "id": 1009,
+          "name": "Supermarkt"
+        }
+      ],
+      "product": {
+        "id": 351468,
+        "name": "Cola",
+        "description": "~twxus~ ~twxnam~"
+      },
+      "unit": {
+        "shortName": "l",
+        "id": 1,
+        "name": "Liter"
+      },
+      "images": {
+        "count": 1,
+        "isCdnSuccessfullyPurged": null,
+        "metadata": [
+          {
+            "aspectRatio": 1.1911468812877264,
+            "width": 1,
+            "height": 0.839527027027027
+          }
+        ]
+      },
+      "imageType": "offer"
+    },
+    {
+      "brand": {
+        "uniqueName": "coca-cola",
+        "indexOffer": true,
+        "indexLeaflet": false,
+        "id": 104494,
+        "name": "Coca-Cola",
+        "industryId": 1009
+      },
+      "advertisers": [
+        {
+          "uniqueName": "rewe",
+          "indexOffer": true,
+          "indexLeaflet": true,
+          "id": "retailers/126802",
+          "name": "REWE",
+          "industryId": 1009
+        }
+      ],
+      "categories": [
+        {
+          "uniqueName": null,
+          "indexOffer": false,
+          "indexLeaflet": false,
+          "id": 359,
+          "name": "Softdrinks",
+          "description": "Märkte wie beispielsweise der [toom Getränkemarkt](https://www.marktguru.de/rp/toom-getraenkemarkt-prospekte) halten eine große Auswahl an [alkoholfreien Getränken](https://www.marktguru.de/c/getraenke-alkoholfrei) bereit. Dazu zählen [Coca-Cola](https://www.marktguru.de/b/coca-cola), Säfte von [Granini](https://www.marktguru.de/b/granini) oder Energydrinks von [Red Bull](https://www.marktguru.de/b/red-bull).",
+          "parentId": 69
+        }
+      ],
+      "id": 23628281,
+      "description": "versch. Sorten, teilweise koffeinhaltig, je 1,25-l-Fl. zzgl. 0.25 Pfand",
+      "volume": 1.25,
+      "quantity": 1,
+      "isMultiProduct": true,
+      "price": 1.19,
+      "oldPrice": null,
+      "referencePrice": 0.95,
+      "requiresLoyalityMembership": false,
+      "leafletFlightId": 282422,
+      "validityDates": [
+        {
+          "from": "2026-06-14T22:00:00Z",
+          "to": "2026-06-20T21:59:00Z"
+        }
+      ],
+      "externalId": null,
+      "externalTrackingUrls": [
+        "https://servedby.flashtalking.com/imp/2/302017;10367284;201;pixel;SevenOneMediaDE;nnCPSevenOneMediaDEKaufDAMeinProspektA4CLEProspektnnAdgapId01984610141314295001/?gdpr=${GDPR}&gdpr_consent=${GDPR_CONSENT_78}&pbMethods=&cachebuster=[CACHEBUSTER]%22"
+      ],
+      "externalTrackings": [
+        {
+          "type": "click",
+          "url": "https://servedby.flashtalking.com/imp/2/302017;10367284;201;pixel;SevenOneMediaDE;nnCPSevenOneMediaDEKaufDAMeinProspektA4CLEProspektnnAdgapId01984610141314295001/?gdpr=${GDPR}&gdpr_consent=${GDPR_CONSENT_78}&pbMethods=&cachebuster=[CACHEBUSTER]%22",
+          "ugpctfet": 100
+        }
+      ],
+      "externalUrl": null,
+      "trackFlightImpression": null,
+      "type": "standard",
+      "industries": [
+        {
+          "id": 1009,
+          "name": "Supermarkt"
+        }
+      ],
+      "product": {
+        "id": 351468,
+        "name": "Cola",
+        "description": "~twxus~ ~twxnam~"
+      },
+      "unit": {
+        "shortName": "l",
+        "id": 1,
+        "name": "Liter"
+      },
+      "images": {
+        "count": 1,
+        "isCdnSuccessfullyPurged": null,
+        "metadata": [
+          {
+            "aspectRatio": 0.5336879432624113,
+            "width": 1,
+            "height": 1.8737541528239203
+          }
+        ]
+      },
+      "imageType": "offer"
+    },
+    {
+      "brand": {
+        "uniqueName": "coca-cola",
+        "indexOffer": true,
+        "indexLeaflet": false,
+        "id": 104494,
+        "name": "Coca-Cola",
+        "industryId": 1009
+      },
+      "advertisers": [
+        {
+          "uniqueName": "edeka",
+          "indexOffer": true,
+          "indexLeaflet": true,
+          "id": "retailers/127093",
+          "name": "EDEKA",
+          "industryId": 1009
+        }
+      ],
+      "categories": [
+        {
+          "uniqueName": null,
+          "indexOffer": false,
+          "indexLeaflet": false,
+          "id": 359,
+          "name": "Softdrinks",
+          "description": "Märkte wie beispielsweise der [toom Getränkemarkt](https://www.marktguru.de/rp/toom-getraenkemarkt-prospekte) halten eine große Auswahl an [alkoholfreien Getränken](https://www.marktguru.de/c/getraenke-alkoholfrei) bereit. Dazu zählen [Coca-Cola](https://www.marktguru.de/b/coca-cola), Säfte von [Granini](https://www.marktguru.de/b/granini) oder Energydrinks von [Red Bull](https://www.marktguru.de/b/red-bull).",
+          "parentId": 69
+        }
+      ],
+      "id": 23628257,
+      "description": "Fanta Orange und weitere Sorten, (koffeinhaltig), 1,25 L, zzgl. 0,25 Pfand",
+      "volume": 1.25,
+      "quantity": 1,
+      "isMultiProduct": true,
+      "price": 0.99,
+      "oldPrice": null,
+      "referencePrice": 0.79,
+      "requiresLoyalityMembership": false,
+      "leafletFlightId": 282515,
+      "validityDates": [
+        {
+          "from": "2026-06-14T22:00:00Z",
+          "to": "2026-06-20T21:59:00Z"
+        }
+      ],
+      "externalId": null,
+      "externalTrackingUrls": [],
+      "externalTrackings": [],
+      "externalUrl": null,
+      "trackFlightImpression": null,
+      "type": "standard",
+      "industries": [
+        {
+          "id": 1009,
+          "name": "Supermarkt"
+        }
+      ],
+      "product": {
+        "id": 351468,
+        "name": "Cola",
+        "description": "~twxus~ ~twxnam~"
+      },
+      "unit": {
+        "shortName": "l",
+        "id": 1,
+        "name": "Liter"
+      },
+      "images": {
+        "count": 1,
+        "isCdnSuccessfullyPurged": null,
+        "metadata": [
+          {
+            "aspectRatio": 0.47214484679665736,
+            "width": 1,
+            "height": 2.117994100294985
+          }
+        ]
+      },
+      "imageType": "offer"
+    },
+    {
+      "brand": {
+        "uniqueName": "coca-cola",
+        "indexOffer": true,
+        "indexLeaflet": false,
+        "id": 104494,
+        "name": "Coca-Cola",
+        "industryId": 1009
+      },
+      "advertisers": [
+        {
+          "uniqueName": "edeka",
+          "indexOffer": true,
+          "indexLeaflet": true,
+          "id": "retailers/127093",
+          "name": "EDEKA",
+          "industryId": 1009
+        }
+      ],
+      "categories": [
+        {
+          "uniqueName": null,
+          "indexOffer": false,
+          "indexLeaflet": false,
+          "id": 359,
+          "name": "Softdrinks",
+          "description": "Märkte wie beispielsweise der [toom Getränkemarkt](https://www.marktguru.de/rp/toom-getraenkemarkt-prospekte) halten eine große Auswahl an [alkoholfreien Getränken](https://www.marktguru.de/c/getraenke-alkoholfrei) bereit. Dazu zählen [Coca-Cola](https://www.marktguru.de/b/coca-cola), Säfte von [Granini](https://www.marktguru.de/b/granini) oder Energydrinks von [Red Bull](https://www.marktguru.de/b/red-bull).",
+          "parentId": 69
+        }
+      ],
+      "id": 23628236,
+      "description": "0.33 L, zzgl. 0,25 Pfand,",
+      "volume": 0.33,
+      "quantity": 1,
+      "isMultiProduct": true,
+      "price": 0.79,
+      "oldPrice": null,
+      "referencePrice": 2.39,
+      "requiresLoyalityMembership": false,
+      "leafletFlightId": 282515,
+      "validityDates": [
+        {
+          "from": "2026-06-14T22:00:00Z",
+          "to": "2026-06-20T21:59:00Z"
+        }
+      ],
+      "externalId": null,
+      "externalTrackingUrls": [],
+      "externalTrackings": [],
+      "externalUrl": null,
+      "trackFlightImpression": null,
+      "type": "standard",
+      "industries": [
+        {
+          "id": 1009,
+          "name": "Supermarkt"
+        }
+      ],
+      "product": {
+        "id": 351468,
+        "name": "Cola",
+        "description": "~twxus~ ~twxnam~"
+      },
+      "unit": {
+        "shortName": "l",
+        "id": 1,
+        "name": "Liter"
+      },
+      "images": {
+        "count": 1,
+        "isCdnSuccessfullyPurged": null,
+        "metadata": [
+          {
+            "aspectRatio": 0.44733044733044736,
+            "width": 1,
+            "height": 2.235483870967742
+          }
+        ]
+      },
+      "imageType": "offer"
+    },
+    {
+      "brand": {
+        "uniqueName": "coca-cola",
+        "indexOffer": true,
+        "indexLeaflet": false,
+        "id": 104494,
+        "name": "Coca-Cola",
+        "industryId": 1002
+      },
+      "advertisers": [
+        {
+          "uniqueName": "thomas-philipps",
+          "indexOffer": true,
+          "indexLeaflet": true,
+          "id": "retailers/126876",
+          "name": "Thomas Philipps",
+          "industryId": 1002
+        }
+      ],
+      "categories": [
+        {
+          "uniqueName": null,
+          "indexOffer": false,
+          "indexLeaflet": false,
+          "id": 359,
+          "name": "Softdrinks",
+          "description": "Märkte wie beispielsweise der [toom Getränkemarkt](https://www.marktguru.de/rp/toom-getraenkemarkt-prospekte) halten eine große Auswahl an [alkoholfreien Getränken](https://www.marktguru.de/c/getraenke-alkoholfrei) bereit. Dazu zählen [Coca-Cola](https://www.marktguru.de/b/coca-cola), Säfte von [Granini](https://www.marktguru.de/b/granini) oder Energydrinks von [Red Bull](https://www.marktguru.de/b/red-bull).",
+          "parentId": 69
+        }
+      ],
+      "id": 23617127,
+      "description": "Erfrischungsgetränke versch. Sorten koffeinhaltig 1,5Liter",
+      "volume": 1.5,
+      "quantity": 1,
+      "isMultiProduct": true,
+      "price": 0.99,
+      "oldPrice": null,
+      "referencePrice": 0.66,
+      "requiresLoyalityMembership": false,
+      "leafletFlightId": 282437,
+      "validityDates": [
+        {
+          "from": "2026-06-14T22:00:00Z",
+          "to": "2026-06-20T21:59:00Z"
+        }
+      ],
+      "externalId": null,
+      "externalTrackingUrls": [],
+      "externalTrackings": [],
+      "externalUrl": null,
+      "trackFlightImpression": null,
+      "type": "standard",
+      "industries": [
+        {
+          "id": 1002,
+          "name": "Kaufhaus"
+        }
+      ],
+      "product": {
+        "id": 351468,
+        "name": "Cola",
+        "description": "~twxus~ ~twxnam~"
+      },
+      "unit": {
+        "shortName": "l",
+        "id": 1,
+        "name": "Liter"
+      },
+      "images": {
+        "count": 1,
+        "isCdnSuccessfullyPurged": null,
+        "metadata": [
+          {
+            "aspectRatio": 0.6120576671035387,
+            "width": 1,
+            "height": 1.633832976445396
+          }
+        ]
+      },
+      "imageType": "offer"
+    },
+    {
+      "brand": {
+        "uniqueName": "coca-cola",
+        "indexOffer": true,
+        "indexLeaflet": false,
+        "id": 104494,
+        "name": "Coca-Cola",
+        "industryId": 1023
+      },
+      "advertisers": [
+        {
+          "uniqueName": "netto-marken-discount",
+          "indexOffer": true,
+          "indexLeaflet": true,
+          "id": "retailers/126735",
+          "name": "Netto Marken-Discount",
+          "industryId": 1023
+        }
+      ],
+      "categories": [
+        {
+          "uniqueName": null,
+          "indexOffer": false,
+          "indexLeaflet": false,
+          "id": 359,
+          "name": "Softdrinks",
+          "description": "Märkte wie beispielsweise der [toom Getränkemarkt](https://www.marktguru.de/rp/toom-getraenkemarkt-prospekte) halten eine große Auswahl an [alkoholfreien Getränken](https://www.marktguru.de/c/getraenke-alkoholfrei) bereit. Dazu zählen [Coca-Cola](https://www.marktguru.de/b/coca-cola), Säfte von [Granini](https://www.marktguru.de/b/granini) oder Energydrinks von [Red Bull](https://www.marktguru.de/b/red-bull).",
+          "parentId": 69
+        }
+      ],
+      "id": 23592308,
+      "description": "teilweise koffeinhaltig, versch. Sorten, 6 x 1,25 Liter, zzgl. Pfand 1.50 Einzelpreis: 1.59, zzgl. Pfand 0.25",
+      "volume": 1.25,
+      "quantity": 6,
+      "isMultiProduct": true,
+      "price": 5.99,
+      "oldPrice": null,
+      "referencePrice": 0.8,
+      "requiresLoyalityMembership": false,
+      "leafletFlightId": 282296,
+      "validityDates": [
+        {
+          "from": "2026-06-14T22:00:00Z",
+          "to": "2026-06-20T21:59:00Z"
+        }
+      ],
+      "externalId": null,
+      "externalTrackingUrls": [],
+      "externalTrackings": [],
+      "externalUrl": null,
+      "trackFlightImpression": null,
+      "type": "standard",
+      "industries": [
+        {
+          "id": 1023,
+          "name": "Discounter"
+        }
+      ],
+      "product": {
+        "id": 351468,
+        "name": "Cola",
+        "description": "~twxus~ ~twxnam~"
+      },
+      "unit": {
+        "shortName": "l",
+        "id": 1,
+        "name": "Liter"
+      },
+      "images": {
+        "count": 1,
+        "isCdnSuccessfullyPurged": null,
+        "metadata": [
+          {
+            "aspectRatio": 0.6738461538461539,
+            "width": 1,
+            "height": 1.4840182648401827
+          }
+        ]
+      },
+      "imageType": "offer"
+    },
+    {
+      "brand": {
+        "uniqueName": "coca-cola",
+        "indexOffer": true,
+        "indexLeaflet": false,
+        "id": 104494,
+        "name": "Coca-Cola",
+        "industryId": 1009
+      },
+      "advertisers": [
+        {
+          "uniqueName": "kaufland",
+          "indexOffer": true,
+          "indexLeaflet": true,
+          "id": "retailers/126654",
+          "name": "Kaufland",
+          "industryId": 1009
+        }
+      ],
+      "categories": [
+        {
+          "uniqueName": null,
+          "indexOffer": false,
+          "indexLeaflet": false,
+          "id": 359,
+          "name": "Softdrinks",
+          "description": "Märkte wie beispielsweise der [toom Getränkemarkt](https://www.marktguru.de/rp/toom-getraenkemarkt-prospekte) halten eine große Auswahl an [alkoholfreien Getränken](https://www.marktguru.de/c/getraenke-alkoholfrei) bereit. Dazu zählen [Coca-Cola](https://www.marktguru.de/b/coca-cola), Säfte von [Granini](https://www.marktguru.de/b/granini) oder Energydrinks von [Red Bull](https://www.marktguru.de/b/red-bull).",
+          "parentId": 69
+        }
+      ],
+      "id": 23551463,
+      "description": "Original oder Zero koffeinhaltiges Erfrischungsgetränk (+ 0.90 Pfand) je Packg. 6 x 0,33-l-Fl.",
+      "volume": 0.33,
+      "quantity": 6,
+      "isMultiProduct": true,
+      "price": 3.69,
+      "oldPrice": null,
+      "referencePrice": 1.86,
+      "requiresLoyalityMembership": false,
+      "leafletFlightId": 281786,
+      "validityDates": [
+        {
+          "from": "2026-06-10T22:00:00Z",
+          "to": "2026-06-17T18:00:00Z"
+        }
+      ],
+      "externalId": null,
+      "externalTrackingUrls": [
+        "https://ad.doubleclick.net/ddm/trackimp/N1106503.2671411MARKGURUDE/B26240841.309225179;dc_pre=CIaFzIm8jI0DFZ2L_Qcd5l8Plg;dc_trk_aid=502197466;dc_trk_cid=154816736;ord={{mg-timestamp}};dc_lat=;dc_rdid=;tag_for_child_directed_treatment=;tfua=;gdpr=${GDPR};gdpr_consent=${GDPR_CONSENT_755};ltd=;dc_tdv=1"
+      ],
+      "externalTrackings": [
+        {
+          "type": "click",
+          "url": "https://ad.doubleclick.net/ddm/trackimp/N1106503.2671411MARKGURUDE/B26240841.309225179;dc_pre=CIaFzIm8jI0DFZ2L_Qcd5l8Plg;dc_trk_aid=502197466;dc_trk_cid=154816736;ord={{mg-timestamp}};dc_lat=;dc_rdid=;tag_for_child_directed_treatment=;tfua=;gdpr=${GDPR};gdpr_consent=${GDPR_CONSENT_755};ltd=;dc_tdv=1",
+          "ugpctfet": 100
+        }
+      ],
+      "externalUrl": null,
+      "trackFlightImpression": null,
+      "type": "standard",
+      "industries": [
+        {
+          "id": 1009,
+          "name": "Supermarkt"
+        }
+      ],
+      "product": {
+        "id": 351468,
+        "name": "Cola",
+        "description": "~twxus~ ~twxnam~"
+      },
+      "unit": {
+        "shortName": "l",
+        "id": 1,
+        "name": "Liter"
+      },
+      "images": {
+        "count": 1,
+        "isCdnSuccessfullyPurged": null,
+        "metadata": [
+          {
+            "aspectRatio": 0.7930555555555555,
+            "width": 1,
+            "height": 1.2609457092819614
+          }
+        ]
+      },
+      "imageType": "offer"
+    },
+    {
+      "brand": {
+        "uniqueName": "coca-cola",
+        "indexOffer": true,
+        "indexLeaflet": false,
+        "id": 104494,
+        "name": "Coca-Cola",
+        "industryId": 1009
+      },
+      "advertisers": [
+        {
+          "uniqueName": "edeka",
+          "indexOffer": true,
+          "indexLeaflet": true,
+          "id": "retailers/127093",
+          "name": "EDEKA",
+          "industryId": 1009
+        }
+      ],
+      "categories": [
+        {
+          "uniqueName": null,
+          "indexOffer": false,
+          "indexLeaflet": false,
+          "id": 359,
+          "name": "Softdrinks",
+          "description": "Märkte wie beispielsweise der [toom Getränkemarkt](https://www.marktguru.de/rp/toom-getraenkemarkt-prospekte) halten eine große Auswahl an [alkoholfreien Getränken](https://www.marktguru.de/c/getraenke-alkoholfrei) bereit. Dazu zählen [Coca-Cola](https://www.marktguru.de/b/coca-cola), Säfte von [Granini](https://www.marktguru.de/b/granini) oder Energydrinks von [Red Bull](https://www.marktguru.de/b/red-bull).",
+          "parentId": 69
+        }
+      ],
+      "id": 23643263,
+      "description": "auch Zero, Mezzo Mix, Fanta und weitere Sorten, (koffeinhaltig), 0,33 L, zzgl. 0,25 Pfand AB der  6. Dose Je 0.65",
+      "volume": 0.33,
+      "quantity": 1,
+      "isMultiProduct": true,
+      "price": 0.79,
+      "oldPrice": null,
+      "referencePrice": 2.39,
+      "requiresLoyalityMembership": false,
+      "leafletFlightId": 282551,
+      "validityDates": [
+        {
+          "from": "2026-06-14T22:00:00Z",
+          "to": "2026-06-20T21:59:00Z"
+        }
+      ],
+      "externalId": null,
+      "externalTrackingUrls": [],
+      "externalTrackings": [],
+      "externalUrl": null,
+      "trackFlightImpression": null,
+      "type": "standard",
+      "industries": [
+        {
+          "id": 1009,
+          "name": "Supermarkt"
+        }
+      ],
+      "product": {
+        "id": 1144791,
+        "name": "Limonade",
+        "description": ""
+      },
+      "unit": {
+        "shortName": "l",
+        "id": 1,
+        "name": "Liter"
+      },
+      "images": {
+        "count": 1,
+        "isCdnSuccessfullyPurged": null,
+        "metadata": [
+          {
+            "aspectRatio": 0.4796380090497738,
+            "width": 1,
+            "height": 2.0849056603773586
+          }
+        ]
+      },
+      "imageType": "offer"
+    },
+    {
+      "brand": {
+        "uniqueName": "coca-cola",
+        "indexOffer": true,
+        "indexLeaflet": false,
+        "id": 104494,
+        "name": "Coca-Cola",
+        "industryId": 1009
+      },
+      "advertisers": [
+        {
+          "uniqueName": "edeka",
+          "indexOffer": true,
+          "indexLeaflet": true,
+          "id": "retailers/127093",
+          "name": "EDEKA",
+          "industryId": 1009
+        }
+      ],
+      "categories": [
+        {
+          "uniqueName": null,
+          "indexOffer": false,
+          "indexLeaflet": false,
+          "id": 359,
+          "name": "Softdrinks",
+          "description": "Märkte wie beispielsweise der [toom Getränkemarkt](https://www.marktguru.de/rp/toom-getraenkemarkt-prospekte) halten eine große Auswahl an [alkoholfreien Getränken](https://www.marktguru.de/c/getraenke-alkoholfrei) bereit. Dazu zählen [Coca-Cola](https://www.marktguru.de/b/coca-cola), Säfte von [Granini](https://www.marktguru.de/b/granini) oder Energydrinks von [Red Bull](https://www.marktguru.de/b/red-bull).",
+          "parentId": 69
+        }
+      ],
+      "id": 23643242,
+      "description": "Mezzo-Mix, Fanta Orange und weitere Sorten, koffeinhaltig, 1,25 L, zzgl. 0,25 Pfand",
+      "volume": 1.25,
+      "quantity": 1,
+      "isMultiProduct": true,
+      "price": 0.99,
+      "oldPrice": null,
+      "referencePrice": 0.79,
+      "requiresLoyalityMembership": false,
+      "leafletFlightId": 282551,
+      "validityDates": [
+        {
+          "from": "2026-06-14T22:00:00Z",
+          "to": "2026-06-20T21:59:00Z"
+        }
+      ],
+      "externalId": null,
+      "externalTrackingUrls": [],
+      "externalTrackings": [],
+      "externalUrl": null,
+      "trackFlightImpression": null,
+      "type": "standard",
+      "industries": [
+        {
+          "id": 1009,
+          "name": "Supermarkt"
+        }
+      ],
+      "product": {
+        "id": 1144791,
+        "name": "Limonade",
+        "description": ""
+      },
+      "unit": {
+        "shortName": "l",
+        "id": 1,
+        "name": "Liter"
+      },
+      "images": {
+        "count": 1,
+        "isCdnSuccessfullyPurged": null,
+        "metadata": [
+          {
+            "aspectRatio": 0.6230248306997742,
+            "width": 1,
+            "height": 1.605072463768116
+          }
+        ]
+      },
+      "imageType": "offer"
+    },
+    {
+      "brand": {
+        "uniqueName": "coca-cola",
+        "indexOffer": true,
+        "indexLeaflet": false,
+        "id": 104494,
+        "name": "Coca-Cola",
+        "industryId": 1002
+      },
+      "advertisers": [
+        {
+          "uniqueName": "thomas-philipps",
+          "indexOffer": true,
+          "indexLeaflet": true,
+          "id": "retailers/126876",
+          "name": "Thomas Philipps",
+          "industryId": 1002
+        }
+      ],
+      "categories": [
+        {
+          "uniqueName": null,
+          "indexOffer": false,
+          "indexLeaflet": false,
+          "id": 359,
+          "name": "Softdrinks",
+          "description": "Märkte wie beispielsweise der [toom Getränkemarkt](https://www.marktguru.de/rp/toom-getraenkemarkt-prospekte) halten eine große Auswahl an [alkoholfreien Getränken](https://www.marktguru.de/c/getraenke-alkoholfrei) bereit. Dazu zählen [Coca-Cola](https://www.marktguru.de/b/coca-cola), Säfte von [Granini](https://www.marktguru.de/b/granini) oder Energydrinks von [Red Bull](https://www.marktguru.de/b/red-bull).",
+          "parentId": 69
+        }
+      ],
+      "id": 23612999,
+      "description": "versch. Sorten • koffeinhaltig 1,5 Liter",
+      "volume": 1.5,
+      "quantity": 1,
+      "isMultiProduct": true,
+      "price": 0.99,
+      "oldPrice": null,
+      "referencePrice": 0.66,
+      "requiresLoyalityMembership": false,
+      "leafletFlightId": 282437,
+      "validityDates": [
+        {
+          "from": "2026-06-14T22:00:00Z",
+          "to": "2026-06-20T21:59:00Z"
+        }
+      ],
+      "externalId": null,
+      "externalTrackingUrls": [],
+      "externalTrackings": [],
+      "externalUrl": null,
+      "trackFlightImpression": null,
+      "type": "standard",
+      "industries": [
+        {
+          "id": 1002,
+          "name": "Kaufhaus"
+        }
+      ],
+      "product": {
+        "id": 1228583,
+        "name": "Erfrischungsgetränke",
+        "description": null
+      },
+      "unit": {
+        "shortName": "l",
+        "id": 1,
+        "name": "Liter"
+      },
+      "images": {
+        "count": 1,
+        "isCdnSuccessfullyPurged": null,
+        "metadata": [
+          {
+            "aspectRatio": 0.3816300129366106,
+            "width": 1,
+            "height": 2.6203389830508477
+          }
+        ]
+      },
+      "imageType": "offer"
+    },
+    {
+      "brand": {
+        "uniqueName": "bacardi-coca-cola",
+        "indexOffer": false,
+        "indexLeaflet": false,
+        "id": 149844,
+        "name": "Bacardi & Coca-Cola",
+        "industryId": 1023
+      },
+      "advertisers": [
+        {
+          "uniqueName": "penny",
+          "indexOffer": true,
+          "indexLeaflet": true,
+          "id": "retailers/126765",
+          "name": "PENNY",
+          "industryId": 1023
+        }
+      ],
+      "categories": [
+        {
+          "uniqueName": null,
+          "indexOffer": false,
+          "indexLeaflet": false,
+          "id": 496,
+          "name": "Cocktails",
+          "description": null,
+          "parentId": 364
+        }
+      ],
+      "id": 23645543,
+      "description": "oder ABSOLUT Vodka Sprite Mischgetränk, 10% vol, teilw. koffeinhaltig, zzgl. 0.25 Pfand, je 0,33 l",
+      "volume": 0.33,
+      "quantity": 1,
+      "isMultiProduct": false,
+      "price": 1.99,
+      "oldPrice": null,
+      "referencePrice": 6.03,
+      "requiresLoyalityMembership": false,
+      "leafletFlightId": 282584,
+      "validityDates": [
+        {
+          "from": "2026-06-14T22:00:00Z",
+          "to": "2026-06-20T21:59:00Z"
+        }
+      ],
+      "externalId": null,
+      "externalTrackingUrls": [
+        "https://servedby.flashtalking.com/imp/2/302255;10379609;201;pixel;SevenOneMediaDE;nnCPSevenOneMediaDEMarktguruA4CLEProspektnnAdgapId01984610141314757001/?gdpr=${GDPR}&gdpr_consent=${GDPR_CONSENT_78}&pbMethods=&cachebuster=[CACHEBUSTER]"
+      ],
+      "externalTrackings": [
+        {
+          "type": "click",
+          "url": "https://servedby.flashtalking.com/imp/2/302255;10379609;201;pixel;SevenOneMediaDE;nnCPSevenOneMediaDEMarktguruA4CLEProspektnnAdgapId01984610141314757001/?gdpr=${GDPR}&gdpr_consent=${GDPR_CONSENT_78}&pbMethods=&cachebuster=[CACHEBUSTER]",
+          "ugpctfet": 100
+        }
+      ],
+      "externalUrl": null,
+      "trackFlightImpression": null,
+      "type": "standard",
+      "industries": [
+        {
+          "id": 1023,
+          "name": "Discounter"
+        }
+      ],
+      "product": {
+        "id": 1198704,
+        "name": "Mischgetränk",
+        "description": ""
+      },
+      "unit": {
+        "shortName": "l",
+        "id": 1,
+        "name": "Liter"
+      },
+      "images": {
+        "count": 1,
+        "isCdnSuccessfullyPurged": null,
+        "metadata": [
+          {
+            "aspectRatio": 1.033434650455927,
+            "width": 1,
+            "height": 0.9676470588235294
+          }
+        ]
+      },
+      "imageType": "offer"
+    },
+    {
+      "brand": {
+        "uniqueName": "jack-daniel-s-coca-cola",
+        "indexOffer": false,
+        "indexLeaflet": false,
+        "id": 149847,
+        "name": "Jack Daniel’s & Coca-Cola",
+        "industryId": 1009
+      },
+      "advertisers": [
+        {
+          "uniqueName": "scheck-in-center",
+          "indexOffer": true,
+          "indexLeaflet": true,
+          "id": "retailers/127130",
+          "name": "Scheck-in Center",
+          "industryId": 1009
+        }
+      ],
+      "categories": [
+        {
+          "uniqueName": null,
+          "indexOffer": false,
+          "indexLeaflet": false,
+          "id": 496,
+          "name": "Cocktails",
+          "description": null,
+          "parentId": 364
+        }
+      ],
+      "id": 23646602,
+      "description": "10% Vol., 0,33 L, zzgl. 0,25 Pfand",
+      "volume": 0.33,
+      "quantity": 1,
+      "isMultiProduct": false,
+      "price": 2.79,
+      "oldPrice": null,
+      "referencePrice": 8.45,
+      "requiresLoyalityMembership": false,
+      "leafletFlightId": 282536,
+      "validityDates": [
+        {
+          "from": "2026-06-14T22:00:00Z",
+          "to": "2026-06-20T21:59:00Z"
+        }
+      ],
+      "externalId": null,
+      "externalTrackingUrls": [],
+      "externalTrackings": [],
+      "externalUrl": null,
+      "trackFlightImpression": null,
+      "type": "standard",
+      "industries": [
+        {
+          "id": 1009,
+          "name": "Supermarkt"
+        }
+      ],
+      "product": {
+        "id": 1198707,
+        "name": "Mischgetränk",
+        "description": ""
+      },
+      "unit": {
+        "shortName": "l",
+        "id": 1,
+        "name": "Liter"
+      },
+      "images": {
+        "count": 1,
+        "isCdnSuccessfullyPurged": null,
+        "metadata": [
+          {
+            "aspectRatio": 1.2111436950146628,
+            "width": 1,
+            "height": 0.8256658595641646
+          }
+        ]
+      },
+      "imageType": "offer"
+    }
+  ]
+}
