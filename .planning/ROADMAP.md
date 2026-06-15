@@ -34,7 +34,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 **Wave 1**
 
-- [ ] 01-01-scaffold-live-probe-PLAN.md — Scaffold the Node 22 project and run the live marktguru probe; capture the raw payload, advertiser slugs, and the Wasgau verdict (Wave 1)
+- [x] 01-01-scaffold-live-probe-PLAN.md — Scaffold the Node 22 project and run the live marktguru probe; capture the raw payload, advertiser slugs, and the Wasgau verdict (Wave 1)
 
 **Wave 2** *(blocked on Wave 1 completion)*
 
@@ -94,7 +94,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Data Contract & Source Spike | 0/3 | Not started | - |
+| 1. Data Contract & Source Spike | 1/3 | In Progress|  |
 | 2. Core Scraper | 0/TBD | Not started | - |
 | 3. PWA Frontend | 0/TBD | Not started | - |
 | 4. Live Integration, All Stores & Hardening | 0/TBD | Not started | - |
