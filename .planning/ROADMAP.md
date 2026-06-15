@@ -2,7 +2,7 @@
 
 ## Overview
 
-ColaApp delivers one answer to one person: where is the Coca-Cola 12×1L case on sale among five fixed Schifferstadt stores. The journey starts by freezing the JSON file contract between scraper and PWA and proving — live — that the marktguru API actually returns the 12×1L case for PLZ 67105 across all five store groups (especially Wasgau). With the contract frozen and the data source confirmed, the producer (scraper) and consumer (PWA) are built in parallel against the same schema: a fault-isolated ETL that strictly matches the 12×1L case and appends a deduplicated price history, and an installable offline-capable PWA that renders the best deal, per-store cards, upcoming offers, and a price-history graph with honest "no offer" / "unavailable" / "stale" states. Finally the two tracks are wired together through a free GitHub Actions cron + GitHub Pages loop, all five store adapters land (Wasgau isolated so it can never block the rest), and the pipeline is hardened so a solo maintainer is never silently left with stale prices.
+ColaApp delivers one answer to one person: where is the Coca-Cola 12×1L case on sale among five fixed Schifferstadt stores (REWE, Edeka, Lidl, Kaufland, Wasgau — the brother's route; Aldi/Penny/Netto are excluded). The journey starts by freezing the JSON file contract between scraper and PWA and proving — live — that the marktguru API actually returns the 12×1L case for PLZ 67105 across those five target stores (especially Wasgau). With the contract frozen and the data source confirmed, the producer (scraper) and consumer (PWA) are built in parallel against the same schema: a fault-isolated ETL that strictly matches the 12×1L case and appends a deduplicated price history, and an installable offline-capable PWA that renders the best deal, per-store cards, upcoming offers, and a price-history graph with honest "no offer" / "unavailable" / "stale" states. Finally the two tracks are wired together through a free GitHub Actions cron + GitHub Pages loop, all five store adapters land (Wasgau isolated so it can never block the rest), and the pipeline is hardened so a solo maintainer is never silently left with stale prices.
 
 ## Phases
 
@@ -24,7 +24,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 **Depends on**: Nothing (first phase)
 **Requirements**: DATA-02
 **Success Criteria** (what must be TRUE):
-  1. A live marktguru probe confirms the Coca-Cola 12×1L case is returned for PLZ 67105 across all five store groups (REWE, Edeka/Netto, Lidl/Kaufland, Aldi/Penny), with Wasgau coverage either confirmed or explicitly declared "not automatically available"
+  1. A live marktguru probe confirms the Coca-Cola 12×1L case is returned for PLZ 67105 across the five target stores (REWE, Edeka, Lidl, Kaufland, Wasgau — modeled as individual advertisers, not groups; Aldi/Penny/Netto excluded), with Wasgau coverage either confirmed or explicitly declared "not automatically available"
   2. Real captured marktguru payloads exist as fixtures, and a strict matcher accepts the 12×1L case while rejecting 1.25L 6-packs, can trays, Zero/light non-case SKUs, and store-brand colas
   3. A frozen `data/*.json` schema (current-offers, price-history, status) exists with realistic mocks for every UI state: offer present, no offer, upcoming only, store errored, and stale
   4. The Pfand convention (price excludes Pfand) and the "no offer" vs "error" vs "unavailable" distinctions are decided and encoded in the schema and shared types
@@ -63,7 +63,7 @@ Decimal phases appear between their surrounding integers in numeric order.
   1. A scheduled GitHub Actions job produces the offer data and commits it to the repository on each run
   2. The PWA and its data are served at zero cost via GitHub Pages with nothing hosted on the author's local machine
   3. The full loop is verified end-to-end: cron → scraper → committed data → Pages → the installed PWA reflects the new data
-  4. All five store groups are present in the data, with each adapter fault-isolated so Wasgau (shown "not automatically available" if Cola coverage is absent) can never block the others
+  4. All five target stores (REWE, Edeka, Lidl, Kaufland, Wasgau) are present in the data, with each adapter fault-isolated so Wasgau (shown "not automatically available" if Cola coverage is absent) can never block the others
   5. The scheduled job stays enabled over time via a keepalive heartbeat (against the 60-day inactivity disable), and a failing run surfaces to the maintainer rather than failing silently
 **Plans**: TBD
 

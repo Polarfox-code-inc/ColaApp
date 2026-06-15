@@ -9,7 +9,7 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Data Acquisition
 
-- [ ] **DATA-01**: System auto-fetches Coca-Cola 12×1L case offers for the 5 Schifferstadt stores (PLZ 67105) on a schedule, with no manual entry
+- [ ] **DATA-01**: System auto-fetches Coca-Cola 12×1L case offers for the 5 target Schifferstadt stores — **REWE, Edeka, Lidl, Kaufland, Wasgau** (individual advertisers; PLZ 67105) — on a schedule, with no manual entry
 - [ ] **DATA-02**: System matches strictly the 12×1L case and excludes other Cola SKUs (1.25L 6-packs, can trays, Zero/light unless the 12×1L case, store-brand colas)
 - [ ] **DATA-03**: System normalizes each offer to price (excluding Pfand), €/litre, store, and valid-from/valid-to dates
 - [ ] **DATA-04**: System appends each offer's price to a price history, deduplicated so repeated runs do not create duplicate entries
@@ -67,6 +67,7 @@ Explicitly excluded. Documented to prevent scope creep.
 | Feature | Reason |
 |---------|--------|
 | More than the 5 Schifferstadt stores | Scope is intentionally narrow; not expanding |
+| Aldi, Penny, Netto as stores | Decided Phase 1: Aldi never carries the 12×1L case; Penny and Netto are not on the brother's route. The 5 tracked stores are REWE, Edeka, Lidl, Kaufland, Wasgau (modeled as individual advertisers, not the original marktguru groups) |
 | Products other than the Coca-Cola 12×1L case | Single-product app by design |
 | Other Cola pack sizes / variants as offers | Decided to track strictly the 12×1L case for cleanliness |
 | Push notifications / alerts | Brother opens and checks himself; keeps it a static PWA |
@@ -111,4 +112,4 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 ---
 *Requirements defined: 2026-06-15*
-*Last updated: 2026-06-15 after roadmap creation*
+*Last updated: 2026-06-15 — Phase 1 discuss: store set narrowed to REWE, Edeka, Lidl, Kaufland, Wasgau (individual advertisers); Aldi/Penny/Netto dropped*
