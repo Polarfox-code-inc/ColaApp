@@ -2,7 +2,7 @@
 
 ## What This Is
 
-A tiny, single-purpose web app (PWA) that tells one person — the author's brother — where the **Coca-Cola 12×1-litre case (Kasten)** is currently or soon on sale among **5 fixed supermarket stores in Schifferstadt, Germany** (REWE, Edeka/Netto, Lidl/Kaufland, Aldi/Penny, Wasgau). He adds it to his Android home screen, opens it when curious, and sees which store has the best deal — plus a price-history graph over time.
+A tiny, single-purpose web app (PWA) that tells one person — the author's brother — where the **Coca-Cola 12×1-litre case (Kasten)** is currently or soon on sale among **5 fixed supermarket stores in Schifferstadt, Germany** (REWE, Edeka, Lidl, Kaufland, Wasgau). He adds it to his Android home screen, opens it when curious, and sees which store has the best deal — plus a price-history graph over time.
 
 ## Core Value
 
@@ -42,7 +42,7 @@ When the 12×1L Coca-Cola case goes on sale at one of the 5 Schifferstadt stores
 ## Context
 
 - **Location:** Schifferstadt, Germany (PLZ 67105). Store locations are fixed and known, which simplifies targeting offers to specific local branches.
-- **Stores in scope:** REWE, Edeka and/or Netto, Lidl and/or Kaufland, Aldi and/or Penny, and Wasgau (a smaller regional Pfalz chain).
+- **Stores in scope:** REWE, Edeka, Lidl, Kaufland, and Wasgau (a smaller regional Pfalz chain) — tracked as 5 individual advertisers. **Aldi, Penny, and Netto are excluded** (decided Phase 1): Aldi never carries the 12×1L case; Penny and Netto are not on the brother's route.
 - **German offer cadence:** Supermarket offers typically run weekly (Mon–Sat/Sun) and are often announced a week ahead via leaflets ("Prospekte"/"Angebote") — so "upcoming next week" offers are meaningful and worth surfacing, not just the current week.
 - **Author has a netcup server** available as a fallback compute option if the free path proves insufficient.
 - **Single user:** The author's brother. No growth, scale, or multi-user concerns.
@@ -66,12 +66,13 @@ When the 12×1L Coca-Cola case goes on sale at one of the 5 Schifferstadt stores
 | GitHub Actions (cron scrape) + GitHub Pages (PWA) | Meets "free + no local hosting" with zero maintenance; data file decouples scraper from frontend | — Pending |
 | PWA, no push notifications | He opens and checks himself; keeps it a static, installable web app with no sideloading | — Pending |
 | Price-history graph in v1 | Nearly free since data is stored over time anyway; useful for spotting a genuinely good price | — Pending |
+| Track 5 individual advertisers — REWE, Edeka, Lidl, Kaufland, Wasgau (drop Aldi/Penny/Netto) | Aldi never carries the 12×1L case; Penny and Netto are not on the brother's route. Lidl and Kaufland tracked separately, not as a group | — Decided Phase 1 |
 
 ## Known Risks
 
 <!-- Surfaced during questioning; for research/roadmap to address. -->
 
-- **Per-store data feasibility varies.** Larger chains (REWE, Lidl, Aldi, Penny, Kaufland) more often expose machine-readable offer data or stable endpoints; smaller/regional ones — especially **Wasgau** — may only publish PDF/image leaflets, which are far harder to parse reliably. The research phase must assess each store and may recommend a fallback (e.g., an aggregator like marktguru, or accepting partial coverage) for stores without good data.
+- **Per-store data feasibility varies.** Larger chains (REWE, Edeka, Lidl, Kaufland) more often expose machine-readable offer data or stable endpoints; smaller/regional ones — especially **Wasgau** — may only publish PDF/image leaflets, which are far harder to parse reliably. The research phase must assess each store and may recommend a fallback (e.g., an aggregator like marktguru, or accepting partial coverage) for stores without good data.
 - **Pinning to exactly 12×1L may yield long "no offer" stretches.** That's accepted (it reflects reality), but the UI should make "no current offer" a clear, non-broken state.
 - **Scrapers are brittle.** Store sites/endpoints change; the scheduled job must fail gracefully and keep serving the last-known data.
 
@@ -93,4 +94,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-06-15 after initialization*
+*Last updated: 2026-06-15 — Phase 1 discuss: store set narrowed to REWE, Edeka, Lidl, Kaufland, Wasgau (individual advertisers); Aldi/Penny/Netto dropped*
