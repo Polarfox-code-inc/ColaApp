@@ -23,6 +23,14 @@ const API = "https://api.marktguru.de/api/v1/offers/search";
 const ZIP = "67105";
 const QUERY = "coca cola";
 
+// Per-attempt request timeout (each individual fetch).
+const PER_ATTEMPT_TIMEOUT_MS = 10_000;
+// Overall wall-clock cap for ONE full fetchOffers (getKeys + searchOffers,
+// retries and backoff included). Bounds total work so a hung marktguru endpoint
+// fails over to last-known data promptly instead of sitting ~74s worst-case
+// (WR-04). A deliberate bound, not emergent worst case.
+const TOTAL_DEADLINE_MS = 20_000;
+
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 /**
@@ -32,23 +40,37 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
  * final attempt. Wraps BOTH network calls so transient failures are absorbed
  * and a persistent failure routes the orchestrator to its total-failure path.
  *
+ * WR-04: when a shared `deadline` AbortSignal is supplied it is combined with
+ * the per-attempt timeout via AbortSignal.any, and the loop bails the moment
+ * the deadline has fired — including BEFORE a backoff sleep — so the whole
+ * fetchOffers is bounded regardless of per-attempt timeouts.
+ *
  * @template T
  * @param {(signal: AbortSignal) => Promise<T> | T} fn receives a fresh signal per attempt
- * @param {{retries?: number, baseMs?: number}} [opts]
+ * @param {{retries?: number, baseMs?: number, deadline?: AbortSignal}} [opts]
  * @returns {Promise<T>}
  */
-export async function withRetry(fn, { retries = 2, baseMs = 1000 } = {}) {
+export async function withRetry(fn, { retries = 2, baseMs = 1000, deadline } = {}) {
   let lastErr;
   for (let attempt = 0; attempt <= retries; attempt++) {
+    // If the shared deadline already fired, stop now rather than starting
+    // another attempt (WR-04 — bounds total wall-clock).
+    if (deadline?.aborted) break;
     // Fresh signal PER ATTEMPT — never reuse an already-fired AbortSignal.
     // A fired AbortSignal.timeout stays aborted, so a reused one would make
-    // every subsequent attempt fail instantly (undici #1926).
-    const signal = AbortSignal.timeout(10_000);
+    // every subsequent attempt fail instantly (undici #1926). The per-attempt
+    // timeout is combined with the shared deadline so whichever fires first
+    // aborts this attempt (WR-04).
+    const perAttempt = AbortSignal.timeout(PER_ATTEMPT_TIMEOUT_MS);
+    const signal = deadline ? AbortSignal.any([perAttempt, deadline]) : perAttempt;
     try {
       return await fn(signal);
     } catch (err) {
       lastErr = err;
       if (attempt === retries) break;
+      // If the deadline fired during the attempt, don't burn the backoff
+      // window — fail over immediately (WR-04).
+      if (deadline?.aborted) break;
       // Exponential backoff + jitter: ~1s then ~3s (D-11). 3 ** attempt gives
       // 1, 3; the jitter avoids synchronized retry storms.
       const delay = baseMs * 3 ** attempt + Math.floor(Math.random() * 250);
@@ -148,7 +170,13 @@ export const resolveResults = (data) =>
  * @returns {Promise<unknown[]>}
  */
 export async function fetchOffers() {
-  const keys = await withRetry(getKeys);
-  const data = await withRetry((signal) => searchOffers(keys, signal));
+  // ONE shared wall-clock deadline spanning BOTH chained calls (WR-04). Both
+  // getKeys and searchOffers share it, so the entire fetch — retries + backoff
+  // included — is bounded at TOTAL_DEADLINE_MS rather than the ~74s worst case
+  // of two independently-retried calls. On a hung endpoint the orchestrator
+  // fails over to last-known data fast.
+  const deadline = AbortSignal.timeout(TOTAL_DEADLINE_MS);
+  const keys = await withRetry(getKeys, { deadline });
+  const data = await withRetry((signal) => searchOffers(keys, signal), { deadline });
   return resolveResults(data);
 }

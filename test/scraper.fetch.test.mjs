@@ -113,6 +113,51 @@ test("getKeys throws when no island carries the bootstrap keys (WR-03)", async (
   await assert.rejects(() => getKeysFromHtml(html), /config\.apiKey not found/);
 });
 
+// --- WR-04: a shared deadline bounds total wall-clock across retries ---
+
+test("withRetry: an already-fired deadline prevents any attempt (WR-04)", async () => {
+  let calls = 0;
+  const fn = () => {
+    calls += 1;
+    throw new Error("should not be called");
+  };
+  const deadline = AbortSignal.abort(); // already aborted
+  await assert.rejects(() => withRetry(fn, { ...FAST, deadline }));
+  assert.equal(calls, 0, "no attempt should start once the deadline has fired");
+});
+
+test("withRetry: a deadline that fires mid-run stops further retries (WR-04)", async () => {
+  let calls = 0;
+  const deadline = AbortSignal.timeout(20); // fires shortly after the first attempt
+  const fn = async () => {
+    calls += 1;
+    await new Promise((r) => setTimeout(r, 40)); // outlive the deadline
+    throw new Error(`attempt ${calls}`);
+  };
+  // baseMs default would sleep ~1s; use a small one so the test stays quick but
+  // the deadline (20ms) still fires before a second attempt could complete.
+  await assert.rejects(() => withRetry(fn, { baseMs: 5, deadline }));
+  assert.equal(calls, 1, "retries stop once the shared deadline has fired");
+});
+
+test("withRetry: with a deadline each attempt still gets a non-pre-fired signal (WR-04)", async () => {
+  const signals = [];
+  const deadline = AbortSignal.timeout(10_000); // far in the future, never fires here
+  const fn = (signal) => {
+    signals.push(signal);
+    if (signals.length < 2) throw new Error("retry me");
+    return "ok";
+  };
+  const result = await withRetry(fn, { ...FAST, deadline });
+  assert.equal(result, "ok");
+  assert.equal(signals.length, 2);
+  for (const s of signals) {
+    assert.ok(s instanceof AbortSignal);
+    assert.equal(s.aborted, false, "combined signal must not be pre-fired");
+  }
+  assert.notEqual(signals[0], signals[1], "each attempt gets a distinct combined signal");
+});
+
 test("withRetry: default options allow up to 3 attempts", async () => {
   let calls = 0;
   // No opts passed -> defaults retries:2 -> still max 3 calls. Use a fn that
