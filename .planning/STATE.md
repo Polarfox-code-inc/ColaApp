@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-last_updated: "2026-06-15T18:25:17.447Z"
-last_activity: 2026-06-15 -- Phase 03 planning complete
+last_updated: "2026-06-15T18:47:42.131Z"
+last_activity: 2026-06-15
 progress:
   total_phases: 4
   completed_phases: 2
   total_plans: 11
-  completed_plans: 6
+  completed_plans: 7
   percent: 50
 ---
 
@@ -20,16 +20,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-15)
 
 **Core value:** When the 12×1L Coca-Cola case goes on sale at one of the 5 Schifferstadt stores, the app shows it — accurately, with the price and the dates it's valid.
-**Current focus:** Phase 02 — core-scraper
+**Current focus:** Phase 03 — pwa-frontend
 
 ## Current Position
 
-Phase: 3
-Plan: Not started
+Phase: 03 (pwa-frontend) — EXECUTING
+Plan: 2 of 5
 Status: Ready to execute
-Last activity: 2026-06-15 -- Phase 03 planning complete
+Last activity: 2026-06-15
 
-Progress: [██████████] 100%
+Progress: [██████░░░░] 64%
 
 ## Performance Metrics
 
@@ -58,6 +58,7 @@ Progress: [██████████] 100%
 | Phase 02 P01 | 10 min | 3 tasks | 8 files |
 | Phase 02 P02 | ~3 min | 2 tasks | 3 files |
 | Phase 02 P03 | ~12 min | 3 tasks | 5 files |
+| Phase 03 P01 | ~12 min | 3 tasks | 14 files |
 
 ## Accumulated Context
 
@@ -79,6 +80,7 @@ Recent decisions affecting current work:
 - [Phase ?]: [Phase 02-02] fetch.mjs: withRetry fresh AbortSignal.timeout per attempt (undici #1926); single key-hygienic offers/search call returns results[] (D-01/D-11/D-12)
 - [Phase ?]: [Phase 02-02] io.mjs: atomic same-dir temp+rename (EXDEV-safe); readPrior ENOENT-tolerant cold start; history append-only (DATA-05/D-02/D-06)
 - [Phase ?]: [Phase 02-03] Scraper orchestrator wired: index.mjs fault-isolated per-store loop + validate-before-write (T-02-08) + atomic write order (current-offers->status->history); merge.mjs verbatim carry-forward, cold-start no_offer/error, frozen-vs-bumped two timestamps (D-04/D-05/D-06); npm run scrape; 84/84 green
+- [Phase ?]: [Phase 03-01] web/ Vite PWA scaffold: pinned vite@^7/vite-plugin-pwa@^1.3.0/uplot@^1.6.32; generateSW manifest (standalone, theme #1A1D21, separate any/maskable icons) + StaleWhileRevalidate /data/*.json(l) route; UI-SPEC :root tokens (D-01) + hero->cards->graph->footer shell (D-02); npm run build proven
 
 ### Pending Todos
 
@@ -98,6 +100,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-06-15T17:52:24.943Z
+Last session: 2026-06-15T18:47:23.731Z
 Stopped at: Phase 3 UI-SPEC approved
-Resume file: .planning/phases/03-pwa-frontend/03-UI-SPEC.md
+Resume file: None

@@ -33,9 +33,9 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### PWA & Delivery
 
-- [ ] **PWA-01**: User can install the app to the Android home screen (web manifest + service worker, no sideloading, no app store)
-- [ ] **PWA-02**: User can open the app offline and still see the last-fetched data
-- [ ] **PWA-03**: When online, the app loads fresh data rather than serving stale prices indefinitely
+- [x] **PWA-01**: User can install the app to the Android home screen (web manifest + service worker, no sideloading, no app store)
+- [x] **PWA-02**: User can open the app offline and still see the last-fetched data
+- [x] **PWA-03**: When online, the app loads fresh data rather than serving stale prices indefinitely
 
 ### Infrastructure
 
@@ -99,9 +99,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | HIST-01 | Phase 3 | Pending |
 | HIST-02 | Phase 3 | Pending |
 | HIST-03 | Phase 3 | Pending |
-| PWA-01 | Phase 3 | Pending |
-| PWA-02 | Phase 3 | Pending |
-| PWA-03 | Phase 3 | Pending |
+| PWA-01 | Phase 3 | Complete |
+| PWA-02 | Phase 3 | Complete |
+| PWA-03 | Phase 3 | Complete |
 | INFR-01 | Phase 4 | Pending |
 | INFR-02 | Phase 4 | Pending |
 | INFR-03 | Phase 4 | Pending |
