@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#1A1D21" />
+    <title>ColaApp</title>
+    <link rel="stylesheet" href="/src/styles.css" />
+  </head>
+  <body>
+    <!--
+      Single scrolling screen (D-02). Mount points are empty here; Plan 04 owns the
+      render layer (main.js) and fills these in the locked top->bottom order:
+      hero -> 5 store cards -> price-history graph -> freshness footer.
+    -->
+    <main class="app">
+      <section id="hero" class="section section--hero" aria-label="Bestes Angebot"></section>
+      <section id="cards" class="section section--cards" aria-label="Angebote je Markt"></section>
+      <section id="graph" class="section section--graph" aria-label="Preisverlauf"></section>
+      <footer id="footer" class="section section--footer"></footer>
+    </main>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

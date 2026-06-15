@@ -1,0 +1,102 @@
+/* web/src/styles.css
+ * UI-SPEC design-token contract (Phase 3). Neutral / minimal utility palette (D-01):
+ * NO Coca-Cola-branded body styling — Coca-Cola red is never used in the UI body;
+ * the only "brand" chrome is the neutral-dark theme_color in the manifest (D-20).
+ * This file declares ALL tokens once on :root + the single-screen shell layout (D-02).
+ * Component markup is owned by Plan 04 (render layer); only tokens + shell + mount hooks here.
+ */
+
+:root {
+  /* ---- Color: neutral light theme, 60/30/10 (D-01 / UI-SPEC Color) ---- */
+  --color-bg: #ffffff; /* dominant 60% — page/hero/plot background */
+  --color-surface: #f4f5f7; /* secondary 30% — store card + footer surfaces */
+  --color-accent: #0b7a3b; /* accent 10% — calm green, reserved for active/best-deal affirmation */
+  --color-text: #1a1d21; /* primary body/heading text (16.91:1 on white) */
+  --color-text-muted: #5b616b; /* secondary meta (dates, €/l label, footer) */
+  --color-border: #d8dade; /* 1px hairline dividers (not text) */
+  --color-theme-dark: #1a1d21; /* PWA chrome only (manifest theme_color, D-20) — NOT a UI bg */
+
+  /* ---- Semantic state token pairs (each always paired with icon + label; WCAG-AA) ---- */
+  --color-info: #1b5fb0; /* unavailable / upcoming — info blue "i" */
+  --color-info-tint: #e8f0fb;
+  --color-warning: #9a5b00; /* error / stale — amber "!" */
+  --color-warning-tint: #fcf1dc;
+  --color-muted: #595e66; /* no_offer — grey dash */
+  --color-muted-tint: #ecedef;
+  --color-active: #0b7a3b; /* offer active — accent green "✓" */
+  --color-active-tint: #ffffff; /* active shows on white (no tint fill), per UI-SPEC */
+
+  /* ---- Spacing scale (multiples of 4; 8-point base) ---- */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 48px;
+  --space-3xl: 64px;
+
+  /* ---- Border radius ---- */
+  --radius-sm: 8px; /* badges / chips */
+  --radius-md: 12px; /* cards / hero */
+
+  /* ---- Typography ---- */
+  --font-stack: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-display: 28px; /* hero best-deal price (600) */
+  --font-heading: 20px; /* section labels / store name (600) */
+  --font-body: 16px; /* default text (400) */
+  --font-label: 13px; /* state chips / meta / axis (mobile legibility floor) */
+  --weight-regular: 400;
+  --weight-semibold: 600;
+
+  /* ---- Layout ---- */
+  --content-max-width: 480px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-stack);
+  font-size: var(--font-body);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---- Page shell: single narrow scroll column (D-02 / UI-SPEC Page shell) ---- */
+.app {
+  max-width: var(--content-max-width);
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl); /* 32px between the four sections */
+  /* 48px(2xl) top/bottom, 16px(md) sides; honor standalone safe-area insets */
+  padding: calc(var(--space-2xl) + env(safe-area-inset-top, 0px))
+    calc(var(--space-md) + env(safe-area-inset-right, 0px))
+    calc(var(--space-2xl) + env(safe-area-inset-bottom, 0px))
+    calc(var(--space-md) + env(safe-area-inset-left, 0px));
+}
+
+/* Mount-point styling hooks only — render layer (Plan 04) builds the content. */
+.section {
+  display: block;
+}
+
+.section--footer {
+  text-align: center;
+  color: var(--color-text-muted);
+  font-size: var(--font-label);
+}
+
+/* Price utility: tabular figures so digits align across the 5 cards + hero. */
+.price {
+  font-variant-numeric: tabular-nums;
+}
