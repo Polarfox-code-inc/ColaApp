@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-last_updated: "2026-06-15T16:08:15.568Z"
-last_activity: 2026-06-15 -- Phase 02 planning complete
+last_updated: "2026-06-15T16:36:29.302Z"
+last_activity: 2026-06-15
 progress:
   total_phases: 4
   completed_phases: 1
   total_plans: 6
-  completed_plans: 3
+  completed_plans: 4
   percent: 25
 ---
 
@@ -20,16 +20,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-15)
 
 **Core value:** When the 12×1L Coca-Cola case goes on sale at one of the 5 Schifferstadt stores, the app shows it — accurately, with the price and the dates it's valid.
-**Current focus:** Phase 01 — data-contract-source-spike
+**Current focus:** Phase 02 — core-scraper
 
 ## Current Position
 
-Phase: 2
-Plan: Not started
+Phase: 02 (core-scraper) — EXECUTING
+Plan: 2 of 3
 Status: Ready to execute
-Last activity: 2026-06-15 -- Phase 02 planning complete
+Last activity: 2026-06-15
 
-Progress: [██████████] 100%
+Progress: [███████░░░] 67%
 
 ## Performance Metrics
 
@@ -54,6 +54,7 @@ Progress: [██████████] 100%
 | Phase 01 P01 | 1 session | 3 tasks | 8 files |
 | Phase 01 P02 | ~5 min | 3 tasks | 13 files |
 | Phase 01 P01-03 | 12 min | 2 tasks | 15 files |
+| Phase 02 P01 | 10 min | 3 tasks | 8 files |
 
 ## Accumulated Context
 
@@ -71,6 +72,7 @@ Recent decisions affecting current work:
 - [Phase 01-02]: StoreOffer schemas use .strict() so a stray pfand/deposit key is rejected (hard-enforces D-10); status:offer offer-field requirement via superRefine
 - [Phase 01-02]: Six UI-state mocks (offer/no_offer/upcoming/error/stale/unavailable) + 23-test node:test suite prove the contract represents every state and rejects float price/unknown status
 - [Phase ?]: [Phase 01-03] Strict 12x1L matcher (contract/matcher.mjs): pure classify(offer)->accept|reject|review over normalized brand+title+description text (NOT title-only); brand gate first then size gate; mixed-brand/Kasten-no-size -> needsReview (D-08); Pfand ignored (D-10); ReDoS-safe regexes; 15-test suite, full 38/38 green
+- [Phase ?]: [Phase 02-01] Scraper pure-transform core (clock/normalize/filter/select/dedup) built TDD; reuses frozen classify + parseHistoryLine verbatim; Berlin-day via Intl never UTC slice (D-09); dedup on frozen D-14 key
 
 ### Pending Todos
 
@@ -90,6 +92,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-06-15T15:44:11.264Z
+Last session: 2026-06-15T16:36:10.509Z
 Stopped at: Phase 2 context gathered
-Resume file: .planning/phases/02-core-scraper/02-CONTEXT.md
+Resume file: None

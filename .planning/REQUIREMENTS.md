@@ -9,10 +9,10 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Data Acquisition
 
-- [ ] **DATA-01**: System auto-fetches Coca-Cola 12×1L case offers for the 5 target Schifferstadt stores — **REWE, Edeka, Lidl, Kaufland, Wasgau** (individual advertisers; PLZ 67105) — on a schedule, with no manual entry
+- [x] **DATA-01**: System auto-fetches Coca-Cola 12×1L case offers for the 5 target Schifferstadt stores — **REWE, Edeka, Lidl, Kaufland, Wasgau** (individual advertisers; PLZ 67105) — on a schedule, with no manual entry
 - [x] **DATA-02**: System matches strictly the 12×1L case and excludes other Cola SKUs (1.25L 6-packs, can trays, Zero/light unless the 12×1L case, store-brand colas)
-- [ ] **DATA-03**: System normalizes each offer to price (excluding Pfand), €/litre, store, and valid-from/valid-to dates
-- [ ] **DATA-04**: System appends each offer's price to a price history, deduplicated so repeated runs do not create duplicate entries
+- [x] **DATA-03**: System normalizes each offer to price (excluding Pfand), €/litre, store, and valid-from/valid-to dates
+- [x] **DATA-04**: System appends each offer's price to a price history, deduplicated so repeated runs do not create duplicate entries
 - [ ] **DATA-05**: A failed or unavailable store fetch is isolated — the run continues, last-known data is preserved, and the affected store is marked stale
 - [ ] **DATA-06**: System records per-store fetch status and a last-updated timestamp
 
@@ -84,10 +84,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| DATA-01 | Phase 2 | Pending |
+| DATA-01 | Phase 2 | Complete |
 | DATA-02 | Phase 1 | Complete |
-| DATA-03 | Phase 2 | Pending |
-| DATA-04 | Phase 2 | Pending |
+| DATA-03 | Phase 2 | Complete |
+| DATA-04 | Phase 2 | Complete |
 | DATA-05 | Phase 2 | Pending |
 | DATA-06 | Phase 2 | Pending |
 | OFFR-01 | Phase 3 | Pending |
