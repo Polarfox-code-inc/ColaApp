@@ -78,7 +78,21 @@ Decimal phases appear between their surrounding integers in numeric order.
   4. The user sees a "last updated" timestamp with a visible warning when data is stale
   5. The user can install the app to the Android home screen, open it offline to see last-fetched data, and gets fresh data (not indefinitely stale prices) when online
 
-**Plans**: TBD
+**Plans**: 5 plans
+
+**Wave 1**
+
+- [ ] 03-01-PLAN.md — Scaffold web/ Vite PWA: pinned toolchain, VitePWA generateSW (manifest + StaleWhileRevalidate data route), app shell, design tokens, trademark-safe icons, dev fixtures (Wave 1)
+- [ ] 03-02-PLAN.md — Pure clock-injected derivation + de-DE formatters: best-deal, upcoming/active, per-store staleness, card sort, currency/date/weekday/timestamp — unit-tested (Wave 1)
+- [ ] 03-03-PLAN.md — Price-history chart: pure data-prep (shared axis, null gaps, point counts, Wasgau excluded) + uPlot render (spanGaps:false, markers-only <3 pts, palette, legend, cold-start) (Wave 1)
+
+**Wave 2** *(blocked on Wave 1 completion)*
+
+- [ ] 03-04-PLAN.md — Integration: tolerant fetch/parse load boundary, hero/card/footer DOM render (three distinct states, upcoming badge, stale chip, footer), main.js orchestrator + ?state= dev switch (Wave 2)
+
+**Wave 3** *(blocked on Wave 2 completion)*
+
+- [ ] 03-05-PLAN.md — Human-verify checkpoint: build + localhost preview, README, and manual install / offline / fresh-when-online + six-state visual verification (Wave 3)
 **UI hint**: yes
 
 ### Phase 4: Live Integration, All Stores & Hardening
@@ -105,5 +119,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 |-------|----------------|--------|-----------|
 | 1. Data Contract & Source Spike | 3/3 | Complete    | 2026-06-15 |
 | 2. Core Scraper | 3/3 | Complete    | 2026-06-15 |
-| 3. PWA Frontend | 0/TBD | Not started | - |
+| 3. PWA Frontend | 0/5 | Not started | - |
 | 4. Live Integration, All Stores & Hardening | 0/TBD | Not started | - |
