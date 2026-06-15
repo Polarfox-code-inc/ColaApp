@@ -1,0 +1,9 @@
+{
+  "_label": "captured-live",
+  "_source": "spike/fixtures/raw-67105-search.json results[7] (verbatim). 10 x 0,33-l can tray — wrong pack, reject (D-07).",
+  "id": 900013,
+  "brand": { "name": "Coca-Cola", "uniqueName": "coca-cola", "id": 104494 },
+  "product": { "id": 900013, "name": "Cola", "description": "" },
+  "description": "oder Coca-Cola Zero Friendspack koffeinhaltig, je 10 x 0,33-l-DosenPckg.  zzgl. 2.50 Pfand",
+  "price": 5.99
+}

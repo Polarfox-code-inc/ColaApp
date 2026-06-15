@@ -1,0 +1,9 @@
+{
+  "_label": "synthesized-from-real-text",
+  "_source": "RESEARCH 'Strict 12x1L Matcher' verbatim live pack token '12 x 1-l' + flavor 'Light' (D-06 Classic/Zero/Light all match). Synthesized positive — no real 12x1L case live this week.",
+  "id": 900003,
+  "brand": { "name": "Coca-Cola", "uniqueName": "coca-cola", "id": 104494 },
+  "product": { "id": 900003, "name": "Cola", "description": "Light koffeinhaltig" },
+  "description": "Coca-Cola Light 12 x 1-l case 11,99 €",
+  "price": 11.99
+}

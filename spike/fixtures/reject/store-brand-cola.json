@@ -1,0 +1,9 @@
+{
+  "_label": "synthesized-from-real-text",
+  "_source": "RESEARCH matcher rule 1 'Brand gate' store-brand list (ja!, gut&günstig, k-classic, vita cola, river, freeway, pepsi, fritz). 'River Cola' is REWE's own discount cola; 12 x 1 l pack would otherwise size-match but a non-Coca-Cola brand must reject (D-07).",
+  "id": 900017,
+  "brand": { "name": "ja!", "uniqueName": "ja", "id": 0 },
+  "product": { "id": 900017, "name": "Cola", "description": "River Cola koffeinhaltig" },
+  "description": "River Cola 12 x 1 l zzgl. 3,30 Pfand 4,99 €",
+  "price": 4.99
+}

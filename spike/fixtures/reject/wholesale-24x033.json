@@ -1,0 +1,9 @@
+{
+  "_label": "synthesized-from-real-text",
+  "_source": "RESEARCH 'Strict 12x1L Matcher' verbatim live string '24 x 0,33 l Dose ... NUR FÜR GROSSHÄNDLER'. Wholesale can tray — wrong pack + Dose, reject (D-07).",
+  "id": 900014,
+  "brand": { "name": "Coca-Cola", "uniqueName": "coca-cola", "id": 104494 },
+  "product": { "id": 900014, "name": "Cola", "description": "" },
+  "description": "24 x 0,33 l Dose koffeinhaltig NUR FÜR GROSSHÄNDLER zzgl. 6,00 Pfand",
+  "price": 13.99
+}

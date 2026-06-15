@@ -1,0 +1,9 @@
+{
+  "_label": "captured-live",
+  "_source": "spike/fixtures/raw-67105-search.json results[8] (verbatim). 6 x 0,33-l can/bottle pack — wrong pack, reject (D-07).",
+  "id": 900012,
+  "brand": { "name": "Coca-Cola", "uniqueName": "coca-cola", "id": 104494 },
+  "product": { "id": 900012, "name": "Cola", "description": "" },
+  "description": "HINWEIS: MIT APP 0,20 € REWE BONUS, koffeinhaltig, je 6 x 0,33-l-Fl.-Pckg.  zzgl. 1.50 Pfand",
+  "price": 3.99
+}

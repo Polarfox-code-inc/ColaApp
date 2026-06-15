@@ -1,0 +1,9 @@
+{
+  "_label": "synthesized-from-real-text",
+  "_source": "RESEARCH 'Strict 12x1L Matcher' fixtures list: 'an offer saying Kasten with no explicit per-bottle size'. German offers sometimes list 'Kasten' without the '12 x 1 l' token; size is ambiguous and there is no contradicting disqualifier -> needsReview (D-08), not dropped.",
+  "id": 900022,
+  "brand": { "name": "Coca-Cola", "uniqueName": "coca-cola", "id": 104494 },
+  "product": { "id": 900022, "name": "Cola", "description": "koffeinhaltig" },
+  "description": "Coca-Cola Kasten versch. Sorten zzgl. Pfand 9,99 €",
+  "price": 9.99
+}

@@ -1,0 +1,9 @@
+{
+  "_label": "synthesized-from-real-text",
+  "_source": "RESEARCH 'Strict 12x1L Matcher' verbatim live string '12 x 1-l case ... (Fanta/Sprite/Mezzo Mix), 9,99 €' (marktguru.de/bl/coca-cola/koeln). Mixed-brand phrasing ('oder Fanta/Sprite/Mezzo Mix') is corroborated by captured results[1] 'MEZZO MIX oder FANTA'. A 12x1L case that bundles sibling brands is ambiguous -> needsReview (D-08), not silently accepted.",
+  "id": 900021,
+  "brand": { "name": "Coca-Cola", "uniqueName": "coca-cola", "id": 104494 },
+  "product": { "id": 900021, "name": "Cola", "description": "koffeinhaltig" },
+  "description": "Coca-Cola oder Fanta/Sprite/Mezzo Mix 12 x 1-l case versch. Sorten zzgl. 3,30 Pfand 9,99 €",
+  "price": 9.99
+}

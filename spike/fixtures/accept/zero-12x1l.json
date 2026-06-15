@@ -1,0 +1,9 @@
+{
+  "_label": "synthesized-from-real-text",
+  "_source": "RESEARCH 'Strict 12x1L Matcher' verbatim live pack token '12 x 1-l' + flavor 'Zero' (observed in captures, e.g. 'oder Coca-Cola Zero'). Synthesized positive (D-06 flavor-permissive) — no real 12x1L case live this week.",
+  "id": 900002,
+  "brand": { "name": "Coca-Cola", "uniqueName": "coca-cola", "id": 104494 },
+  "product": { "id": 900002, "name": "Cola", "description": "Zero koffeinhaltig" },
+  "description": "Coca-Cola Zero 12 x 1-l case zzgl. 3,30 Pfand 11,99 €",
+  "price": 11.99
+}

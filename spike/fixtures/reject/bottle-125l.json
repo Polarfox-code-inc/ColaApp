@@ -1,0 +1,9 @@
+{
+  "_label": "captured-live",
+  "_source": "spike/fixtures/raw-67105-search.json results[9] (verbatim). 1,25-l single bottle — wrong size, reject (D-07).",
+  "id": 900011,
+  "brand": { "name": "Coca-Cola", "uniqueName": "coca-cola", "id": 104494 },
+  "product": { "id": 900011, "name": "Cola", "description": "" },
+  "description": "versch. Sorten, teilweise koffeinhaltig, je 1,25-l-Fl. zzgl. 0.25 Pfand",
+  "price": 1.19
+}
