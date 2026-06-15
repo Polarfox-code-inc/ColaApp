@@ -94,4 +94,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-06-15 — Phase 1 discuss: store set narrowed to REWE, Edeka, Lidl, Kaufland, Wasgau (individual advertisers); Aldi/Penny/Netto dropped*
+*Last updated: 2026-06-15 — Phase 2 complete: fault-isolated core scraper (fetch → filter → select → normalize → merge → validate → atomic write) built on the frozen schema, 96/96 tests green. Requirements remain Active (not yet Validated) — nothing is live to the brother until the cron + Pages loop ships in Phase 4.*
