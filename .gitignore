@@ -1,0 +1,11 @@
+# Dependencies
+node_modules/
+
+# Logs
+*.log
+
+# Secrets — scraped marktguru apiKey/clientKey live only in process memory,
+# are NEVER written to disk or committed (RESEARCH Security Domain, V14).
+.env
+.env.*
+*.key

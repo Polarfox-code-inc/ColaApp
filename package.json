@@ -1,0 +1,27 @@
+{
+  "name": "colaapp",
+  "version": "1.0.0",
+  "description": "Tells one person where the Coca-Cola 12x1L case is on sale among 5 fixed Schifferstadt supermarkets (PWA over a marktguru-fed data file).",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test": "node --test",
+    "probe": "node spike/probe.mjs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Polarfox-code-inc/ColaApp.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Polarfox-code-inc/ColaApp/issues"
+  },
+  "homepage": "https://github.com/Polarfox-code-inc/ColaApp#readme",
+  "dependencies": {
+    "zod": "^3.25.76"
+  }
+}
