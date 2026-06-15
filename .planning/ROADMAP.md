@@ -14,7 +14,7 @@ ColaApp delivers one answer to one person: where is the Coca-Cola 12×1L case on
 Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Data Contract & Source Spike** - Freeze the JSON file contract and prove marktguru returns the 12×1L case across all 5 stores (completed 2026-06-15)
-- [ ] **Phase 2: Core Scraper** - Fault-isolated ETL that fetches, normalizes, and appends a deduplicated price history
+- [x] **Phase 2: Core Scraper** - Fault-isolated ETL that fetches, normalizes, and appends a deduplicated price history (completed 2026-06-15)
 - [ ] **Phase 3: PWA Frontend** - Installable offline PWA rendering best deal, per-store states, upcoming offers, and price history
 - [ ] **Phase 4: Live Integration, All Stores & Hardening** - Wire the free cron + Pages loop, land all 5 adapters, and harden against silent failure
 
@@ -63,7 +63,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 **Wave 2** *(blocked on Wave 1 completion)*
 
-- [ ] 02-03-PLAN.md — Orchestrator + merge: fault-isolated per-store build, carry-forward/cold-start serialization, two-timestamp status, schema-validated atomic writes, `npm run scrape`, end-to-end fixture test (Wave 2)
+- [x] 02-03-PLAN.md — Orchestrator + merge: fault-isolated per-store build, carry-forward/cold-start serialization, two-timestamp status, schema-validated atomic writes, `npm run scrape`, end-to-end fixture test (Wave 2)
 
 ### Phase 3: PWA Frontend
 
@@ -104,6 +104,6 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Data Contract & Source Spike | 3/3 | Complete    | 2026-06-15 |
-| 2. Core Scraper | 2/3 | In Progress|  |
+| 2. Core Scraper | 3/3 | Complete   | 2026-06-15 |
 | 3. PWA Frontend | 0/TBD | Not started | - |
 | 4. Live Integration, All Stores & Hardening | 0/TBD | Not started | - |
