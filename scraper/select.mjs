@@ -9,13 +9,29 @@
 import { classify } from "../contract/matcher.mjs";
 import { berlinDay, toStoreOffer } from "./normalize.mjs";
 
+// Berlin-day trim that tolerates an unparseable instant. `validityDates` is
+// untrusted marktguru JSON: a missing/null/garbage from|to makes `new Date(iso)`
+// an Invalid Date, and feeding that to Intl.format throws RangeError. Returning
+// null instead lets `berlinRanges` DROP just that range — so one malformed offer
+// is skipped (per-offer isolation), never poisoning the whole store (WR-01).
+const safeBerlinDay = (iso) => {
+  const d = new Date(iso);
+  return Number.isNaN(d.getTime()) ? null : berlinDay(iso);
+};
+
 // All marktguru validity ranges of an offer, trimmed to Berlin calendar days.
+// Ranges whose from|to cannot be parsed are dropped (WR-01), preserving the
+// accept/upcoming/active semantics for every valid range that remains. Because
+// only parseable ranges survive here, the later toStoreOffer(best.range.raw)
+// call can never hit an Invalid Date either.
 const berlinRanges = (offer) =>
-  (offer?.validityDates ?? []).map((r) => ({
-    raw: r,
-    from: berlinDay(r?.from),
-    to: berlinDay(r?.to),
-  }));
+  (offer?.validityDates ?? [])
+    .map((r) => ({
+      raw: r,
+      from: safeBerlinDay(r?.from),
+      to: safeBerlinDay(r?.to),
+    }))
+    .filter((r) => r.from && r.to);
 
 // The active range (covers `today`) if any, else the earliest future range.
 // Returns the chosen { raw, from, to } or null when the offer has no usable range.

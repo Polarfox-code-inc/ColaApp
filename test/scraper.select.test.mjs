@@ -154,3 +154,34 @@ test("empty candidate list -> no_offer", () => {
   const chosen = selectForStore([], NOW);
   assert.equal(chosen.status, "no_offer");
 });
+
+// --- WR-01: per-offer fault isolation for malformed validity ranges ---
+
+test("a malformed validity range (null from/to) is skipped, never throws (WR-01)", () => {
+  const bad = accept(9.99, [range(null, undefined)]);
+  // The lone bad offer must not throw and must degrade to no_offer, not error.
+  assert.doesNotThrow(() => selectForStore([bad], NOW));
+  assert.equal(selectForStore([bad], NOW).status, "no_offer");
+});
+
+test("a malformed offer does not poison a sibling valid offer for the same store (WR-01)", () => {
+  const activeRange = range("2026-06-14T22:00:00Z", "2026-06-20T21:59:00Z"); // covers NOW
+  const bad = accept(5.0, [range("not-a-date", null)]); // unparseable -> dropped
+  const good = accept(11.99, [activeRange]);
+  // Order the bad one first to prove it cannot abort selection of the good one.
+  const chosen = selectForStore([bad, good], NOW);
+  assert.equal(chosen.status, "offer");
+  assert.equal(chosen.price, 1199); // the valid sibling won, store NOT downgraded
+  assert.equal(chosen.validFrom, "2026-06-15");
+});
+
+test("an offer with one bad range and one valid range keeps the valid range (WR-01)", () => {
+  const multi = accept(7.77, [
+    range("garbage", "also-garbage"), // dropped
+    range("2026-06-14T22:00:00Z", "2026-06-20T21:59:00Z"), // active, kept
+  ]);
+  const chosen = selectForStore([multi], NOW);
+  assert.equal(chosen.status, "offer");
+  assert.equal(chosen.validFrom, "2026-06-15");
+  assert.equal(chosen.price, 777);
+});
