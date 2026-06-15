@@ -84,7 +84,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] 03-01-PLAN.md — Scaffold web/ Vite PWA: pinned toolchain, VitePWA generateSW (manifest + StaleWhileRevalidate data route), app shell, design tokens, trademark-safe icons, dev fixtures (Wave 1)
 - [x] 03-02-PLAN.md — Pure clock-injected derivation + de-DE formatters: best-deal, upcoming/active, per-store staleness, card sort, currency/date/weekday/timestamp — unit-tested (Wave 1)
-- [ ] 03-03-PLAN.md — Price-history chart: pure data-prep (shared axis, null gaps, point counts, Wasgau excluded) + uPlot render (spanGaps:false, markers-only <3 pts, palette, legend, cold-start) (Wave 1)
+- [x] 03-03-PLAN.md — Price-history chart: pure data-prep (shared axis, null gaps, point counts, Wasgau excluded) + uPlot render (spanGaps:false, markers-only <3 pts, palette, legend, cold-start) (Wave 1)
 
 **Wave 2** *(blocked on Wave 1 completion)*
 
@@ -119,5 +119,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 |-------|----------------|--------|-----------|
 | 1. Data Contract & Source Spike | 3/3 | Complete    | 2026-06-15 |
 | 2. Core Scraper | 3/3 | Complete    | 2026-06-15 |
-| 3. PWA Frontend | 2/5 | In Progress|  |
+| 3. PWA Frontend | 3/5 | In Progress|  |
 | 4. Live Integration, All Stores & Hardening | 0/TBD | Not started | - |

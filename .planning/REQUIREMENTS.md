@@ -27,9 +27,9 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Price History
 
-- [ ] **HIST-01**: User sees a price-history graph of the 12×1L case best price over time
-- [ ] **HIST-02**: The graph handles sparse/early data gracefully — no misleading trend with too few points, and no interpolation across "no offer" gaps
-- [ ] **HIST-03**: The graph shows a separate per-store line (REWE, Edeka, Lidl, Kaufland; Wasgau has none — always unavailable) — *pulled into v1 during Phase 3 discuss*
+- [x] **HIST-01**: User sees a price-history graph of the 12×1L case best price over time
+- [x] **HIST-02**: The graph handles sparse/early data gracefully — no misleading trend with too few points, and no interpolation across "no offer" gaps
+- [x] **HIST-03**: The graph shows a separate per-store line (REWE, Edeka, Lidl, Kaufland; Wasgau has none — always unavailable) — *pulled into v1 during Phase 3 discuss*
 
 ### PWA & Delivery
 
@@ -96,9 +96,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | OFFR-04 | Phase 3 | Pending |
 | OFFR-05 | Phase 3 | Complete |
 | OFFR-06 | Phase 3 | Complete |
-| HIST-01 | Phase 3 | Pending |
-| HIST-02 | Phase 3 | Pending |
-| HIST-03 | Phase 3 | Pending |
+| HIST-01 | Phase 3 | Complete |
+| HIST-02 | Phase 3 | Complete |
+| HIST-03 | Phase 3 | Complete |
 | PWA-01 | Phase 3 | Complete |
 | PWA-02 | Phase 3 | Complete |
 | PWA-03 | Phase 3 | Complete |
