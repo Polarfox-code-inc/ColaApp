@@ -1,0 +1,24 @@
+{
+  "name": "colaapp-web",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "ColaApp PWA frontend — single-screen vanilla-JS PWA reading the frozen marktguru-fed data contract.",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "uplot": "^1.6.32",
+    "vite": "^7",
+    "vite-plugin-pwa": "^1.3.0"
+  },
+  "devDependencies": {
+    "@vite-pwa/assets-generator": "^1.0.2"
+  }
+}
