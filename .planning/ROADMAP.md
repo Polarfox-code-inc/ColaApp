@@ -88,7 +88,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 **Wave 2** *(blocked on Wave 1 completion)*
 
-- [ ] 03-04-PLAN.md — Integration: tolerant fetch/parse load boundary, hero/card/footer DOM render (three distinct states, upcoming badge, stale chip, footer), main.js orchestrator + ?state= dev switch (Wave 2)
+- [x] 03-04-PLAN.md — Integration: tolerant fetch/parse load boundary, hero/card/footer DOM render (three distinct states, upcoming badge, stale chip, footer), main.js orchestrator + ?state= dev switch (Wave 2)
 
 **Wave 3** *(blocked on Wave 2 completion)*
 
@@ -119,5 +119,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 |-------|----------------|--------|-----------|
 | 1. Data Contract & Source Spike | 3/3 | Complete    | 2026-06-15 |
 | 2. Core Scraper | 3/3 | Complete    | 2026-06-15 |
-| 3. PWA Frontend | 3/5 | In Progress|  |
+| 3. PWA Frontend | 4/5 | In Progress|  |
 | 4. Live Integration, All Stores & Hardening | 0/TBD | Not started | - |
