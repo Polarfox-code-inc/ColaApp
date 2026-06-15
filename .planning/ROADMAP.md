@@ -28,7 +28,10 @@ Decimal phases appear between their surrounding integers in numeric order.
   2. Real captured marktguru payloads exist as fixtures, and a strict matcher accepts the 12×1L case while rejecting 1.25L 6-packs, can trays, Zero/light non-case SKUs, and store-brand colas
   3. A frozen `data/*.json` schema (current-offers, price-history, status) exists with realistic mocks for every UI state: offer present, no offer, upcoming only, store errored, and stale
   4. The Pfand convention (price excludes Pfand) and the "no offer" vs "error" vs "unavailable" distinctions are decided and encoded in the schema and shared types
-**Plans**: TBD
+**Plans**: 3 plans
+- [ ] 01-01-scaffold-live-probe-PLAN.md — Scaffold the Node 22 project and run the live marktguru probe; capture the raw payload, advertiser slugs, and the Wasgau verdict (Wave 1)
+- [ ] 01-02-frozen-contract-schema-PLAN.md — Freeze the 3-file zod contract (D-01..D-14) and author a passing mock for every UI state (Wave 2)
+- [ ] 01-03-strict-matcher-PLAN.md — Implement and fixture-test the strict 12×1L matcher (DATA-02) via TDD (Wave 2)
 
 ### Phase 2: Core Scraper
 **Goal**: A scheduled, fault-isolated ETL produces real data files on the frozen schema — fetching the 12×1L case automatically, normalizing it, and maintaining a clean append-only price history.
@@ -74,7 +77,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Data Contract & Source Spike | 0/TBD | Not started | - |
+| 1. Data Contract & Source Spike | 0/3 | Not started | - |
 | 2. Core Scraper | 0/TBD | Not started | - |
 | 3. PWA Frontend | 0/TBD | Not started | - |
 | 4. Live Integration, All Stores & Hardening | 0/TBD | Not started | - |
