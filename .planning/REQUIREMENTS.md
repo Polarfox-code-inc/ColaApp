@@ -29,6 +29,7 @@ Requirements for initial release. Each maps to roadmap phases.
 
 - [ ] **HIST-01**: User sees a price-history graph of the 12×1L case best price over time
 - [ ] **HIST-02**: The graph handles sparse/early data gracefully — no misleading trend with too few points, and no interpolation across "no offer" gaps
+- [ ] **HIST-03**: The graph shows a separate per-store line (REWE, Edeka, Lidl, Kaufland; Wasgau has none — always unavailable) — *pulled into v1 during Phase 3 discuss*
 
 ### PWA & Delivery
 
@@ -48,7 +49,6 @@ Deferred to a future release. Tracked but not in the current roadmap.
 
 ### History Polish
 
-- **HIST-03**: Per-store history overlay lines on the graph
 - **HIST-04**: All-time-low reference line on the graph
 
 ### Presentation
@@ -98,6 +98,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | OFFR-06 | Phase 3 | Pending |
 | HIST-01 | Phase 3 | Pending |
 | HIST-02 | Phase 3 | Pending |
+| HIST-03 | Phase 3 | Pending |
 | PWA-01 | Phase 3 | Pending |
 | PWA-02 | Phase 3 | Pending |
 | PWA-03 | Phase 3 | Pending |
@@ -106,10 +107,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 | INFR-03 | Phase 4 | Pending |
 
 **Coverage:**
-- v1 requirements: 20 total
-- Mapped to phases: 20 ✓
+- v1 requirements: 21 total
+- Mapped to phases: 21 ✓
 - Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-06-15*
-*Last updated: 2026-06-15 — Phase 1 discuss: store set narrowed to REWE, Edeka, Lidl, Kaufland, Wasgau (individual advertisers); Aldi/Penny/Netto dropped*
+*Last updated: 2026-06-15 — Phase 3 discuss: HIST-03 (per-store history lines) pulled from v2 into v1/Phase 3 by user decision*
+*Earlier: 2026-06-15 — Phase 1 discuss: store set narrowed to REWE, Edeka, Lidl, Kaufland, Wasgau (individual advertisers); Aldi/Penny/Netto dropped*

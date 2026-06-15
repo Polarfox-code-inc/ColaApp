@@ -69,12 +69,12 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 **Goal**: An installable, offline-capable PWA (built against the Phase 1 mocks) answers "where is the best deal" at a glance and renders every offer and history state honestly.
 **Depends on**: Phase 1
-**Requirements**: OFFR-01, OFFR-02, OFFR-03, OFFR-04, OFFR-05, OFFR-06, HIST-01, HIST-02, PWA-01, PWA-02, PWA-03
+**Requirements**: OFFR-01, OFFR-02, OFFR-03, OFFR-04, OFFR-05, OFFR-06, HIST-01, HIST-02, HIST-03, PWA-01, PWA-02, PWA-03
 **Success Criteria** (what must be TRUE):
 
   1. The user sees a hero "best deal right now" answer (store + price + valid-until), or a clear "no current offer" message when nothing qualifies
   2. The user sees a card per store with the current price, €/litre, and valid dates, where "kein Angebot", "not automatically available" (e.g. Wasgau), and a fetch error are three visually distinct states
-  3. The user sees upcoming (future-dated) offers and a price-history graph that handles sparse/early data without misleading trends or interpolating across "no offer" gaps
+  3. The user sees upcoming (future-dated) offers and a price-history graph — with a separate per-store line (REWE, Edeka, Lidl, Kaufland; Wasgau none) — that handles sparse/early data without misleading trends or interpolating across "no offer" gaps
   4. The user sees a "last updated" timestamp with a visible warning when data is stale
   5. The user can install the app to the Android home screen, open it offline to see last-fetched data, and gets fresh data (not indefinitely stale prices) when online
 
