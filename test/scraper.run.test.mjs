@@ -200,6 +200,55 @@ test("total fetch failure on a cold dir serializes no_offer + error, both files 
   }
 });
 
+// --- Case G: a schema-validation drift still writes a valid error status.json
+//     and leaves current-offers.json (last-known data) untouched (WR-02) ---
+
+test("a validation drift writes a valid error status.json and preserves current-offers (WR-02)", async () => {
+  const d = await freshDir();
+  try {
+    // Seed a DRIFTED prior current-offers.json: a status:"offer" REWE entry
+    // missing its required offer fields. A total fetch failure carries this
+    // forward verbatim, so the assembled current-offers fails parseCurrentOffers.
+    const goodCurrent = JSON.parse(
+      readFileSync(join(ROOT, "data/current-offers.json"), "utf8")
+    );
+    const drifted = {
+      lastUpdated: goodCurrent.lastUpdated,
+      stores: goodCurrent.stores.map((s) =>
+        s.store === "REWE"
+          ? { store: "REWE", displayName: "REWE", status: "offer" } // missing price/etc
+          : s
+      ),
+    };
+    await writeFile(join(d, "current-offers.json"), JSON.stringify(drifted), "utf8");
+    await writeFile(
+      join(d, "status.json"),
+      readFileSync(join(ROOT, "data/status.json"), "utf8"),
+      "utf8"
+    );
+
+    const driftedBytes = await readFile(join(d, "current-offers.json"), "utf8");
+
+    // The run must FAIL LOUD (rethrow) — it is an alert-only hard stop.
+    await assert.rejects(() =>
+      run({ now: NOW, dataDir: d, fetchOffers: async () => { throw new Error("boom"); } })
+    );
+
+    // But status.json must now be a VALID error document (observable failure).
+    const st = await readStatus(d); // parseStatusFile throws if invalid
+    assert.equal(st.lastUpdated, NOW_ISO);
+    for (const store of ["REWE", "Edeka", "Lidl", "Kaufland"]) {
+      assert.equal(find(st, store).status, "error");
+    }
+    assert.equal(find(st, "Wasgau").status, "unavailable");
+
+    // current-offers.json (last-known data) must be UNTOUCHED — not overwritten.
+    assert.equal(await readFile(join(d, "current-offers.json"), "utf8"), driftedBytes);
+  } finally {
+    await rm(d, { recursive: true, force: true });
+  }
+});
+
 // --- Case F: file-level lastUpdated === injected now on every run (DATA-06) ---
 
 test("every run sets file-level lastUpdated on both files to the injected now (DATA-06)", async () => {

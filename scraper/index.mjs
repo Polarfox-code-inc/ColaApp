@@ -72,6 +72,33 @@ async function readHistoryKeys(historyPath) {
 }
 
 /**
+ * On a schema-validation drift we cannot trust the assembled documents, but we
+ * MUST still surface the failure in a machine-readable way (WR-02). Build a
+ * minimal status.json — the four marktguru stores marked "error", Wasgau its
+ * fixed "unavailable" — validate it against the FROZEN StatusFileSchema (so a
+ * malformed error-status can never land either), and atomically write ONLY
+ * status.json. current-offers.json and price-history.jsonl are left untouched
+ * so last-known data is preserved.
+ *
+ * @param {string} dataDir directory holding the data files
+ * @param {Date}   now      injected run clock
+ */
+async function writeErrorStatus(dataDir, now) {
+  const nowIso = now.toISOString();
+  const stores = [
+    ...MARKTGURU_STORES.map((store) => ({ store, status: "error", lastUpdated: nowIso })),
+    { store: "Wasgau", status: "unavailable", lastUpdated: nowIso }, // fixed (D-03)
+  ];
+  const status = { lastUpdated: nowIso, stores };
+  // Validate the minimal doc against the frozen schema before it can land.
+  parseStatusFile(status);
+  await writeAtomic(
+    join(dataDir, "status.json"),
+    JSON.stringify(status, null, 2) + "\n"
+  );
+}
+
+/**
  * Run the full scrape pipeline once. Always writes all three files.
  *
  * @param {object} [opts]
@@ -129,9 +156,28 @@ export async function run({
     now
   );
 
-  // (6) Validate BEFORE any write (T-02-08). A drift throws here -> no file lands.
-  parseCurrentOffers(currentOffers);
-  parseStatusFile(status);
+  // (6) Validate BEFORE any write (T-02-08). A drift throws here so a corrupt
+  //     payload never lands. This IS a fail-loud hard stop (it rethrows -> exit
+  //     1 -> CI alert). But the phase invariant is "always make the failure
+  //     observable": on a drift we still write a minimal, KNOWN-GOOD error
+  //     status.json (its own simple schema cannot have drifted from the same
+  //     bug that broke the assembled docs) so the PWA freshness indicator and
+  //     the dead-man's-switch see a machine-readable error state instead of a
+  //     silently stale file. current-offers.json is deliberately NOT written
+  //     here — the last good carry-forward snapshot stays intact (WR-02).
+  try {
+    parseCurrentOffers(currentOffers);
+    parseStatusFile(status);
+  } catch (err) {
+    console.error("VALIDATION DRIFT (assembled docs invalid):", err.message);
+    await writeErrorStatus(dataDir, now).catch((writeErr) => {
+      // Best-effort: never let the error-status write mask the original drift.
+      console.error("could not write error status.json:", writeErr.message);
+    });
+    // Re-throw the ORIGINAL drift: this remains an alert-only hard stop. We do
+    // NOT append history and do NOT overwrite current-offers.json.
+    throw err;
+  }
 
   // (7) Compute the new history lines, deduped against the existing keys. The
   //     line objects are validated inside historyLinesToAppend (parseHistoryLine).
