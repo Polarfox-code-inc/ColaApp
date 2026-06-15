@@ -8,7 +8,21 @@
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { withRetry } from "../scraper/fetch.mjs";
+import { withRetry, getKeys } from "../scraper/fetch.mjs";
+
+// Drive getKeys offline by stubbing the global fetch with a homepage body.
+// Restores the real fetch afterwards so other suites are unaffected.
+async function getKeysFromHtml(html) {
+  const realFetch = globalThis.fetch;
+  globalThis.fetch = async () => ({ ok: true, text: async () => html });
+  try {
+    return await getKeys();
+  } finally {
+    globalThis.fetch = realFetch;
+  }
+}
+
+const ISLAND = '{"config":{"apiKey":"AK","clientKey":"CK"}}';
 
 // baseMs:0 keeps the backoff sleep effectively instant so the suite is fast;
 // the retry *count* behavior is independent of the delay magnitude.
@@ -68,6 +82,35 @@ test("withRetry: each attempt receives a distinct, fresh AbortSignal", async () 
   // Distinct objects — no reuse across attempts.
   assert.notEqual(signals[0], signals[1], "attempt 0 and 1 must get different signals");
   assert.notEqual(signals[1], signals[2], "attempt 1 and 2 must get different signals");
+});
+
+// --- WR-03: loosened bootstrap-island regex tolerates trivial markup drift ---
+
+test("getKeys still matches the plain `type=\"application/json\"` island", async () => {
+  const html = `<html><body><script type="application/json">${ISLAND}</script></body></html>`;
+  assert.deepEqual(await getKeysFromHtml(html), { apiKey: "AK", clientKey: "CK" });
+});
+
+test("getKeys matches an island with an extra id attribute (Next.js shape) (WR-03)", async () => {
+  const html = `<script type="application/json" id="__NEXT_DATA__">${ISLAND}</script>`;
+  assert.deepEqual(await getKeysFromHtml(html), { apiKey: "AK", clientKey: "CK" });
+});
+
+test("getKeys matches whitespace around `=` and single quotes (WR-03)", async () => {
+  const html = `<script  type = 'application/json'  data-foo="x">${ISLAND}</script>`;
+  assert.deepEqual(await getKeysFromHtml(html), { apiKey: "AK", clientKey: "CK" });
+});
+
+test("getKeys skips islands lacking the keys and picks the right one (WR-03)", async () => {
+  const html =
+    `<script type="application/json" id="other">{"foo":1}</script>` +
+    `<script type="application/json" id="__NEXT_DATA__">${ISLAND}</script>`;
+  assert.deepEqual(await getKeysFromHtml(html), { apiKey: "AK", clientKey: "CK" });
+});
+
+test("getKeys throws when no island carries the bootstrap keys (WR-03)", async () => {
+  const html = `<script type="application/json">{"config":{}}</script>`;
+  await assert.rejects(() => getKeysFromHtml(html), /config\.apiKey not found/);
 });
 
 test("withRetry: default options allow up to 3 attempts", async () => {

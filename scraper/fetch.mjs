@@ -74,8 +74,16 @@ export async function getKeys(signal) {
     throw new Error(`homepage fetch failed: HTTP ${res.status} ${res.statusText}`);
   }
   const html = await res.text();
-  // Bounded, non-greedy match — ReDoS-safe (no catastrophic backtracking).
-  const blocks = [...html.matchAll(/<script\s+type="application\/json">(.*?)<\/script>/gms)];
+  // Loosened opening-tag match (WR-03): tolerate extra attributes (e.g.
+  // id="__NEXT_DATA__"), whitespace around `=`, and single OR double quotes,
+  // so a trivial markup change does not route every run to total-failure.
+  // Still ReDoS-safe: a single non-greedy `.*?` body capture, [^>]* on the
+  // attribute run, no nested quantifiers (no catastrophic backtracking).
+  const blocks = [
+    ...html.matchAll(
+      /<script\b[^>]*\btype\s*=\s*["']application\/json["'][^>]*>(.*?)<\/script>/gms
+    ),
+  ];
   for (let i = 0; i < blocks.length; i++) {
     let parsed;
     try {
