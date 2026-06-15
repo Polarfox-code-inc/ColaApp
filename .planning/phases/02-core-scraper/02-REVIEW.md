@@ -19,8 +19,22 @@ findings:
   warning: 4
   info: 5
   total: 9
-status: issues-found
+status: fixed
+fixed:
+  warnings_resolved: [WR-01, WR-02, WR-03, WR-04]
+  info_deferred: [IN-01, IN-02, IN-03, IN-04, IN-05]
+  commits: [ddd9711, b69714c, 9943d22, 7d878c5]
+  suite: "96/96 green (was 84/84; +12 tests)"
+  fixed_at: 2026-06-15T17:10:00Z
 ---
+
+> **Resolution (2026-06-15):** All 4 Warnings fixed via `/gsd-code-review 02 --fix`
+> (commits ddd9711, b69714c, 9943d22, 7d878c5). WR-01 now isolates malformed
+> validity ranges per-offer; WR-02 writes a valid error `status.json` on schema
+> drift (preserving the always-write intent); WR-03 loosened the bootstrap-key
+> island regex against markup drift; WR-04 bounds total fetch wall-clock with a
+> shared 20s deadline. The 5 Info findings were deferred (out of `--fix` scope).
+> Suite: 96/96 green.
 
 # Phase 2: Code Review Report
 

@@ -1,9 +1,10 @@
 ---
-status: testing
+status: resolved
 phase: 02-core-scraper
 source: [02-VERIFICATION.md, 02-REVIEW.md]
 started: 2026-06-15T16:59:13Z
-updated: 2026-06-15T16:59:13Z
+updated: 2026-06-15T17:10:00Z
+resolution: Both items fixed in code via /gsd-code-review 02 --fix (WR-01 ddd9711, WR-02 7d878c5). Suite 96/96 green.
 ---
 
 ## Current Test
@@ -28,7 +29,7 @@ expected: |
   skipped/needs-review, the store still surfaces its other valid offers.
   CONFIRMED empirically by verifier: berlinDay(undefined) throws RangeError.
   Not a data-loss path. Decision: accept (comment) OR apply safeBerlinDay guard.
-status: pending
+status: resolved
 
 ### 2. WR-02 — Schema-drift path writes zero files (index.mjs:132-134)
 expected: |
@@ -38,7 +39,7 @@ expected: |
   signal the failure. CONFIRMED from source. Not a data-loss path.
   Decision: accept current fail-loud behavior (add a comment) OR write a minimal
   error status.json before re-throwing so the invariant holds on this path too.
-status: pending
+status: resolved
 
 ## Notes
 
