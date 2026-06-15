@@ -377,7 +377,9 @@ storeOffers.Wasgau = { store: "Wasgau", displayName: "Wasgau", status: "unavaila
 
 **If this table looks short:** it is — the field-name, slug, date, and price facts that would normally be assumptions were already *verified live* in Phase 1 and are cited, not assumed.
 
-## Open Questions
+## Open Questions (RESOLVED)
+
+> Both questions below were resolved during planning (Phase 2 PLAN.md set): Q1 — Plan 02-03 pre-task block fixes the first-ever per-store `lastUpdated` to `now.toISOString()`, frozen thereafter; Q2 — Plan 02-01 Task 1 sets `displayName = store` (identity). Retained here for rationale.
 
 1. **Exact cold-start status.json `lastUpdated` for a never-refreshed store**
    - What we know: per-store `lastUpdated` must be a valid ISO-UTC string (schema `IsoUtc`) and must NOT bump on error.
