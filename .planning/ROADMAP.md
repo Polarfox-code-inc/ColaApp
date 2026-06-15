@@ -38,7 +38,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 **Wave 2** *(blocked on Wave 1 completion)*
 
-- [ ] 01-02-frozen-contract-schema-PLAN.md — Freeze the 3-file zod contract (D-01..D-14) and author a passing mock for every UI state (Wave 2)
+- [x] 01-02-frozen-contract-schema-PLAN.md — Freeze the 3-file zod contract (D-01..D-14) and author a passing mock for every UI state (Wave 2)
 - [ ] 01-03-strict-matcher-PLAN.md — Implement and fixture-test the strict 12×1L matcher (DATA-02) via TDD (Wave 2)
 
 ### Phase 2: Core Scraper
@@ -94,7 +94,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Data Contract & Source Spike | 1/3 | In Progress|  |
+| 1. Data Contract & Source Spike | 2/3 | In Progress|  |
 | 2. Core Scraper | 0/TBD | Not started | - |
 | 3. PWA Frontend | 0/TBD | Not started | - |
 | 4. Live Integration, All Stores & Hardening | 0/TBD | Not started | - |

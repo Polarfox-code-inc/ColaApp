@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-last_updated: "2026-06-15T13:59:29.763Z"
+last_updated: "2026-06-15T14:06:14.000Z"
 last_activity: 2026-06-15
 progress:
   total_phases: 4
   completed_phases: 0
   total_plans: 3
-  completed_plans: 1
-  percent: 33
+  completed_plans: 2
+  percent: 67
 ---
 
 # Project State
@@ -25,11 +25,11 @@ See: .planning/PROJECT.md (updated 2026-06-15)
 ## Current Position
 
 Phase: 01 (data-contract-source-spike) — EXECUTING
-Plan: 2 of 3
-Status: Ready to execute
+Plan: 3 of 3
+Status: Plan 01-02 complete; ready to execute Plan 01-03 (strict matcher)
 Last activity: 2026-06-15
 
-Progress: [███░░░░░░░] 33%
+Progress: [███████░░░] 67%
 
 ## Performance Metrics
 
@@ -52,6 +52,7 @@ Progress: [███░░░░░░░] 33%
 
 *Updated after each plan completion*
 | Phase 01 P01 | 1 session | 3 tasks | 8 files |
+| Phase 01 P02 | ~5 min | 3 tasks | 13 files |
 
 ## Accumulated Context
 
@@ -65,6 +66,9 @@ Recent decisions affecting current work:
 - [Roadmap]: Remaining store adapters + hardening folded into Phase 4 (coarse granularity) — they scale existing capabilities (DATA-05 isolation, OFFR-04 "unavailable") rather than adding new v1 requirements.
 - [Phase ?]: [Phase 1 spike] marktguru offers live at data.results (20 results @ 67105); Wasgau unavailable; validityDates day-granular Berlin; price decimal euro
 - [Phase ?]: [Phase 1 spike] No real 12x1L case on sale this week -> Plan 03 synthesizes positive fixture from RESEARCH (synthesized-from-real); captured payload is the negative/quarantine corpus
+- [Phase 01-02]: Frozen zod contract (contract/schema.mjs + types.d.ts) encoding D-01..D-14 is the single scraper<->PWA interface; both Phase 2 and Phase 3 import it
+- [Phase 01-02]: StoreOffer schemas use .strict() so a stray pfand/deposit key is rejected (hard-enforces D-10); status:offer offer-field requirement via superRefine
+- [Phase 01-02]: Six UI-state mocks (offer/no_offer/upcoming/error/stale/unavailable) + 23-test node:test suite prove the contract represents every state and rejects float price/unknown status
 
 ### Pending Todos
 
@@ -84,6 +88,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-06-15T13:58:16.043Z
-Stopped at: Phase 1 context gathered
+Last session: 2026-06-15T14:06:14.000Z
+Stopped at: Completed 01-02-frozen-contract-schema-PLAN.md
 Resume file: None
