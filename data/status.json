@@ -1,0 +1,10 @@
+{
+  "lastUpdated": "2026-06-15T04:00:00Z",
+  "stores": [
+    { "store": "REWE", "status": "offer", "lastUpdated": "2026-06-15T04:00:00Z" },
+    { "store": "Edeka", "status": "no_offer", "lastUpdated": "2026-06-15T04:00:00Z" },
+    { "store": "Lidl", "status": "no_offer", "lastUpdated": "2026-06-15T04:00:00Z" },
+    { "store": "Kaufland", "status": "no_offer", "lastUpdated": "2026-06-15T04:00:00Z" },
+    { "store": "Wasgau", "status": "unavailable", "lastUpdated": "2026-06-15T04:00:00Z" }
+  ]
+}
