@@ -18,12 +18,12 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Offers View
 
-- [ ] **OFFR-01**: User sees a hero "best deal right now" answer (store + price + valid-until), or a clear "no current offer" message when nothing qualifies
-- [ ] **OFFR-02**: User sees a card per store showing the current offer's price, €/litre, and valid dates
+- [x] **OFFR-01**: User sees a hero "best deal right now" answer (store + price + valid-until), or a clear "no current offer" message when nothing qualifies
+- [x] **OFFR-02**: User sees a card per store showing the current offer's price, €/litre, and valid dates
 - [ ] **OFFR-03**: A store with no current offer shows a clear "kein Angebot" state, visually distinct from an error
 - [ ] **OFFR-04**: A store whose data cannot be fetched automatically (e.g. Wasgau without coverage) shows a clear "not automatically available" state
-- [ ] **OFFR-05**: User sees upcoming offers (future-dated valid-from) so next week's deals are visible ahead of time
-- [ ] **OFFR-06**: User sees a "last updated" timestamp and a visible warning when the data is stale
+- [x] **OFFR-05**: User sees upcoming offers (future-dated valid-from) so next week's deals are visible ahead of time
+- [x] **OFFR-06**: User sees a "last updated" timestamp and a visible warning when the data is stale
 
 ### Price History
 
@@ -90,12 +90,12 @@ Which phases cover which requirements. Updated during roadmap creation.
 | DATA-04 | Phase 2 | Complete |
 | DATA-05 | Phase 2 | Complete |
 | DATA-06 | Phase 2 | Complete |
-| OFFR-01 | Phase 3 | Pending |
-| OFFR-02 | Phase 3 | Pending |
+| OFFR-01 | Phase 3 | Complete |
+| OFFR-02 | Phase 3 | Complete |
 | OFFR-03 | Phase 3 | Pending |
 | OFFR-04 | Phase 3 | Pending |
-| OFFR-05 | Phase 3 | Pending |
-| OFFR-06 | Phase 3 | Pending |
+| OFFR-05 | Phase 3 | Complete |
+| OFFR-06 | Phase 3 | Complete |
 | HIST-01 | Phase 3 | Pending |
 | HIST-02 | Phase 3 | Pending |
 | HIST-03 | Phase 3 | Pending |
