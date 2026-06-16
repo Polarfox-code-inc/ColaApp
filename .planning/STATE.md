@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-06-15)
 
 Phase: 04 (live-integration-all-stores-hardening) — EXECUTING
 Plan: 3 of 3
-Status: Ready to execute
+Status: Plan 04-03 IN PROGRESS — Task 1 (docs) committed (6f9e1e3); Task 2 OPEN human-verify gate (real-device live acceptance) awaiting "approved"
 Last activity: 2026-06-16
 
 Progress: [█████████░] 86%
@@ -102,6 +102,7 @@ None yet.
 
 - [Phase 1]: marktguru is an unofficial API and Wasgau Cola coverage at PLZ 67105 is unconfirmed — the Phase 1 live spike must resolve this before the schema is finalized. "Not automatically available" for Wasgau is an acceptable designed outcome, not a failure.
 - [Phase 04 L-1/Open Q1] A GITHUB_TOKEN bot commit may not reliably reset GitHub's 60-day scheduled-workflow inactivity timer; Plan 02 should surface as a checkpoint:human-verify (accept residual risk vs a gh workflow enable/API touch)
+- [Phase 04-03 OPEN human-verify gate] Task 2 real-device live acceptance is NOT done. Requires: (one-time human GitHub settings — repo Public, Pages source "GitHub Actions", token Read+write, default branch master, failure-email on) THEN the 8-step web/README.md "Live verification (production / D-12)" checklist on a physical Android phone against https://polarfox-code-inc.github.io/ColaApp/. On "approved": mark INFR-01/02/03 complete, close Phase 3's 03-05 checkpoint, advance plan counter, update ROADMAP. Do NOT mark Phase 4 complete until then.
 
 ## Deferred Items
 
@@ -113,6 +114,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-06-16T08:51:03.792Z
-Stopped at: Phase 4 context gathered
-Resume file: None
+Last session: 2026-06-16T08:53:13Z
+Stopped at: Plan 04-03 Task 1 committed (6f9e1e3); paused at Task 2 OPEN checkpoint:human-verify (real-device live acceptance)
+Resume file: .planning/phases/04-live-integration-all-stores-hardening/04-03-SUMMARY.md (PENDING-HUMAN-VERIFY)
