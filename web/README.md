@@ -106,6 +106,78 @@ These are the PWA-01/02/03 checks. Use Chrome (desktop) or Android Chrome.
   cached copy instantly (offline last-data, PWA-02) while revalidating in the
   background (fresh-when-online, PWA-03). Caching only — no push/notifications.
 
+## Live verification (production / D-12)
+
+This is the **production** counterpart of the localhost procedure above. It
+proves the full self-sustaining loop and runs the folded-in Phase-3 03-05
+real-device acceptance against the **live HTTPS GitHub Pages URL** —
+`https://polarfox-code-inc.github.io/ColaApp/` — on the **actual Android
+phone**. Passing all eight steps closes Phase 3's open 03-05 checkpoint and
+satisfies INFR-01/02/03 (success-criteria 3 and 4). This section is
+documentation only; it changes no product code.
+
+### One-time maintainer prerequisites (human-only, do first)
+
+These GitHub repo Settings must be in place **before the first live run** (see
+**Plan 02** `04-02-SUMMARY.md` "User Setup Required" and RESEARCH's "Manual
+Maintainer Checklist"). They are not in git and cannot be automated here:
+
+| # | Prerequisite | Where |
+|---|--------------|-------|
+| 1 | Repo visibility = **Public** (free unlimited Actions + free Pages) | Settings → General → Danger Zone |
+| 2 | Pages source = **"GitHub Actions"** (NOT "Deploy from a branch") | Settings → Pages → Build and deployment → Source |
+| 3 | Workflow permissions = **Read and write** (so the self-commit can push) | Settings → Actions → General → Workflow permissions |
+| 4 | Default branch = **master** (matches the `push:` trigger) | Settings → General |
+| 5 | Failed-workflow **email notifications on** for the owner (`knut_ulf@web.de`) | GitHub account Notifications (default on) |
+
+If the in-app **stale** chip (D-03) ever shows the data has stopped updating,
+check the Actions tab — the scheduled workflow may have auto-disabled after 60
+days of bot-commit-only activity (the accepted L-1 residual risk); re-enable it
+with one click.
+
+### Live verification checklist (run on the Android phone)
+
+Run against `https://polarfox-code-inc.github.io/ColaApp/`:
+
+1. **Loop proof (success-criterion 3 / INFR-03):** Trigger the pipeline (Actions
+   tab → **Run workflow** / `workflow_dispatch`, or wait for cron). Confirm: the
+   run is **green**; a `chore(data): scheduled scrape + heartbeat` commit appears
+   on **master**; the `deploy` job ran (gated correctly — it runs on a data
+   change or a code push); and the live URL serves the new
+   `current-offers.json` — verify via the footer **"last updated"** timestamp.
+2. **INSTALL (PWA-01):** Open the live URL in **Android Chrome**, then
+   **"Add to home screen."** Confirm the name is **ColaApp**, the trademark-safe **bottle icon
+   on `#1A1D21`** (NOT Coca-Cola red / not the Coca-Cola logo), the **maskable**
+   variant is **not clipped**, and the app opens **standalone** (no browser
+   chrome).
+3. **OFFLINE LAST-DATA (PWA-02):** With the installed app loaded once, enable
+   **airplane mode** and reopen. Confirm hero / cards / graph / footer all render
+   the **last-fetched data** — not an offline error page.
+4. **FRESH-WHEN-ONLINE (PWA-03):** Back online, after the next scrape that
+   **changes data** (or force one via `workflow_dispatch`), reopen the installed
+   app **twice**. Confirm the **new price appears** — Workbox StaleWhileRevalidate
+   revalidated it in the background; the data is not stale forever.
+5. **SIX STATES:** On the phone, visit each of
+   `…/ColaApp/?state=offer`, `?state=no_offer`, `?state=upcoming`,
+   `?state=error`, `?state=stale`, and `?state=unavailable` in turn, and confirm
+   each renders per the **`?state=` dev fixture switch** table above. (These
+   fixtures ship in `dist/data/*` from `web/public/data/`.)
+6. **Localisation:** Confirm **German throughout** and `de-DE` number/date
+   formatting (`€9,99`, `0,83 €/l`, `21.06.2026`), and the neutral
+   (non-Coca-Cola-branded) utility look.
+7. **Subpath sanity:** Via DevTools / Android remote debugging, confirm the
+   **service worker registered under `/ColaApp/`** (Application → Service
+   Workers), the **manifest loaded**, the **icons resolve at
+   `/ColaApp/icon-*.png` (no 404s)**, and the data is fetched from
+   `/ColaApp/data/…` (the relative `./data/…` fetch resolves against
+   `document.baseURI` = `/ColaApp/`).
+8. **Fault isolation live (success-criterion 4):** Confirm **all five stores**
+   are present; **Wasgau** shows the info-blue **"nicht automatisch verfügbar"**
+   chip; and a **single store error does not blank the others**.
+
+When steps 1–8 all pass, Phase 3's **03-05** checkpoint is closed (D-12) and
+INFR-01 / INFR-02 / INFR-03 are confirmed satisfied.
+
 ## Phase 4 boundary (out of scope here)
 
 The production install runs over **HTTPS at the GitHub Pages subpath**
