@@ -455,7 +455,9 @@ fi
 | A4 | Manifest icon relative `src` resolves correctly at `/ColaApp/icon-*.png` (no base-prepend needed) | Pattern 6 | Low-Medium — verify in built `dist/` (plugin issue #713) |
 | A5 | `index.html` has no `<base href>` that would shift `document.baseURI` away from `/ColaApp/` | Pattern 6 | Low — one-line check |
 
-## Open Questions
+## Open Questions (RESOLVED)
+
+> **Resolution (planning, 2026-06-16):** Q1 → escalated to an explicit `checkpoint:decision` in plan 04-02 Task 1 (accept residual risk vs. add a `gh workflow enable` step) — not silently assumed, because the question has no authoritative technical answer. Q2 → locked to Option A (`data/heartbeat.json`, no contract change) in plan 04-01 Task 1. Q3 → resolved "no `if: always()`": the heartbeat step runs on success only; a failed scrape exits non-zero, the job fails, and the owner is emailed (D-02) and intervenes, which resets the timer anyway.
 
 1. **Does a `GITHUB_TOKEN` heartbeat commit actually reset the 60-day timer? (the INFR-03 crux — see Landmine L-1)**
    - What we know: GitHub disables scheduled workflows after 60 days of no *activity*; "any commit to the default branch resyncs" is the documented cure. `[VERIFIED]`
