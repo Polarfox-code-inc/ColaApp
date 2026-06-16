@@ -315,3 +315,16 @@ body {
 .chart-legend__note {
   font-style: italic;
 }
+
+/* ---- Site logo (decorative, bottom of page) ---- */
+.site-logo {
+  margin-top: var(--space-xl);
+  text-align: center;
+}
+.site-logo__img {
+  display: block;
+  width: 60%;
+  max-width: 200px;
+  height: auto;
+  margin-inline: auto;
+}
