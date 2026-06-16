@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-last_updated: "2026-06-16T07:14:37.676Z"
-last_activity: 2026-06-16 -- Phase 4 planning complete
+last_updated: "2026-06-16T07:58:57.602Z"
+last_activity: 2026-06-16
 progress:
   total_phases: 4
   completed_phases: 2
   total_plans: 14
-  completed_plans: 10
+  completed_plans: 11
   percent: 50
 ---
 
@@ -20,16 +20,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-15)
 
 **Core value:** When the 12×1L Coca-Cola case goes on sale at one of the 5 Schifferstadt stores, the app shows it — accurately, with the price and the dates it's valid.
-**Current focus:** Phase 03 — pwa-frontend
+**Current focus:** Phase 04 — live-integration-all-stores-hardening
 
 ## Current Position
 
-Phase: 03 (pwa-frontend) — EXECUTING
-Plan: 5 of 5
+Phase: 04 (live-integration-all-stores-hardening) — EXECUTING
+Plan: 2 of 3
 Status: Ready to execute
-Last activity: 2026-06-16 -- Phase 4 planning complete
+Last activity: 2026-06-16
 
-Progress: [█████████░] 91%
+Progress: [████████░░] 79%
 
 ## Performance Metrics
 
@@ -62,6 +62,7 @@ Progress: [█████████░] 91%
 | Phase 03 P02 | ~5 min | 2 tasks | 4 files |
 | Phase 03 P03 | 4 | 2 tasks | 2 files |
 | Phase 03 P04 | 14 | 3 tasks | 14 files |
+| Phase 04 P01 | 5min | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -87,6 +88,8 @@ Recent decisions affecting current work:
 - [Phase ?]: [Phase 03-03] Price-history chart: pure prepareChartData (shared epoch-seconds axis + null gaps; no interpolation HIST-02) + STORES_WITH_LINES excludes Wasgau (HIST-03); renderHistory lazy-imports uPlot+CSS (async) so the module stays node --test loadable; <3 points => paths:()=>null markers-only; cold-start panel returns before uPlot; 40/40 web tests green
 - [Phase ?]: Render layer is textContent-only (zero innerHTML) for XSS safety
 - [Phase ?]: loadData per-file files override lets the six ?state= fixtures share one public/data dir
+- [Phase ?]: [Phase 04-01] Keepalive heartbeat in a SEPARATE data/heartbeat.json (Option A): cannot mutate stores[].lastUpdated (D-05 by construction), never edits the frozen .strict() contract; runs standalone via node scripts/heartbeat.mjs after the scrape
+- [Phase ?]: [Phase 04-01] Vite base:'/ColaApp/' set once at top level for the Pages subpath (D-08); start_url/scope stay './' and icon srcs stay bare-relative (plugin #713); SW urlPattern matches url.pathname so already subpath-safe (D-07)
 
 ### Pending Todos
 
@@ -95,6 +98,7 @@ None yet.
 ### Blockers/Concerns
 
 - [Phase 1]: marktguru is an unofficial API and Wasgau Cola coverage at PLZ 67105 is unconfirmed — the Phase 1 live spike must resolve this before the schema is finalized. "Not automatically available" for Wasgau is an acceptable designed outcome, not a failure.
+- [Phase 04 L-1/Open Q1] A GITHUB_TOKEN bot commit may not reliably reset GitHub's 60-day scheduled-workflow inactivity timer; Plan 02 should surface as a checkpoint:human-verify (accept residual risk vs a gh workflow enable/API touch)
 
 ## Deferred Items
 
@@ -106,6 +110,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-06-16T06:43:01.588Z
+Last session: 2026-06-16T07:58:17.407Z
 Stopped at: Phase 4 context gathered
-Resume file: .planning/phases/04-live-integration-all-stores-hardening/04-CONTEXT.md
+Resume file: None

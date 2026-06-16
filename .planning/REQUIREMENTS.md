@@ -40,8 +40,8 @@ Requirements for initial release. Each maps to roadmap phases.
 ### Infrastructure
 
 - [ ] **INFR-01**: Offer data is produced by a scheduled GitHub Actions job and committed to the repository
-- [ ] **INFR-02**: The PWA and its data are served at zero cost via GitHub Pages, with nothing hosted on the author's local machine
-- [ ] **INFR-03**: The scheduled job stays enabled over time (keepalive against the 60-day inactivity disable) and the full loop runs end-to-end (cron → data → Pages → installed PWA reflects new data)
+- [x] **INFR-02**: The PWA and its data are served at zero cost via GitHub Pages, with nothing hosted on the author's local machine
+- [x] **INFR-03**: The scheduled job stays enabled over time (keepalive against the 60-day inactivity disable) and the full loop runs end-to-end (cron → data → Pages → installed PWA reflects new data)
 
 ## v2 Requirements
 
@@ -103,8 +103,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PWA-02 | Phase 3 | Complete |
 | PWA-03 | Phase 3 | Complete |
 | INFR-01 | Phase 4 | Pending |
-| INFR-02 | Phase 4 | Pending |
-| INFR-03 | Phase 4 | Pending |
+| INFR-02 | Phase 4 | Complete |
+| INFR-03 | Phase 4 | Complete |
 
 **Coverage:**
 - v1 requirements: 21 total

@@ -112,7 +112,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 **Wave 1**
 
-- [ ] 04-01-PLAN.md — Keepalive heartbeat writer (separate file, D-04/D-05 invariant test) + Vite `base:'/ColaApp/'` subpath config (Wave 1)
+- [x] 04-01-PLAN.md — Keepalive heartbeat writer (separate file, D-04/D-05 invariant test) + Vite `base:'/ColaApp/'` subpath config (Wave 1)
 
 **Wave 2** *(blocked on Wave 1 completion)*
 
@@ -132,4 +132,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 | 1. Data Contract & Source Spike | 3/3 | Complete    | 2026-06-15 |
 | 2. Core Scraper | 3/3 | Complete    | 2026-06-15 |
 | 3. PWA Frontend | 4/5 | In Progress|  |
-| 4. Live Integration, All Stores & Hardening | 0/3 | Not started | - |
+| 4. Live Integration, All Stores & Hardening | 1/3 | In Progress|  |
