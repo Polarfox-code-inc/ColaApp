@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-last_updated: "2026-06-16T07:58:57.602Z"
+last_updated: "2026-06-16T08:51:36.996Z"
 last_activity: 2026-06-16
 progress:
   total_phases: 4
   completed_phases: 2
   total_plans: 14
-  completed_plans: 11
+  completed_plans: 12
   percent: 50
 ---
 
@@ -25,11 +25,11 @@ See: .planning/PROJECT.md (updated 2026-06-15)
 ## Current Position
 
 Phase: 04 (live-integration-all-stores-hardening) — EXECUTING
-Plan: 2 of 3
+Plan: 3 of 3
 Status: Ready to execute
 Last activity: 2026-06-16
 
-Progress: [████████░░] 79%
+Progress: [█████████░] 86%
 
 ## Performance Metrics
 
@@ -63,6 +63,7 @@ Progress: [████████░░] 79%
 | Phase 03 P03 | 4 | 2 tasks | 2 files |
 | Phase 03 P04 | 14 | 3 tasks | 14 files |
 | Phase 04 P01 | 5min | 2 tasks | 4 files |
+| Phase 04 P02 | ~1min | 2 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -90,6 +91,8 @@ Recent decisions affecting current work:
 - [Phase ?]: loadData per-file files override lets the six ?state= fixtures share one public/data dir
 - [Phase ?]: [Phase 04-01] Keepalive heartbeat in a SEPARATE data/heartbeat.json (Option A): cannot mutate stores[].lastUpdated (D-05 by construction), never edits the frozen .strict() contract; runs standalone via node scripts/heartbeat.mjs after the scrape
 - [Phase ?]: [Phase 04-01] Vite base:'/ColaApp/' set once at top level for the Pages subpath (D-08); start_url/scope stay './' and icon srcs stay bare-relative (plugin #713); SW urlPattern matches url.pathname so already subpath-safe (D-07)
+- [Phase ?]: [Phase 04-02] CI pipeline.yml assembled (D-06): single workflow schedule 2x/day + push(master) + dispatch; Job A scrape->data_changed diff (excl heartbeat, BEFORE heartbeat L-2)->heartbeat->github-actions[bot] commit+rebase+push; Job B gated data_changed||push->copy 3 data files->build web /ColaApp/->official Pages flow; 5 actions first-party pinned (checkout/setup-node@v6, configure-pages@v6, upload/deploy@v5)
+- [Phase ?]: [Phase 04-02] L-1 keepalive (INFR-03): chose accept-residual-risk — heartbeat-commit only, NO gh-enable step. A 60-day auto-disabled schedule surfaces via the in-app stale chip (D-03), one-click to re-enable; honors no-new-secrets (D-02)
 
 ### Pending Todos
 
@@ -110,6 +113,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-06-16T07:58:17.407Z
+Last session: 2026-06-16T08:51:03.792Z
 Stopped at: Phase 4 context gathered
 Resume file: None

@@ -116,7 +116,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 **Wave 2** *(blocked on Wave 1 completion)*
 
-- [ ] 04-02-PLAN.md — Single scrape→commit→build→deploy GitHub Actions workflow (schedule 2×/day + push, data-changed-gated Pages deploy, GITHUB_TOKEN self-commit) + explicit L-1 keepalive decision + maintainer checklist (Wave 2)
+- [x] 04-02-PLAN.md — Single scrape→commit→build→deploy GitHub Actions workflow (schedule 2×/day + push, data-changed-gated Pages deploy, GITHUB_TOKEN self-commit) + explicit L-1 keepalive decision + maintainer checklist (Wave 2)
 
 **Wave 3** *(blocked on Wave 2 completion)*
 
@@ -132,4 +132,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 | 1. Data Contract & Source Spike | 3/3 | Complete    | 2026-06-15 |
 | 2. Core Scraper | 3/3 | Complete    | 2026-06-15 |
 | 3. PWA Frontend | 4/5 | In Progress|  |
-| 4. Live Integration, All Stores & Hardening | 1/3 | In Progress|  |
+| 4. Live Integration, All Stores & Hardening | 2/3 | In Progress|  |
