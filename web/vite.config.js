@@ -7,6 +7,7 @@ import { VitePWA } from 'vite-plugin-pwa';
 export default defineConfig({
   // Phase 4 sets base:'/ColaApp/' for the GitHub Pages subpath. Keep start_url/scope
   // relative ('./') so the shell stays subpath-safe (RESEARCH Pitfall 4).
+  base: '/ColaApp/', // D-08: served at https://polarfox-code-inc.github.io/ColaApp/
   server: {
     // Allow importing the frozen ../../contract/*.mjs from web/ in dev (RESEARCH Pitfall 7).
     fs: { allow: ['..'] },
