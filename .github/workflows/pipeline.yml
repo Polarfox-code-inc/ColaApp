@@ -1,0 +1,129 @@
+# .github/workflows/pipeline.yml
+#
+# ColaApp live loop (Phase 4, Plan 02 — INFR-01/INFR-02/INFR-03, D-06..D-11).
+# A single greenfield workflow with two jobs:
+#   A. scrape-and-commit — run the fault-isolated scraper, write the keepalive
+#      heartbeat, and commit data/ back to the repo via the default GITHUB_TOKEN.
+#   B. deploy            — only when the SCRAPED data actually changed (D-09) or
+#      the run was a code push (D-10), copy prod data into the build and deploy
+#      the PWA to GitHub Pages via the official first-party artifact flow.
+#
+# Keepalive posture (L-1 / INFR-03) — DECISION: accept-residual-risk.
+#   Community evidence (the canonical keepalive-workflow project moved off
+#   commit-mode to API-mode) suggests a GITHUB_TOKEN bot commit may NOT reliably
+#   reset GitHub's 60-day scheduled-workflow inactivity timer. We deliberately do
+#   NOT add a `gh workflow enable` re-arm step here: it would honor "no new
+#   accounts/secrets" (D-02) but adds workflow surface. The ACCEPTED residual
+#   risk is that this scheduled job could silently disable after ~60 days of
+#   bot-commit-only activity. That is tolerable because a disabled job surfaces
+#   within days via the in-app "stale" freshness chip (D-03), and re-enabling is
+#   a single click in the repo's Actions tab. The heartbeat (data/heartbeat.json,
+#   committed every run) still guarantees repo CONTENT activity (D-04); only the
+#   scheduled-trigger re-arm is the documented uncertainty.
+#
+# Supply chain (T-04-07 / T-04-SC): only first-party actions/*, pinned to the
+# verified majors. No PAT, no third-party keepalive action, no legacy gh-pages
+# branch flow.
+
+name: pipeline
+
+on:
+  schedule:
+    - cron: "7 4 * * *"     # ~04:07 UTC (offset off the hour — D-01)
+    - cron: "23 16 * * *"   # ~16:23 UTC
+  push:
+    branches: [master]      # default branch — D-10
+  workflow_dispatch: {}     # manual run for first-deploy / debugging
+
+# Least-privilege at the top; the deploy job narrows further (T-04-05).
+permissions:
+  contents: write           # commit data/ + heartbeat back (Job A)
+
+concurrency:
+  group: cola-pipeline      # serialize runs — avoids commit races (CLAUDE.md)
+  cancel-in-progress: false # let an in-flight deploy finish; never cancel a half-deploy
+
+jobs:
+  scrape-and-commit:
+    runs-on: ubuntu-latest
+    outputs:
+      data_changed: ${{ steps.diff.outputs.data_changed }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Scrape (fault-isolated; exits 0 on per-store/total fetch errors)
+        # Deliberately NO shell strictness (no `set -e` wrapper): the scraper
+        # exits 0 on per-store/total fetch errors by design and only exits
+        # non-zero on a schema-validation throw. Over-stricting would turn a
+        # designed exit-0-on-store-error into a failed run (L-6).
+        run: npm run scrape
+      - name: Detect scraped-data change (BEFORE heartbeat — L-2)
+        id: diff
+        # Compute data_changed from the SCRAPER's output ONLY, excluding the
+        # heartbeat file, so a heartbeat-only run reads as "no change" and does
+        # not trigger a deploy (D-09). Run this BEFORE the heartbeat write.
+        run: |
+          if git diff --quiet -- data/ ':!data/heartbeat.json'; then
+            echo "data_changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "data_changed=true"  >> "$GITHUB_OUTPUT"
+          fi
+      - name: Heartbeat (keepalive; bumps lastRun WITHOUT touching per-store lastUpdated)
+        # NO `if: always()` (RESEARCH Open Q3): the heartbeat runs only on scrape
+        # success. A failed scrape exits non-zero, the job fails, the owner is
+        # emailed (D-02) and intervenes — which resets the timer anyway, so a
+        # missed heartbeat on a failed run is acceptable by design.
+        run: node scripts/heartbeat.mjs
+      - name: Commit data + heartbeat (heartbeat guarantees a diff -> keepalive activity)
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/
+          # Commit only if something is staged (heartbeat normally guarantees it).
+          if git diff --cached --quiet; then
+            echo "nothing to commit"; exit 0
+          fi
+          git commit -m "chore(data): scheduled scrape + heartbeat [skip ci]"
+          git pull --rebase --autostash origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
+
+  deploy:
+    needs: scrape-and-commit
+    # Deploy when scraped data changed (D-09) OR this run was a code push (D-10).
+    if: ${{ needs.scrape-and-commit.outputs.data_changed == 'true' || github.event_name == 'push' }}
+    runs-on: ubuntu-latest
+    permissions:        # tighten below the top-level write (T-04-05)
+      pages: write
+      id-token: write
+      contents: read
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v6          # gets the just-pushed data/ (schedule path)
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci                        # root: makes ../contract resolvable for the build
+      - name: Copy prod data into the build input (D-07/D-11)
+        # Overwrite ONLY the three live filenames; leave any *.offer.json fixtures
+        # in web/public/data intact.
+        run: |
+          mkdir -p web/public/data
+          cp data/current-offers.json data/status.json data/price-history.jsonl web/public/data/
+      - name: Build PWA (base:'/ColaApp/')
+        working-directory: web
+        run: |
+          npm ci
+          npm run build
+      - uses: actions/configure-pages@v6
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: web/dist
+      - id: deployment
+        uses: actions/deploy-pages@v5
