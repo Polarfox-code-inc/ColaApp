@@ -41,9 +41,17 @@ export default defineConfig({
             // Function urlPattern matches on url.pathname => robust under a Pages subpath
             // (Pitfall 4). Matches data/*.json and data/*.jsonl.
             urlPattern: ({ url }) => /\/data\/.*\.(json|jsonl)$/.test(url.pathname),
-            handler: 'StaleWhileRevalidate', // offline last-data (PWA-02) + bg refresh (PWA-03). NOT CacheFirst (T-03-01).
+            // NetworkFirst, NOT StaleWhileRevalidate: the app reads the data file
+            // ONCE at startup and renders immediately, so SWR would always paint the
+            // PREVIOUS visit's data (a permanent one-open lag — the brother could see
+            // days-old prices). The app's whole job is the CURRENT price, so fetch
+            // fresh when online and fall back to the cache only offline. A short
+            // network timeout keeps a flaky connection from hanging the first paint —
+            // it drops to last-known data after 3s (PWA-02 offline-last-data preserved).
+            handler: 'NetworkFirst',
             options: {
               cacheName: 'cola-data',
+              networkTimeoutSeconds: 3, // slow/flaky network -> serve cached last-data
               expiration: { maxEntries: 10, maxAgeSeconds: 60 * 60 * 24 * 30 },
               cacheableResponse: { statuses: [0, 200] },
             },
