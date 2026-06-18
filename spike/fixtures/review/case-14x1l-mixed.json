@@ -1,0 +1,9 @@
+{
+  "_label": "captured-from-live",
+  "_source": "Live marktguru /offers/search @ PLZ 67105 on 2026-06-18 (diagnose workflow run 27748228826). Real Kaufland offer, brand=Coca-Cola, valid 18-24 Jun, EUR 10.99. Case-like 1-litre multipack but count is 14 (not 12) AND mixed-brand ('Fanta, Sprite oder Mezzo Mix ... versch. Sorten') -> ambiguous, quarantine as needsReview (D-08), not silently dropped.",
+  "id": 900030,
+  "brand": { "name": "Coca-Cola", "uniqueName": "coca-cola", "id": 104494 },
+  "product": { "id": 900030, "name": "Cola", "description": "~twxus~ ~twxnam~" },
+  "description": "Fanta, Sprite oder Mezzo Mix z. T. koffeinhaltig, versch. Sorten (+ 3.60 Pfand) 14 x je 1-l-PET-Fl.",
+  "price": 10.99
+}

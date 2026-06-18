@@ -1,0 +1,37 @@
+# .github/workflows/diagnose.yml
+# Throwaway, side-effect-free diagnostic. Runs on a GitHub runner (whose IP is
+# NOT blocked by marktguru, unlike a local sandbox) to dump the raw cola feed
+# and the frozen matcher's verdict for the Kaufland 12x1L investigation.
+# Read-only: no commit, no deploy. Safe to delete after the investigation.
+name: diagnose
+
+on:
+  push:
+    branches: [claude/claude-md-file-cm12tg]
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Diagnose marktguru feed (Kaufland 12x1L)
+        run: node scripts/diagnose.mjs
+      # Follow the pipe: run the REAL scraper against the live feed with the new
+      # matcher, then print its output. Read-only here (no commit, no deploy) —
+      # purely to confirm the Kaufland offer now surfaces as needsReview.
+      - name: Run scraper (with new matcher) and show output
+        run: |
+          npm run scrape
+          echo "===== data/current-offers.json ====="
+          cat data/current-offers.json
+          echo "===== data/status.json ====="
+          cat data/status.json
