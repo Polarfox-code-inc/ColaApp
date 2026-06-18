@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-last_updated: "2026-06-16T11:40:00.000Z"
-last_activity: 2026-06-16 - Completed quick task 260616-ixt: Add the cat logo image to the bottom of the ColaApp PWA page
+last_updated: "2026-06-18T00:00:00.000Z"
+last_activity: 2026-06-18 - Synced 19 merged commits (PRs #2-#4): broadened matcher scope (>=12x1L incl. Coca-Cola mixed bundles & odd counts), needsReview "bitte prüfen" card, PWA NetworkFirst data caching, throwaway diagnostic workflow; reflected in PROJECT/REQUIREMENTS/STATE
 progress:
   total_phases: 4
   completed_phases: 2
@@ -93,6 +93,10 @@ Recent decisions affecting current work:
 - [Phase ?]: [Phase 04-01] Vite base:'/ColaApp/' set once at top level for the Pages subpath (D-08); start_url/scope stay './' and icon srcs stay bare-relative (plugin #713); SW urlPattern matches url.pathname so already subpath-safe (D-07)
 - [Phase ?]: [Phase 04-02] CI pipeline.yml assembled (D-06): single workflow schedule 2x/day + push(master) + dispatch; Job A scrape->data_changed diff (excl heartbeat, BEFORE heartbeat L-2)->heartbeat->github-actions[bot] commit+rebase+push; Job B gated data_changed||push->copy 3 data files->build web /ColaApp/->official Pages flow; 5 actions first-party pinned (checkout/setup-node@v6, configure-pages@v6, upload/deploy@v5)
 - [Phase ?]: [Phase 04-02] L-1 keepalive (INFR-03): chose accept-residual-risk — heartbeat-commit only, NO gh-enable step. A 60-day auto-disabled schedule surfaces via the in-app stale chip (D-03), one-click to re-enable; honors no-new-secrets (D-02)
+- [Post-04 / merged PRs #2-#4]: **Matcher scope broadened (user decision, commits 83c959e+19f3a23)** — contract/matcher.mjs now accepts any 1L PET case of count >=12 that INCLUDES Coca-Cola (any flavor incl. Zero, and Coca-Cola-company mixed-brand bundles like +Fanta/Sprite/Mezzo Mix), incl. odd "+bonus bottle" counts (14×1L). REJECT: store/competitor colas (checked first), wrong per-bottle sizes (1,25/0,5/0,33/0,2/Dose), 1L packs <12. REVIEW: only a Kasten/case with no confirmable 1L size. "versch. Sorten" (= various flavors) no longer demotes a clean case. New caseCount() helper → normalize.mjs prices €/litre over ACTUAL bottle count (14×1L = 14 L). Replaces the original strict "exactly 12×1L" matcher (01-03).
+- [Post-04 / merged PR #2]: **needsReview UI card (commit 81bb27a)** — web render layer no longer suppresses needsReview offers; a live review offer gets its own "bitte prüfen" amber-chip card (price/€l/validity, muted price), ranked below upcoming and above no_offer. isCleanOffer unchanged so review offers never headline the hero. isReview() helper + tests.
+- [Post-04 / merged PR #4]: **PWA data caching → NetworkFirst (commit 94892ef)** — web/vite.config.js runtime route for data/*.json|jsonl switched from StaleWhileRevalidate to NetworkFirst (3s timeout). SWR painted the previous visit's data (app reads file once at startup) → permanent one-open stale-price lag. NetworkFirst restores PWA-03 (current price) while preserving PWA-02 (offline last-known). App-shell precache + autoUpdate unchanged.
+- [Post-04 / merged]: **Throwaway diagnostic workflow (commits e681d1f, 428cefa)** — .github/workflows/diagnose.yml + scripts/diagnose.mjs run the live marktguru fetch + frozen matcher on a GitHub runner (sandbox is 403-blocked) to dump the raw cola feed and classify() verdict. Read-only: no commit, no deploy. Spawned by the Kaufland 12×1L / 14×1L investigation; safe to delete once that closes.
 
 ### Pending Todos
 

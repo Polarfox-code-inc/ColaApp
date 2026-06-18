@@ -10,7 +10,7 @@ Requirements for initial release. Each maps to roadmap phases.
 ### Data Acquisition
 
 - [x] **DATA-01**: System auto-fetches Coca-Cola 12×1L case offers for the 5 target Schifferstadt stores — **REWE, Edeka, Lidl, Kaufland, Wasgau** (individual advertisers; PLZ 67105) — on a schedule, with no manual entry
-- [x] **DATA-02**: System matches strictly the 12×1L case and excludes other Cola SKUs (1.25L 6-packs, can trays, Zero/light unless the 12×1L case, store-brand colas)
+- [x] **DATA-02**: System matches any 1-litre PET case of **≥12 bottles that includes Coca-Cola** — accepting any flavor (Classic/Zero/Light/koffeinfrei, "versch. Sorten"), Coca-Cola-company mixed-brand bundles (Coca-Cola + Fanta/Sprite/Mezzo Mix), and odd "+bonus bottle" counts (e.g. 14×1L) — and excludes wrong-size/other SKUs (1.25L 6-packs, 0.5L/0.33L/0.2L, can trays, store/competitor colas) and 1L packs under 12. An ambiguous-size "Kasten" is flagged `needsReview` rather than dropped. *(Scope broadened 2026-06 from the original "strictly 12×1L"; see PROJECT.md Key Decisions.)*
 - [x] **DATA-03**: System normalizes each offer to price (excluding Pfand), €/litre, store, and valid-from/valid-to dates
 - [x] **DATA-04**: System appends each offer's price to a price history, deduplicated so repeated runs do not create duplicate entries
 - [x] **DATA-05**: A failed or unavailable store fetch is isolated — the run continues, last-known data is preserved, and the affected store is marked stale
@@ -35,7 +35,7 @@ Requirements for initial release. Each maps to roadmap phases.
 
 - [x] **PWA-01**: User can install the app to the Android home screen (web manifest + service worker, no sideloading, no app store)
 - [x] **PWA-02**: User can open the app offline and still see the last-fetched data
-- [x] **PWA-03**: When online, the app loads fresh data rather than serving stale prices indefinitely
+- [x] **PWA-03**: When online, the app loads fresh data rather than serving stale prices indefinitely — `data/*.json|jsonl` served **NetworkFirst** (3s timeout, falls back to cache only when offline/flaky); the earlier StaleWhileRevalidate caused a permanent one-open stale-price lag *(fixed 2026-06, commit 94892ef)*
 
 ### Infrastructure
 
@@ -68,8 +68,8 @@ Explicitly excluded. Documented to prevent scope creep.
 |---------|--------|
 | More than the 5 Schifferstadt stores | Scope is intentionally narrow; not expanding |
 | Aldi, Penny, Netto as stores | Decided Phase 1: Aldi never carries the 12×1L case; Penny and Netto are not on the brother's route. The 5 tracked stores are REWE, Edeka, Lidl, Kaufland, Wasgau (modeled as individual advertisers, not the original marktguru groups) |
-| Products other than the Coca-Cola 12×1L case | Single-product app by design |
-| Other Cola pack sizes / variants as offers | Decided to track strictly the 12×1L case for cleanliness |
+| Products other than a Coca-Cola 1-litre case | Single-product app by design |
+| Wrong-size / non-case Cola SKUs (1.25L 6-packs, 0.5L/0.33L/0.2L, cans, 1L packs under 12 bottles) | Not a case. NB (broadened 2026-06): ≥12×1L PET cases that include Coca-Cola — incl. mixed-brand bundles & odd counts — ARE in scope; only wrong per-bottle sizes and sub-12 packs are excluded |
 | Push notifications / alerts | Brother opens and checks himself; keeps it a static PWA |
 | Native Android app / app-store distribution | PWA is sufficient and avoids sideloading |
 | Accounts, login, multi-user, personalization | It's for one person |
@@ -113,5 +113,6 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 ---
 *Requirements defined: 2026-06-15*
-*Last updated: 2026-06-15 — Phase 3 discuss: HIST-03 (per-store history lines) pulled from v2 into v1/Phase 3 by user decision*
+*Last updated: 2026-06-18 — Synced 19 merged commits: DATA-02 broadened to ≥12×1L cases incl. Coca-Cola mixed-brand bundles & odd counts (review only an unconfirmable-size Kasten); PWA-03 pinned to NetworkFirst data caching*
+*Earlier: 2026-06-15 — Phase 3 discuss: HIST-03 (per-store history lines) pulled from v2 into v1/Phase 3 by user decision*
 *Earlier: 2026-06-15 — Phase 1 discuss: store set narrowed to REWE, Edeka, Lidl, Kaufland, Wasgau (individual advertisers); Aldi/Penny/Netto dropped*
