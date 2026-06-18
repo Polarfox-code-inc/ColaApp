@@ -134,27 +134,23 @@ test("re-running over the same accepted offer appends the history line once, not
 test("total fetch failure with a prior snapshot carries offers forward and freezes per-store ts (DATA-05/D-06)", async () => {
   const d = await freshDir();
   try {
-    // Seed the prior data/* shapes into the tmp dir.
-    await writeFile(
-      join(d, "current-offers.json"),
-      readFileSync(join(ROOT, "data/current-offers.json"), "utf8"),
-      "utf8"
-    );
-    await writeFile(
-      join(d, "status.json"),
-      readFileSync(join(ROOT, "data/status.json"), "utf8"),
-      "utf8"
-    );
+    // Seed the prior snapshot from COMMITTED MOCKS, not the live data/* files. The
+    // live files are mutated by the scheduled scrape (REWE drifted to no_offer),
+    // which previously invalidated this test's "prior offer" premise. The offer
+    // mock pins REWE as a clean prior offer; the stale status mock gives it a known
+    // frozen lastUpdated.
+    const priorCurrent = readFileSync(join(ROOT, "mocks/current-offers.offer.json"), "utf8");
+    const priorStatus = readFileSync(join(ROOT, "mocks/status.stale.json"), "utf8");
+    await writeFile(join(d, "current-offers.json"), priorCurrent, "utf8");
+    await writeFile(join(d, "status.json"), priorStatus, "utf8");
     await writeFile(
       join(d, "price-history.jsonl"),
-      readFileSync(join(ROOT, "data/price-history.jsonl"), "utf8"),
+      '{"date":"2026-06-15","store":"REWE","price":999,"pricePerLitre":83,"validFrom":"2026-06-16","validTo":"2026-06-21"}\n',
       "utf8"
     );
 
-    const priorRewe = JSON.parse(readFileSync(join(ROOT, "data/current-offers.json"), "utf8"))
-      .stores.find((s) => s.store === "REWE");
-    const priorReweTs = JSON.parse(readFileSync(join(ROOT, "data/status.json"), "utf8"))
-      .stores.find((s) => s.store === "REWE").lastUpdated;
+    const priorRewe = JSON.parse(priorCurrent).stores.find((s) => s.store === "REWE");
+    const priorReweTs = JSON.parse(priorStatus).stores.find((s) => s.store === "REWE").lastUpdated;
 
     await run({ now: NOW, dataDir: d, fetchOffers: async () => { throw new Error("boom"); } });
 
@@ -209,8 +205,10 @@ test("a validation drift writes a valid error status.json and preserves current-
     // Seed a DRIFTED prior current-offers.json: a status:"offer" REWE entry
     // missing its required offer fields. A total fetch failure carries this
     // forward verbatim, so the assembled current-offers fails parseCurrentOffers.
+    // Base it on the committed offer mock (stable), NOT the live data/* file the
+    // scheduled scrape mutates.
     const goodCurrent = JSON.parse(
-      readFileSync(join(ROOT, "data/current-offers.json"), "utf8")
+      readFileSync(join(ROOT, "mocks/current-offers.offer.json"), "utf8")
     );
     const drifted = {
       lastUpdated: goodCurrent.lastUpdated,
@@ -223,7 +221,7 @@ test("a validation drift writes a valid error status.json and preserves current-
     await writeFile(join(d, "current-offers.json"), JSON.stringify(drifted), "utf8");
     await writeFile(
       join(d, "status.json"),
-      readFileSync(join(ROOT, "data/status.json"), "utf8"),
+      readFileSync(join(ROOT, "mocks/status.stale.json"), "utf8"),
       "utf8"
     );
 
