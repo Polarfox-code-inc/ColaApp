@@ -1,15 +1,19 @@
 // web/src/chart/history.js
 // Price-history chart (HIST-01/02/03). Two halves:
-//   1. PURE data-prep — parseHistoryJsonl + prepareChartData. Aligns the
-//      append-only JSONL history lines to a single shared date x-axis with one
-//      y-series per LINE-store, inserting `null` (NOT a value) wherever a store
-//      has no observation on a date. Those nulls are the honesty mechanism:
-//      with uPlot's spanGaps:false they break the line instead of interpolating
-//      a price that never existed (RESEARCH Pitfall 3 / HIST-02). Wasgau is never
-//      a series — it has no automatic data source (D-12 / HIST-03). This half is
-//      unit-locked in web/test/chart.test.mjs.
-//   2. renderHistory — the uPlot rendering that encodes the gap/markers rules,
-//      per-store palette, the Wasgau-aware legend and the cold-start panel.
+//   1. PURE data-prep — parseHistoryJsonl + prepareChartData. Turns each offer in
+//      the append-only JSONL history into a FLAT PRICE SEGMENT spanning its
+//      validity window (validFrom→validTo) on a single shared x-axis, one y-series
+//      per LINE-store. A store's series carries the offer price at every x inside
+//      one of its windows and `null` everywhere else. With uPlot's spanGaps:false
+//      that paints a horizontal line for the whole week an offer is valid (its
+//      DURATION) and BREAKS between distinct offers — never interpolating a price
+//      that never existed (RESEARCH Pitfall 3 / HIST-02). To keep two back-to-back
+//      offers of the same store from joining into one sloped line, a one-second
+//      sentinel after each offer's validTo forces a null between them. Wasgau is
+//      never a series — it has no automatic data source (D-12 / HIST-03). This half
+//      is unit-locked in web/test/chart.test.mjs.
+//   2. renderHistory — the uPlot rendering that encodes the gap rule, per-store
+//      palette, the Wasgau-aware legend and the cold-start panel.
 //
 // Price math: history `price` is integer cents (D-09); the chart axis is euros,
 // so each value is price/100. The x-axis is epoch SECONDS at UTC midnight of each
@@ -46,42 +50,73 @@ export function parseHistoryJsonl(text) {
     .map((line) => JSON.parse(line));
 }
 
+// Epoch SECONDS at UTC midnight of a YYYY-MM-DD (uPlot time scale wants seconds).
+const daySeconds = (d) => Date.parse(`${d}T00:00:00Z`) / 1000;
+
+// One-second sentinel placed just after each offer's validTo. It guarantees a
+// null x between two back-to-back offers of the SAME store, so spanGaps:false
+// breaks them instead of joining their prices with a misleading slope (HIST-02).
+const GAP_SECONDS = 1;
+
 /**
- * Align history lines to a shared sorted date axis with one y-series per
- * line-store and `null` gaps where a store has no observation on a date.
+ * Turn each offer into a flat price segment spanning its validity window, on a
+ * single shared x-axis, one y-series per line-store. A store's value at x is the
+ * offer price when x lies inside one of that store's [validFrom, validTo] windows,
+ * else `null` — so spanGaps:false draws a horizontal line for the offer's whole
+ * valid week and breaks between distinct offers (never interpolated).
  *
  * @param {import('../../../contract/types.d.ts').HistoryLine[]} historyLines
  * @returns {{
  *   data: (number[] | (number|null)[])[],  // [xSeconds, ...one series per STORES_WITH_LINES]
- *   dates: string[],                        // unique sorted YYYY-MM-DD (empty => cold start)
+ *   x: number[],                            // shared epoch-seconds axis (empty => cold start)
  *   stores: typeof STORES_WITH_LINES,       // the four line-stores, in order (no Wasgau)
- *   pointCounts: Record<string, number>,    // non-null observations per store
+ *   offerCounts: Record<string, number>,    // offers (segments) per store
+ *   isEmpty: boolean,                       // true => renderHistory shows the cold-start panel
  * }}
  */
 export function prepareChartData(historyLines) {
-  // Unique observation dates, ascending. ISO YYYY-MM-DD sorts lexically === chronologically.
-  const dates = [...new Set(historyLines.map((l) => l.date))].sort();
-  // x-axis: epoch SECONDS at UTC midnight of each date (uPlot time scale wants seconds).
-  const x = dates.map((d) => Date.parse(`${d}T00:00:00Z`) / 1000);
+  // Collect each line-store's offer windows. Wasgau/unknown stores never become a
+  // series (D-12 / HIST-03); a row missing its validity window is skipped.
+  const offersByStore = new Map(STORES_WITH_LINES.map((s) => [s, []]));
+  for (const l of historyLines) {
+    const offers = offersByStore.get(l.store);
+    if (!offers || !l.validFrom || !l.validTo) continue;
+    offers.push({
+      from: daySeconds(l.validFrom),
+      to: daySeconds(l.validTo),
+      price: l.price / 100,
+    });
+  }
 
-  const pointCounts = {};
+  // Shared x-axis: every offer's validFrom + validTo, plus a (validTo + sentinel)
+  // break point so adjacent same-store offers stay separated.
+  const xs = new Set();
+  for (const offers of offersByStore.values()) {
+    for (const o of offers) {
+      xs.add(o.from);
+      xs.add(o.to);
+      xs.add(o.to + GAP_SECONDS);
+    }
+  }
+  const x = [...xs].sort((a, b) => a - b);
+
+  const offerCounts = {};
   const series = STORES_WITH_LINES.map((store) => {
-    // date -> euro price for this store only.
-    const byDate = new Map(
-      historyLines
-        .filter((l) => l.store === store)
-        .map((l) => [l.date, l.price / 100]),
-    );
-    pointCounts[store] = byDate.size;
-    // null where the store has no observation => a broken line, never interpolated.
-    return dates.map((d) => (byDate.has(d) ? byDate.get(d) : null));
+    const offers = offersByStore.get(store);
+    offerCounts[store] = offers.length;
+    // Offer price where x is inside a window, else null (broken line — no interpolation).
+    return x.map((t) => {
+      const o = offers.find((win) => t >= win.from && t <= win.to);
+      return o ? o.price : null;
+    });
   });
 
   return {
     data: [x, ...series],
-    dates,
+    x,
     stores: STORES_WITH_LINES,
-    pointCounts,
+    offerCounts,
+    isEmpty: x.length === 0,
   };
 }
 
@@ -114,22 +149,22 @@ const formatYTick = (v) => `${v.toFixed(2).replace(".", ",")} €`;
 
 /**
  * One uPlot series for a line-store. Honesty rules live here:
- *  - spanGaps:false -> a null breaks the line, NEVER interpolated (D-13-graph).
- *  - paths:()=>null when the store has <3 points -> markers only, no connecting
- *    line (a 1–2-point "trend" would be misleading). >=3 points -> default line.
- *  - points always shown so even single observations are visible.
+ *  - spanGaps:false -> a null breaks the line, NEVER interpolated (HIST-02 /
+ *    D-13-graph). Combined with the per-offer windows + sentinel from
+ *    prepareChartData, each offer paints a flat segment over its valid week and
+ *    distinct offers stay broken apart.
+ *  - points always shown so a one-day offer (validFrom == validTo) is still
+ *    visible as a marker rather than a zero-length, invisible segment.
  * @param {string} store
  * @param {string} color
- * @param {number} pointCount
  */
-function seriesFor(store, color, pointCount) {
+function seriesFor(store, color) {
   return {
     label: store,
     stroke: color,
-    width: 2,
+    width: 3,
     spanGaps: false, // null => broken line, NO interpolation (HIST-02 / D-13-graph)
-    paths: pointCount < 3 ? () => null : undefined, // <3 points: markers only
-    points: { show: true, size: 7 },
+    points: { show: true, size: 6 },
   };
 }
 
@@ -197,9 +232,9 @@ function renderLegend(container) {
 
 /**
  * Render the price-history chart into `container`. Reads the prepared data; on a
- * cold start (0 dates) it renders the honest "Noch keine Daten" panel and returns
+ * cold start (no offers) it renders the honest "Noch keine Daten" panel and returns
  * WITHOUT constructing uPlot (Pitfall 8 — an empty axis looks broken). Otherwise
- * it builds one line per store with the gap/markers rules, the Wasgau-aware
+ * it builds one flat-segment line per store with the gap rule, the Wasgau-aware
  * legend, and a ResizeObserver that keeps the canvas the width of its container.
  *
  * uPlot and its CSS are imported lazily here (see top-of-file note) so this
@@ -211,11 +246,11 @@ function renderLegend(container) {
  * @returns {Promise<import('uplot').default | null>} the uPlot instance, or null on cold start
  */
 export async function renderHistory(container, historyLines) {
-  const { data, dates, stores, pointCounts } = prepareChartData(historyLines);
+  const { data, stores, isEmpty } = prepareChartData(historyLines);
 
-  // Cold start: no observations yet. Honest empty panel, no hollow uPlot axis.
+  // Cold start: no offers yet. Honest empty panel, no hollow uPlot axis.
   // Returns before any uPlot/CSS import is even evaluated (Pitfall 8).
-  if (dates.length === 0) {
+  if (isEmpty) {
     renderColdStart(container);
     return null;
   }
@@ -234,9 +269,7 @@ export async function renderHistory(container, historyLines) {
     ],
     series: [
       {}, // x series placeholder (uPlot convention)
-      ...stores.map((store) =>
-        seriesFor(store, LINE_COLORS[store], pointCounts[store]),
-      ),
+      ...stores.map((store) => seriesFor(store, LINE_COLORS[store])),
     ],
   };
 

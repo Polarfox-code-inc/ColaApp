@@ -1,21 +1,30 @@
 // web/test/chart.test.mjs
-// Locks the load-bearing data-prep half of the price-history chart: the shared
-// sorted date axis, per-store y-series with NULL gaps (never interpolated —
-// RESEARCH Pitfall 3 / HIST-02), the Wasgau-is-never-a-series rule (HIST-03),
-// per-store point counts (drives markers-only vs line), JSONL parsing of the real
-// repo-root fixture, and the cold-start-detectable empty shape (Pitfall 8).
-// Pure functions only — no DOM, no uPlot, no clock. Mirrors the derive/format
-// test harness style (node:test + node:assert/strict + repo-root fixtures).
+// Locks the load-bearing data-prep half of the price-history chart: each offer
+// becomes a FLAT PRICE SEGMENT spanning its validity window on a shared
+// epoch-seconds x-axis (one series per line-store), with `null` everywhere
+// outside a window so spanGaps:false breaks between distinct offers and never
+// interpolates (HIST-02). A one-second sentinel after each offer's validTo keeps
+// two back-to-back same-store offers from joining into one sloped line. Wasgau is
+// never a series (HIST-03). Pure functions only — no DOM, no uPlot, no clock.
+//
+// The fixture is INLINE (not the live data/price-history.jsonl) so these tests are
+// deterministic and independent of whatever real history the scraper has appended.
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
-import { fileURLToPath } from "node:url";
-import { dirname, join } from "node:path";
 import { parseHistoryJsonl, prepareChartData } from "../src/chart/history.js";
 
-// web/test -> web -> repo root. The fixture lives at the repo root, not under web/.
-const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-const HISTORY = readFileSync(join(ROOT, "data", "price-history.jsonl"), "utf8");
+// Epoch seconds at UTC midnight — mirrors the production daySeconds() helper.
+const SEC = (d) => Date.parse(`${d}T00:00:00Z`) / 1000;
+
+// Three offers: REWE has TWO (06-02..06-07 @10,99 and 06-16..06-21 @9,99),
+// Kaufland ONE (06-09..06-14 @10,49). Lines up to prove segments + breaks.
+const HISTORY = [
+  '{"date":"2026-06-01","store":"REWE","price":1099,"pricePerLitre":92,"validFrom":"2026-06-02","validTo":"2026-06-07"}',
+  '{"date":"2026-06-08","store":"Kaufland","price":1049,"pricePerLitre":87,"validFrom":"2026-06-09","validTo":"2026-06-14"}',
+  '{"date":"2026-06-15","store":"REWE","price":999,"pricePerLitre":83,"validFrom":"2026-06-16","validTo":"2026-06-21"}',
+].join("\n");
+
+const seriesOf = (out, store) => out.data[1 + out.stores.indexOf(store)];
 
 // --- parseHistoryJsonl: JSONL text -> HistoryLine[] ---
 
@@ -35,10 +44,8 @@ test("parseHistoryJsonl parses the 3-line fixture into HistoryLine objects", () 
 });
 
 test("parseHistoryJsonl tolerates a trailing newline and blank lines", () => {
-  const withTrailing = parseHistoryJsonl(HISTORY + "\n");
-  assert.equal(withTrailing.length, 3);
-  const withBlanks = parseHistoryJsonl("\n" + HISTORY + "\n\n   \n");
-  assert.equal(withBlanks.length, 3);
+  assert.equal(parseHistoryJsonl(HISTORY + "\n").length, 3);
+  assert.equal(parseHistoryJsonl("\n" + HISTORY + "\n\n   \n").length, 3);
 });
 
 test("parseHistoryJsonl returns [] for empty / whitespace-only input", () => {
@@ -46,71 +53,104 @@ test("parseHistoryJsonl returns [] for empty / whitespace-only input", () => {
   assert.deepEqual(parseHistoryJsonl("   \n  \n"), []);
 });
 
-// --- prepareChartData: shared axis + null gaps + point counts ---
+// --- prepareChartData: per-offer segments + sentinel breaks ---
 
-test("prepareChartData builds the shared sorted date axis from the fixture", () => {
+test("prepareChartData builds the shared x-axis from offer windows + sentinels", () => {
   const out = prepareChartData(parseHistoryJsonl(HISTORY));
-  assert.deepEqual(out.dates, ["2026-06-01", "2026-06-08", "2026-06-15"]);
-  // x is epoch SECONDS at UTC midnight of each date, aligned to dates.
-  const x = out.data[0];
-  assert.deepEqual(x, [
-    Date.parse("2026-06-01T00:00:00Z") / 1000,
-    Date.parse("2026-06-08T00:00:00Z") / 1000,
-    Date.parse("2026-06-15T00:00:00Z") / 1000,
-  ]);
+  // Every offer contributes from, to, and (to + 1s); sorted unique, ascending.
+  const expected = [
+    SEC("2026-06-02"),
+    SEC("2026-06-07"),
+    SEC("2026-06-07") + 1,
+    SEC("2026-06-09"),
+    SEC("2026-06-14"),
+    SEC("2026-06-14") + 1,
+    SEC("2026-06-16"),
+    SEC("2026-06-21"),
+    SEC("2026-06-21") + 1,
+  ];
+  assert.deepEqual(out.x, expected);
+  assert.deepEqual(out.data[0], expected); // data[0] is the x-series
 });
 
 test("prepareChartData lines up four line-stores and excludes Wasgau", () => {
   const out = prepareChartData(parseHistoryJsonl(HISTORY));
   assert.deepEqual(out.stores, ["REWE", "Edeka", "Lidl", "Kaufland"]);
-  assert.equal(out.stores.length, 4);
   assert.ok(!out.stores.includes("Wasgau"), "Wasgau must never be a series");
-  // data = [x, ...4 series]; never a 5th (Wasgau) series.
-  assert.equal(out.data.length, 5);
+  assert.equal(out.data.length, 5); // x + 4 series, never a 5th (Wasgau)
 });
 
-test("prepareChartData breaks the REWE line with null at the no-offer date (no interpolation)", () => {
+test("prepareChartData paints REWE's two offers as flat segments, broken apart", () => {
   const out = prepareChartData(parseHistoryJsonl(HISTORY));
-  const rewe = out.data[1 + out.stores.indexOf("REWE")];
-  // REWE: 10.99 on 06-01, NOTHING on 06-08 (null gap), 9.99 on 06-15.
-  assert.deepEqual(rewe, [10.99, null, 9.99]);
-  // The null at index 1 is the proof of HIST-02: never interpolate across a gap.
-  assert.equal(rewe[1], null);
+  // x:    02     07     07+1  09    14    14+1  16     21     21+1
+  // REWE: 10,99  10,99  null  null  null  null  9,99   9,99   null
+  assert.deepEqual(seriesOf(out, "REWE"), [
+    10.99, 10.99, null, null, null, null, 9.99, 9.99, null,
+  ]);
 });
 
-test("prepareChartData maps prices to euros and aligns Kaufland's single point", () => {
+test("prepareChartData paints Kaufland's single offer as one flat segment", () => {
   const out = prepareChartData(parseHistoryJsonl(HISTORY));
-  const kaufland = out.data[1 + out.stores.indexOf("Kaufland")];
-  assert.deepEqual(kaufland, [null, 10.49, null]);
+  assert.deepEqual(seriesOf(out, "Kaufland"), [
+    null, null, null, 10.49, 10.49, null, null, null, null,
+  ]);
 });
 
-test("prepareChartData leaves stores with no observations all-null", () => {
+test("prepareChartData leaves stores with no offers all-null", () => {
   const out = prepareChartData(parseHistoryJsonl(HISTORY));
-  const edeka = out.data[1 + out.stores.indexOf("Edeka")];
-  const lidl = out.data[1 + out.stores.indexOf("Lidl")];
-  assert.deepEqual(edeka, [null, null, null]);
-  assert.deepEqual(lidl, [null, null, null]);
+  const allNull = new Array(out.x.length).fill(null);
+  assert.deepEqual(seriesOf(out, "Edeka"), allNull);
+  assert.deepEqual(seriesOf(out, "Lidl"), allNull);
 });
 
-test("prepareChartData counts non-null points per store (drives markers-only branch)", () => {
+test("prepareChartData counts offers (segments) per store", () => {
   const out = prepareChartData(parseHistoryJsonl(HISTORY));
-  assert.equal(out.pointCounts.REWE, 2); // 2 points -> markers only (<3)
-  assert.equal(out.pointCounts.Kaufland, 1); // 1 point -> markers only
-  assert.equal(out.pointCounts.Edeka, 0);
-  assert.equal(out.pointCounts.Lidl, 0);
+  assert.equal(out.offerCounts.REWE, 2);
+  assert.equal(out.offerCounts.Kaufland, 1);
+  assert.equal(out.offerCounts.Edeka, 0);
+  assert.equal(out.offerCounts.Lidl, 0);
+});
+
+test("the validTo sentinel breaks two back-to-back same-store offers (no joined slope)", () => {
+  // Only REWE, two adjacent offers: 06-02..06-07 then 06-08..06-13. Nothing else
+  // supplies a null between them, so the sentinel must.
+  const backToBack = [
+    '{"date":"2026-06-01","store":"REWE","price":1100,"pricePerLitre":92,"validFrom":"2026-06-02","validTo":"2026-06-07"}',
+    '{"date":"2026-06-08","store":"REWE","price":1000,"pricePerLitre":83,"validFrom":"2026-06-08","validTo":"2026-06-13"}',
+  ].join("\n");
+  const out = prepareChartData(parseHistoryJsonl(backToBack));
+  // x: 02   07   07+1  08   13   13+1
+  assert.deepEqual(out.x, [
+    SEC("2026-06-02"),
+    SEC("2026-06-07"),
+    SEC("2026-06-07") + 1,
+    SEC("2026-06-08"),
+    SEC("2026-06-13"),
+    SEC("2026-06-13") + 1,
+  ]);
+  // The null at index 2 (the sentinel) is what keeps 11,00 and 10,00 from joining.
+  assert.deepEqual(seriesOf(out, "REWE"), [11, 11, null, 10, 10, null]);
+});
+
+test("a one-day offer (validFrom == validTo) yields a single visible point", () => {
+  const oneDay =
+    '{"date":"2026-06-18","store":"Kaufland","price":1099,"pricePerLitre":79,"validFrom":"2026-06-18","validTo":"2026-06-18"}';
+  const out = prepareChartData(parseHistoryJsonl(oneDay));
+  // x: 18, 18+1 (from == to collapses to one boundary, plus the sentinel).
+  assert.deepEqual(out.x, [SEC("2026-06-18"), SEC("2026-06-18") + 1]);
+  assert.deepEqual(seriesOf(out, "Kaufland"), [10.99, null]);
+  assert.equal(out.offerCounts.Kaufland, 1);
 });
 
 // --- cold-start shape (Pitfall 8): empty input must be detectable by renderHistory ---
 
 test("prepareChartData([]) yields the cold-start-detectable empty shape", () => {
   const out = prepareChartData([]);
-  assert.deepEqual(out.dates, []);
-  assert.equal(out.dates.length, 0); // renderHistory branches on dates.length === 0
-  // x-series present but empty so uPlot is never constructed on a hollow axis.
-  assert.deepEqual(out.data[0], []);
-  // every line-store reports zero points.
-  assert.equal(out.pointCounts.REWE, 0);
-  assert.equal(out.pointCounts.Edeka, 0);
-  assert.equal(out.pointCounts.Lidl, 0);
-  assert.equal(out.pointCounts.Kaufland, 0);
+  assert.equal(out.isEmpty, true); // renderHistory branches on isEmpty
+  assert.deepEqual(out.x, []);
+  assert.deepEqual(out.data[0], []); // x-series present but empty => uPlot never built
+  assert.equal(out.offerCounts.REWE, 0);
+  assert.equal(out.offerCounts.Edeka, 0);
+  assert.equal(out.offerCounts.Lidl, 0);
+  assert.equal(out.offerCounts.Kaufland, 0);
 });
