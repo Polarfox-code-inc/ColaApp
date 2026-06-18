@@ -174,9 +174,14 @@ body {
   justify-content: space-between;
 }
 .card__row--price,
-.card__row--upcoming {
+.card__row--upcoming,
+.card__row--review {
   margin-top: var(--space-sm);
   flex-wrap: wrap;
+}
+/* A review offer is unverified — its price is muted, never accent green. */
+.card__row--review .card__price {
+  color: var(--color-text-muted);
 }
 .card__store {
   font-size: var(--font-heading);
@@ -207,6 +212,9 @@ body {
 }
 .card[data-state="upcoming"] {
   border-left-color: var(--color-info);
+}
+.card[data-state="review"] {
+  border-left-color: var(--color-warning);
 }
 .card[data-state="no_offer"] {
   border-left-color: var(--color-muted);
@@ -242,6 +250,10 @@ body {
 .chip[data-state="upcoming"] {
   color: var(--color-info);
   background: var(--color-info-tint);
+}
+.chip[data-state="review"] {
+  color: var(--color-warning);
+  background: var(--color-warning-tint);
 }
 .chip[data-state="no_offer"] {
   color: var(--color-muted);

@@ -16,7 +16,7 @@
 // and the threaded `now`. Everything funnels through the pure layer so a
 // needsReview offer can never present as active/upcoming.
 
-import { isActive, isUpcoming, isStale, berlinToday } from "../derive/derive.js";
+import { isActive, isUpcoming, isReview, isStale, berlinToday } from "../derive/derive.js";
 import {
   formatPrice,
   formatPerLitre,
@@ -26,6 +26,7 @@ import {
 // Hardcoded German chip labels (D-03 — verbatim from the UI-SPEC Copywriting Contract).
 const LABEL = {
   active: "aktiv",
+  review: "bitte prüfen",
   no_offer: "kein Angebot",
   unavailable: "nicht automatisch verfügbar",
   error: "Fehler",
@@ -37,6 +38,7 @@ const LABEL = {
 const ICON = {
   active: "✓",
   upcoming: "→",
+  review: "?",
   no_offer: "–",
   unavailable: "i",
   error: "!",
@@ -96,9 +98,16 @@ function renderCard(store, statusByStore, now, today) {
 
   const active = isActive(store, today);
   const upcoming = isUpcoming(store, today);
+  const review = !active && !upcoming && isReview(store, today);
 
   // data-state drives the 1px left state-edge color (UI-SPEC token contract).
-  const state = active ? "active" : upcoming ? "upcoming" : rawState(store.status);
+  const state = active
+    ? "active"
+    : upcoming
+      ? "upcoming"
+      : review
+        ? "review"
+        : rawState(store.status);
   card.dataset.state = state;
 
   // --- Row 1: store name + state chip (+ optional veraltet chip) ---
@@ -112,6 +121,7 @@ function renderCard(store, statusByStore, now, today) {
     // Upcoming uses the info badge as its primary chip (see Row 2 below too).
     chips.appendChild(upcomingBadge(store));
   } else {
+    // review / no_offer / unavailable / error all use the standard icon+label chip.
     chips.appendChild(chip(state, LABEL[state]));
   }
 
@@ -124,14 +134,29 @@ function renderCard(store, statusByStore, now, today) {
   row1.appendChild(chips);
   card.appendChild(row1);
 
-  // --- Row 2: active price row, OR upcoming badge line, OR nothing ---
+  // --- Row 2: active price row, OR upcoming badge line, OR review row, OR nothing ---
   if (active) {
     card.appendChild(activePriceRow(store));
   } else if (upcoming) {
     card.appendChild(upcomingLine(store));
+  } else if (review) {
+    card.appendChild(reviewRow(store));
   }
 
   return card;
+}
+
+// Review Row 2: the unverified offer's price + €/l + "gültig bis {…}". The price
+// is muted (not accent green) because the offer is not a confirmed clean 12×1L
+// deal — the "bitte prüfen" chip + amber edge already flag it for verification.
+function reviewRow(store) {
+  const row = el("div", "card__row card__row--review");
+  row.appendChild(el("span", "card__price price", formatPrice(store.price)));
+  row.appendChild(el("span", "card__perlitre", formatPerLitre(store.pricePerLitre)));
+  row.appendChild(
+    el("span", "card__validity", `gültig bis ${formatValidUntil(store.validTo)}`),
+  );
+  return row;
 }
 
 // Active Row 2: accent-green price + €/l + "gültig bis {…}" (all muted but price).
