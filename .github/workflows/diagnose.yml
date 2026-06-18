@@ -21,7 +21,17 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           node-version: 22
-      # scripts/diagnose.mjs imports only dependency-free modules
-      # (scraper/fetch.mjs, contract/matcher.mjs) — no npm install needed.
+          cache: npm
+      - run: npm ci
       - name: Diagnose marktguru feed (Kaufland 12x1L)
         run: node scripts/diagnose.mjs
+      # Follow the pipe: run the REAL scraper against the live feed with the new
+      # matcher, then print its output. Read-only here (no commit, no deploy) —
+      # purely to confirm the Kaufland offer now surfaces as needsReview.
+      - name: Run scraper (with new matcher) and show output
+        run: |
+          npm run scrape
+          echo "===== data/current-offers.json ====="
+          cat data/current-offers.json
+          echo "===== data/status.json ====="
+          cat data/status.json
