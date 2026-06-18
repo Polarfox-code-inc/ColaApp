@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-18T10:01:34.895Z",
+  "lastUpdated": "2026-06-18T12:06:13.088Z",
   "stores": [
     {
       "store": "REWE",
@@ -20,10 +20,10 @@
       "store": "Kaufland",
       "displayName": "Kaufland",
       "status": "offer",
-      "needsReview": true,
+      "needsReview": false,
       "price": 1099,
       "currency": "EUR",
-      "pricePerLitre": 92,
+      "pricePerLitre": 79,
       "validFrom": "2026-06-18",
       "validTo": "2026-06-24"
     },
