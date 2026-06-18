@@ -1,0 +1,27 @@
+# .github/workflows/diagnose.yml
+# Throwaway, side-effect-free diagnostic. Runs on a GitHub runner (whose IP is
+# NOT blocked by marktguru, unlike a local sandbox) to dump the raw cola feed
+# and the frozen matcher's verdict for the Kaufland 12x1L investigation.
+# Read-only: no commit, no deploy. Safe to delete after the investigation.
+name: diagnose
+
+on:
+  push:
+    branches: [claude/claude-md-file-cm12tg]
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+      # scripts/diagnose.mjs imports only dependency-free modules
+      # (scraper/fetch.mjs, contract/matcher.mjs) — no npm install needed.
+      - name: Diagnose marktguru feed (Kaufland 12x1L)
+        run: node scripts/diagnose.mjs
