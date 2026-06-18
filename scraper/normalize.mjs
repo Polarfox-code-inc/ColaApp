@@ -5,8 +5,10 @@
 // here (determinism against fixtures — RESEARCH Pattern 4).
 //
 // Encodes DATA-03 normalization: integer cents (D-09), cents/litre over the
-// 12x1L case (D-11), Berlin-trimmed calendar dates (D-13), and NO pfand field
-// (D-10 — the contract is .strict() and would reject an extra key).
+// ACTUAL bottle count (D-11), Berlin-trimmed calendar dates (D-13), and NO pfand
+// field (D-10 — the contract is .strict() and would reject an extra key).
+
+import { caseCount } from "../contract/matcher.mjs";
 
 // Berlin-day trim (D-09, findings S4). Intl over a UTC `.slice(0,10)` is
 // mandatory: 2026-06-14T22:00:00Z is already 2026-06-15 in Europe/Berlin (CEST),
@@ -36,8 +38,11 @@ export function toStoreOffer(offer, range) {
   const store = offer?.store;
   // Math.round avoids float artefacts like 5.99 * 100 === 598.9999... (D-09).
   const price = Math.round((offer?.price ?? 0) * 100);
-  // 12 x 1-litre case -> per-litre is price over 12 litres (D-11).
-  const pricePerLitre = Math.round(price / 12);
+  // Per-litre is price over the ACTUAL number of 1-litre bottles (D-11): a 14×1L
+  // case is 14 litres, not 12. Fall back to 12 (a full Kasten) when the offer
+  // carries no parseable count — e.g. an ambiguous "Kasten" review entry.
+  const litres = caseCount(offer) ?? 12;
+  const pricePerLitre = Math.round(price / litres);
 
   return {
     store,

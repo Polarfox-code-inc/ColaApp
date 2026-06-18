@@ -61,42 +61,59 @@ test("Pfand text does not affect the verdict (D-10)", () => {
   assert.equal(classify(withPfand), "accept");
 });
 
-// Odd-count 1-litre case (e.g. the real Kaufland "14 x je 1-l") is case-like but
-// not the canonical 12-pack -> review, never silently dropped (D-08).
-test("a 14 x 1 l Coca-Cola case -> review (odd count)", () => {
-  assert.equal(
-    classify({
-      brand: { name: "Coca-Cola" },
-      product: { name: "Cola" },
-      description: "Coca-Cola koffeinhaltig 14 x je 1-l-PET-Fl.",
-    }),
-    "review"
-  );
+const offer = (description, extra = {}) => ({
+  brand: { name: "Coca-Cola" },
+  product: { name: "Cola" },
+  description,
+  ...extra,
 });
 
-// The known-wrong 6x count stays a hard reject (DISQUALIFY precedes the review
-// path) — odd-count review must not weaken the 6x1L boundary (D-07).
-test("a 6 x 1 l case stays reject (known-wrong count)", () => {
-  assert.equal(
-    classify({
-      brand: { name: "Coca-Cola" },
-      product: { name: "Cola" },
-      description: "Coca-Cola 6 x 1-l case",
-    }),
-    "reject"
-  );
+// A 1-litre case of 12 OR MORE bottles (a full Kasten + bonus) -> accept, incl.
+// Coca-Cola-company mixed bundles and any flavor (user scope decision 2026-06).
+test("a 14 x 1 l Coca-Cola case -> accept (>=12, bonus bottles ok)", () => {
+  assert.equal(classify(offer("Coca-Cola koffeinhaltig 14 x je 1-l-PET-Fl.")), "accept");
 });
 
-// "12 x je 1-l" (real Kaufland phrasing with "je") still reads as the clean
-// 12x1L case -> accept.
-test('the "je" phrasing "12 x je 1-l" still accepts', () => {
+test("a 20 x 1 l mixed Coke-company case -> accept", () => {
+  assert.equal(classify(offer("Coca-Cola oder Fanta 20 x 1-l versch. Sorten")), "accept");
+});
+
+test("a mixed-brand 12 x 1 l bundle that includes Coca-Cola -> accept", () => {
   assert.equal(
-    classify({
-      brand: { name: "Coca-Cola" },
-      product: { name: "Cola", description: "koffeinhaltig" },
-      description: "Coca-Cola 12 x je 1-l-PET-Fl.",
-    }),
+    classify(offer("Coca-Cola, Fanta, Sprite oder Mezzo Mix 12 x 1-l versch. Sorten")),
     "accept"
+  );
+});
+
+// "versch. Sorten" = various FLAVORS; it must never demote a confirmable case.
+test('"versch. Sorten" alone does not demote a clean 12x1L case', () => {
+  assert.equal(classify(offer("Coca-Cola koffeinhaltig versch. Sorten 12 x 1-l")), "accept");
+});
+
+// Fewer than 12 1-litre bottles is a six-pack, not a case -> reject.
+test("a 6 x 1 l case -> reject (under a full case)", () => {
+  assert.equal(classify(offer("Coca-Cola 6 x 1-l case")), "reject");
+});
+
+test("an 11 x 1 l pack -> reject (still under 12)", () => {
+  assert.equal(classify(offer("Coca-Cola 11 x 1-l")), "reject");
+});
+
+// "12 x je 1-l" (real Kaufland phrasing with "je") -> accept.
+test('the "je" phrasing "12 x je 1-l" accepts', () => {
+  assert.equal(classify(offer("Coca-Cola 12 x je 1-l-PET-Fl.")), "accept");
+});
+
+// A "Kasten" with no confirmable per-bottle size/count -> review (ambiguous).
+test('an ambiguous "Kasten" with no size -> review', () => {
+  assert.equal(classify(offer("Coca-Cola Kasten versch. Sorten")), "review");
+});
+
+// A Fanta-only bundle (no Coca-Cola) -> reject even at a valid case size.
+test("a case that does NOT include Coca-Cola -> reject", () => {
+  assert.equal(
+    classify({ brand: { name: "Fanta" }, product: { name: "Limo" }, description: "Fanta oder Sprite 12 x 1-l" }),
+    "reject"
   );
 });
 

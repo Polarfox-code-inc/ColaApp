@@ -47,6 +47,26 @@ test("toStoreOffer builds integer-cents price + cents/litre for 8.88", () => {
   assert.equal(so.pricePerLitre, 74); // Math.round(888 / 12) === 74
 });
 
+test("toStoreOffer prices per ACTUAL bottle count (14×1L -> /14, not /12)", () => {
+  const so = toStoreOffer(
+    {
+      price: 10.99,
+      store: "Kaufland",
+      brand: { name: "Coca-Cola" },
+      product: { name: "Cola" },
+      description: "Fanta, Sprite oder Mezzo Mix versch. Sorten 14 x je 1-l-PET-Fl.",
+    },
+    range("2026-06-17T22:00:00Z", "2026-06-24T18:00:00Z")
+  );
+  assert.equal(so.price, 1099);
+  assert.equal(so.pricePerLitre, 79); // Math.round(1099 / 14), NOT 1099/12 (=92)
+});
+
+test("toStoreOffer falls back to /12 when the offer carries no parseable count", () => {
+  const so = toStoreOffer({ price: 11.99, store: "REWE" }, range("2026-06-14T22:00:00Z", "2026-06-20T21:59:00Z"));
+  assert.equal(so.pricePerLitre, 100); // Math.round(1199 / 12)
+});
+
 test("toStoreOffer trims validity range to Berlin days", () => {
   const so = toStoreOffer(
     { price: 11.99, store: "REWE" },

@@ -1,0 +1,9 @@
+{
+  "_label": "synthesized-from-real-text",
+  "_source": "RESEARCH 'Strict 12x1L Matcher' verbatim live string '12 x 1-l case ... (Fanta/Sprite/Mezzo Mix), 9,99 €' (marktguru.de/bl/coca-cola/koeln). A 12×1L PET case incl. Coca-Cola bundled with sibling brands (Fanta/Sprite/Mezzo Mix). German Kasten promos are overwhelmingly these bundles, so a 1-litre case (>=12) that includes Coca-Cola is a real offer -> ACCEPT (user scope decision 2026-06). 'versch. Sorten' = various flavors, never a demotion.",
+  "id": 900021,
+  "brand": { "name": "Coca-Cola", "uniqueName": "coca-cola", "id": 104494 },
+  "product": { "id": 900021, "name": "Cola", "description": "koffeinhaltig" },
+  "description": "Coca-Cola oder Fanta/Sprite/Mezzo Mix 12 x 1-l case versch. Sorten zzgl. 3,30 Pfand 9,99 €",
+  "price": 9.99
+}
