@@ -207,7 +207,7 @@ test("status files validate: data/status.json + mocks/status.stale.json", () => 
 test("every non-empty price-history.jsonl line is valid JSON and a HistoryLine (D-14)", () => {
   const raw = readFileSync(join(ROOT, "data/price-history.jsonl"), "utf8");
   const lines = raw.split("\n").filter((l) => l.trim().length > 0);
-  assert.ok(lines.length >= 2, "expected at least 2 seeded history lines");
+  assert.ok(lines.length >= 1, "expected at least 1 real history line");
   // The file must NOT be a single JSON array (D-02 JSONL, append-only).
   assert.notEqual(raw.trim()[0], "[", "price-history.jsonl must be JSONL, not an array");
   for (const line of lines) {
