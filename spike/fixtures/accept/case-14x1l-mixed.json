@@ -1,0 +1,9 @@
+{
+  "_label": "captured-from-live",
+  "_source": "Live marktguru /offers/search @ PLZ 67105 on 2026-06-18 (diagnose workflow run 27748228826). Real Kaufland offer, brand=Coca-Cola, valid 18-24 Jun, EUR 10.99. A 14×1-litre PET case incl. Coca-Cola bundled with Fanta/Sprite/Mezzo Mix. Count 14 >= 12 (full case + bonus bottles) -> ACCEPT (user scope decision 2026-06).",
+  "id": 900030,
+  "brand": { "name": "Coca-Cola", "uniqueName": "coca-cola", "id": 104494 },
+  "product": { "id": 900030, "name": "Cola", "description": "~twxus~ ~twxnam~" },
+  "description": "Fanta, Sprite oder Mezzo Mix z. T. koffeinhaltig, versch. Sorten (+ 3.60 Pfand) 14 x je 1-l-PET-Fl.",
+  "price": 10.99
+}

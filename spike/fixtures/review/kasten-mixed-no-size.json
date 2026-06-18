@@ -1,0 +1,9 @@
+{
+  "_label": "synthesized-from-real-text",
+  "_source": "A 'Kasten' bundle that names Coca-Cola + sibling brands but gives NO per-bottle size or count ('Coca-Cola oder Fanta/Sprite Kasten versch. Sorten'). Could be a 1-litre case or a 0,5L/1,25L Kasten — genuinely ambiguous, so surface flagged (needsReview, D-08) rather than guess. 'versch. Sorten' (flavors) must NOT by itself demote a confirmable case.",
+  "id": 900031,
+  "brand": { "name": "Coca-Cola", "uniqueName": "coca-cola", "id": 104494 },
+  "product": { "id": 900031, "name": "Cola", "description": "koffeinhaltig" },
+  "description": "Coca-Cola oder Fanta/Sprite Kasten versch. Sorten zzgl. Pfand 9,99 €",
+  "price": 9.99
+}
