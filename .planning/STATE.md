@@ -113,6 +113,7 @@ None yet.
 | # | Description | Date | Commit | Directory |
 |---|-------------|------|--------|-----------|
 | 260616-ixt | Add the cat logo image to the bottom of the ColaApp PWA page | 2026-06-16 | 5289848 | [260616-ixt-add-the-cat-logo-image-to-the-bottom-of-](./quick/260616-ixt-add-the-cat-logo-image-to-the-bottom-of-/) |
+| 260618-q81 | Clean placeholder history data + show offer duration as a price line over the valid week | 2026-06-18 | fa9d1b6, 4e1afea | [260618-q81-clean-non-real-placeholder-data-graph-ol](./quick/260618-q81-clean-non-real-placeholder-data-graph-ol/) |
 
 ## Deferred Items
 
