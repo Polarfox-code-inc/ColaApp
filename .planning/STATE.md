@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: executing
-last_updated: "2026-06-18T00:00:00.000Z"
-last_activity: 2026-06-18 - Synced 19 merged commits (PRs #2-#4): broadened matcher scope (>=12x1L incl. Coca-Cola mixed bundles & odd counts), needsReview "bitte prüfen" card, PWA NetworkFirst data caching, throwaway diagnostic workflow; reflected in PROJECT/REQUIREMENTS/STATE
+status: milestone_complete
+last_updated: "2026-06-18T12:00:00.000Z"
+last_activity: 2026-06-18 - Human approved the real-device verification (twin gates 03-05 + 04-03 Task 2): install/offline/fresh-when-online + six states pass against the live Pages site. INFR-01/02/03 closed; Phases 3 & 4 complete; milestone v1.0 feature-complete
 progress:
   total_phases: 4
-  completed_phases: 2
+  completed_phases: 4
   total_plans: 14
-  completed_plans: 12
-  percent: 50
+  completed_plans: 14
+  percent: 100
 ---
 
 # Project State
@@ -20,16 +20,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-06-15)
 
 **Core value:** When the 12×1L Coca-Cola case goes on sale at one of the 5 Schifferstadt stores, the app shows it — accurately, with the price and the dates it's valid.
-**Current focus:** Phase 04 — live-integration-all-stores-hardening
+**Current focus:** Milestone v1.0 feature-complete — all 4 phases done. Next: `/gsd-ship` (PR/review) or `/gsd-complete-milestone` to archive v1.0.
 
 ## Current Position
 
-Phase: 04 (live-integration-all-stores-hardening) — EXECUTING
-Plan: 3 of 3
-Status: Plan 04-03 IN PROGRESS — Task 1 (docs) committed (6f9e1e3); Task 2 OPEN human-verify gate (real-device live acceptance) awaiting "approved"
-Last activity: 2026-06-16
+Phase: 04 (live-integration-all-stores-hardening) — COMPLETE (all phases complete)
+Plan: 3 of 3 — done
+Status: Plan 04-03 COMPLETE — Task 1 (docs, 6f9e1e3) + Task 2 human-verify gate APPROVED 2026-06-18. Twin gate Phase 3 / 03-05 also closed.
+Last activity: 2026-06-18
 
-Progress: [█████████░] 86%
+Progress: [██████████] 100% (14/14 plans)
 
 ## Performance Metrics
 
@@ -105,8 +105,8 @@ None yet.
 ### Blockers/Concerns
 
 - [Phase 1]: marktguru is an unofficial API and Wasgau Cola coverage at PLZ 67105 is unconfirmed — the Phase 1 live spike must resolve this before the schema is finalized. "Not automatically available" for Wasgau is an acceptable designed outcome, not a failure.
-- [Phase 04 L-1/Open Q1] A GITHUB_TOKEN bot commit may not reliably reset GitHub's 60-day scheduled-workflow inactivity timer; Plan 02 should surface as a checkpoint:human-verify (accept residual risk vs a gh workflow enable/API touch)
-- [Phase 04-03 OPEN human-verify gate] Task 2 real-device live acceptance is NOT done. Requires: (one-time human GitHub settings — repo Public, Pages source "GitHub Actions", token Read+write, default branch master, failure-email on) THEN the 8-step web/README.md "Live verification (production / D-12)" checklist on a physical Android phone against https://polarfox-code-inc.github.io/ColaApp/. On "approved": mark INFR-01/02/03 complete, close Phase 3's 03-05 checkpoint, advance plan counter, update ROADMAP. Do NOT mark Phase 4 complete until then.
+- [Phase 04 L-1, RESIDUAL — accepted] A GITHUB_TOKEN bot commit may not reliably reset GitHub's 60-day scheduled-workflow inactivity timer. Decided accept-residual-risk in 04-02: a 60-day auto-disable surfaces via the in-app stale chip (one click re-enables). Monitor over time; revisit only if the schedule silently disables.
+- [Phase 04-03 / 03-05 human-verify gate] — ✅ RESOLVED 2026-06-18. Human approved the real-device acceptance run (install/offline/fresh-when-online + six states) against https://polarfox-code-inc.github.io/ColaApp/. INFR-01/02/03 complete; both twin checkpoints closed with SUMMARYs.
 
 ### Quick Tasks Completed
 
@@ -124,6 +124,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-06-16T08:53:13Z
-Stopped at: Plan 04-03 Task 1 committed (6f9e1e3); paused at Task 2 OPEN checkpoint:human-verify (real-device live acceptance)
-Resume file: .planning/phases/04-live-integration-all-stores-hardening/04-03-SUMMARY.md (PENDING-HUMAN-VERIFY)
+Last session: 2026-06-18
+Stopped at: Milestone v1.0 feature-complete — human approved the twin real-device human-verify gates (03-05 + 04-03 Task 2); all 4 phases / 14 plans done. Doc sync of merged PRs #2-#4 also folded in (matcher scope, review card, NetworkFirst).
+Resume file: none — next is `/gsd-ship` (PR + review) or `/gsd-complete-milestone` (archive v1.0). Note: local doc commits are not yet pushed to origin.

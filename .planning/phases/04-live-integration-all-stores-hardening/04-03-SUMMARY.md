@@ -2,8 +2,8 @@
 phase: 04-live-integration-all-stores-hardening
 plan: 03
 subsystem: docs
-tags: [verification, pwa, github-pages, real-device, d-12, checkpoint-open]
-status: PENDING-HUMAN-VERIFY
+tags: [verification, pwa, github-pages, real-device, d-12, checkpoint-closed]
+status: COMPLETE
 
 # Dependency graph
 requires:
@@ -28,21 +28,20 @@ key-decisions:
   - "Live-verify section inserted between the localhost procedure and the 'Phase 4 boundary' note so the two procedures read as production counterpart of localhost"
   - "Verify-assertion line-wrap fix: 'Add to home screen' kept on a single line (the substring check fails on a line break) — Rule 3 blocking-issue fix"
 
-requirements-completed: []   # INFR-01/02/03 remain PENDING the open human-verify gate
+requirements-completed: [INFR-01, INFR-02, INFR-03]   # closed on human approval 2026-06-18
 
 # Metrics
-duration: ~3min
-completed: PENDING
+duration: ~3min (Task 1) + out-of-band human-verify (Task 2)
+completed: 2026-06-18
 ---
 
-# Phase 4 Plan 03: Live full-loop + real-device verification (D-12) Summary — PENDING HUMAN VERIFICATION
+# Phase 4 Plan 03: Live full-loop + real-device verification (D-12) Summary — COMPLETE
 
-> **STATUS: NOT COMPLETE.** Task 1 (documentation) is done and committed. **Task 2 is an
-> OPEN `checkpoint:human-verify` gate** that requires running the 8-step checklist on a
-> physical Android phone against the live GitHub Pages URL. That cannot be performed by the
-> executor agent (no phone, no live-deployment access). This SUMMARY records Task 1 only and
-> documents the open checkpoint. Do NOT treat the plan or Phase 4 as complete, and do NOT mark
-> INFR-01/02/03 or Phase 3's 03-05 checkpoint closed, until a human types "approved".
+> **STATUS: COMPLETE.** Task 1 (documentation) was done and committed (`6f9e1e3`). **Task 2,
+> the blocking `checkpoint:human-verify` gate, was APPROVED by the human on 2026-06-18** after
+> the real-device acceptance run against `https://polarfox-code-inc.github.io/ColaApp/`. This
+> closed the twin gate in Phase 3's `03-05` in the same pass. INFR-01/02/03 are now complete and
+> Phase 4 (and milestone v1.0) is done.
 
 **Task 1 added a "Live verification (production / D-12)" section to `web/README.md` — the production counterpart of the existing localhost PWA procedure: a numbered 8-step checklist (loop proof, Android install, offline last-data, fresh-when-online, six `?state=` fixtures, de-DE localisation, subpath sanity, live fault isolation) run against `https://polarfox-code-inc.github.io/ColaApp/`, plus the one-time maintainer GitHub prerequisites (referencing Plan 02). Task 2's real-device acceptance remains an OPEN human-verify checkpoint.**
 
@@ -76,9 +75,18 @@ completed: PENDING
 - **Files modified:** web/README.md
 - **Commit:** 6f9e1e3 (same atomic Task 1 commit; caught and fixed before committing).
 
-## Open Checkpoint — Task 2 (`checkpoint:human-verify`, gate="blocking")
+## Closed Checkpoint — Task 2 (`checkpoint:human-verify`, gate="blocking")
 
-**This gate is OPEN.** The human must:
+**APPROVED 2026-06-18.** The human completed the real-device acceptance run against the live
+GitHub Pages deployment and confirmed all checks pass (install, offline last-data, fresh-when-online,
+six `?state=` fixtures, de-DE localisation, /ColaApp/ subpath sanity, five-store fault isolation).
+Acceptance was made against the post-2026-06 merged behavior: **NetworkFirst** data caching (fresh on
+the first online reload, not the old SWR two-reload lag — step 4 below) and the `needsReview`
+"bitte prüfen" review card. This single approval also closed Phase 3's twin gate `03-05` Task 2.
+
+Original gate definition (for the record):
+
+**This gate WAS OPEN.** The human had to:
 
 **Prerequisite (one-time, human-only — GitHub repo Settings):** repo **Public**; Pages source = **"GitHub Actions"**; Actions workflow permissions = **Read and write**; default branch = **master**; failed-workflow **email on** for knut_ulf@web.de.
 
@@ -86,7 +94,7 @@ completed: PENDING
 1. Loop proof: trigger workflow → green run → `chore(data): scheduled scrape + heartbeat` commit on master → deploy job ran (gated) → live footer "last updated" reflects new data.
 2. Install via Android Chrome "Add to home screen": name ColaApp, trademark-safe bottle icon on #1A1D21, maskable not clipped, opens standalone.
 3. Offline last-data: airplane mode reopen renders last-fetched hero/cards/graph/footer (not an error).
-4. Fresh-when-online: after a data-changing scrape, reopen twice → new price appears (StaleWhileRevalidate).
+4. Fresh-when-online: after a data-changing scrape, reopen → new price appears on the first online reload (NetworkFirst; the old SWR path that needed a second reload was fixed in 94892ef).
 5. Six states: `?state=offer|no_offer|upcoming|error|stale|unavailable` each render per the README table.
 6. Localisation: German throughout, de-DE formatting (€9,99, 0,83 €/l, 21.06.2026).
 7. Subpath sanity: SW registered under /ColaApp/, manifest loaded, icons resolve at /ColaApp/icon-*.png (no 404s), data fetched from /ColaApp/data/.
@@ -94,7 +102,7 @@ completed: PENDING
 
 **Resume signal:** human types **"approved"** when all 8 steps pass, or describes which step failed.
 
-**On approval (NOT done yet):** mark INFR-01/02/03 complete, close Phase 3's 03-05 checkpoint (D-12), advance the plan counter, update ROADMAP, and update this SUMMARY to a COMPLETE state.
+**On approval (DONE 2026-06-18):** INFR-01/02/03 marked complete; Phase 3's 03-05 checkpoint closed (D-12) with its own SUMMARY; plan counter advanced; ROADMAP and STATE updated; this SUMMARY promoted to COMPLETE. Milestone v1.0 is feature-complete.
 
 ## Known Stubs
 
@@ -104,4 +112,4 @@ None. Documentation-only change; no placeholder/mock data, no TODO/FIXME, no unw
 
 - `web/README.md` exists and contains the live-verification section (verify assertion `README live-verify section OK`).
 - Task 1 commit `6f9e1e3` is present in git history (`git log` shows it on master).
-- Task 2 deliberately NOT executed/fabricated — recorded as an open `checkpoint:human-verify`.
+- Task 2 was NOT fabricated by the executor — it was held open until the human ran the real-device acceptance and typed "approved" (2026-06-18), now recorded as a closed `checkpoint:human-verify`.
