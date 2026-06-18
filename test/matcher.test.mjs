@@ -61,6 +61,45 @@ test("Pfand text does not affect the verdict (D-10)", () => {
   assert.equal(classify(withPfand), "accept");
 });
 
+// Odd-count 1-litre case (e.g. the real Kaufland "14 x je 1-l") is case-like but
+// not the canonical 12-pack -> review, never silently dropped (D-08).
+test("a 14 x 1 l Coca-Cola case -> review (odd count)", () => {
+  assert.equal(
+    classify({
+      brand: { name: "Coca-Cola" },
+      product: { name: "Cola" },
+      description: "Coca-Cola koffeinhaltig 14 x je 1-l-PET-Fl.",
+    }),
+    "review"
+  );
+});
+
+// The known-wrong 6x count stays a hard reject (DISQUALIFY precedes the review
+// path) — odd-count review must not weaken the 6x1L boundary (D-07).
+test("a 6 x 1 l case stays reject (known-wrong count)", () => {
+  assert.equal(
+    classify({
+      brand: { name: "Coca-Cola" },
+      product: { name: "Cola" },
+      description: "Coca-Cola 6 x 1-l case",
+    }),
+    "reject"
+  );
+});
+
+// "12 x je 1-l" (real Kaufland phrasing with "je") still reads as the clean
+// 12x1L case -> accept.
+test('the "je" phrasing "12 x je 1-l" still accepts', () => {
+  assert.equal(
+    classify({
+      brand: { name: "Coca-Cola" },
+      product: { name: "Cola", description: "koffeinhaltig" },
+      description: "Coca-Cola 12 x je 1-l-PET-Fl.",
+    }),
+    "accept"
+  );
+});
+
 // Anti-Pattern #1: the matcher must read description text, not title alone.
 test("normalize() concatenates description, not just product.name", () => {
   const text = normalize({

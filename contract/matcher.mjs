@@ -8,10 +8,11 @@
 // product.description + description (NOT title alone — Anti-Pattern #1).
 //
 // Flavor-permissive (Classic/Zero/Light/koffeinfrei all match — D-06); strict on
-// pack size (rejects 1,25L 6-packs, can trays, 0,5L, 6x1L cases, store-brand
-// colas — D-07); quarantines mixed-brand / ambiguous-size offers as "review"
-// (needsReview, D-08) instead of silently dropping them. Pfand text is never
-// parsed or branched on (D-10).
+// pack size (rejects 1,25L 6-packs, can trays, 0,5L, the known-wrong 6x/10x/18x/
+// 24x cases, store-brand colas — D-07); quarantines mixed-brand / ambiguous-size
+// offers AND case-like 1-litre multipacks whose count is not 12 (e.g. a 14x1L
+// promo) as "review" (needsReview, D-08) instead of silently dropping them.
+// Pfand text is never parsed or branched on (D-10).
 //
 // All regexes are linear / anchored with bounded quantifiers — no nested
 // unbounded quantifiers, so adversarial offer text cannot trigger catastrophic
@@ -40,13 +41,21 @@ export function normalize(offer) {
     .trim();
 }
 
-// A clean "12 x 1 L" case token: 12, an x, a single 1, an optional hyphen, then
-// l / liter at a word boundary. Bounded \s* runs only — linear.
-const IS_12x1L = /(^|[^\d])12\s*x\s*1\s*-?\s*l(iter)?\b/;
+// A clean "12 x 1 L" case token: 12, an x, an optional "je", a single 1, an
+// optional hyphen, then l / liter at a word boundary. The optional "je" tolerates
+// the real Kaufland phrasing "12 x je 1-l-PET-Fl.". Bounded \s* runs only — linear.
+const IS_12x1L = /(^|[^\d])12\s*x\s*(je\s*)?1\s*-?\s*l(iter)?\b/;
+
+// Any 1-litre multipack token, capturing the bottle COUNT in group 2: N x [je] 1 l.
+// Used to spot a case-like Coca-Cola offer whose count is NOT 12 (e.g. the real
+// Kaufland "14 x je 1-l-PET-Fl." promo). Same bounded, linear shape as IS_12x1L.
+const NX1L = /(^|[^\d])(\d{1,2})\s*x\s*(je\s*)?1\s*-?\s*l(iter)?\b/;
 
 // Disqualifying pack/size tokens — if present without a clean IS_12x1L, reject.
-// Covers wrong bottle sizes (1,25 / 0,5 / 0,33 / 0,2), cans (dose/ds.), and
-// wrong pack counts (6x / 10x / 24x).
+// Covers wrong bottle sizes (1,25 / 0,5 / 0,33 / 0,2), cans (dose/ds.), and the
+// KNOWN-wrong pack counts (6x / 10x / 18x / 24x). These counts are rejected
+// outright (checked BEFORE the odd-count "review" path below), so a 6x1L case
+// stays a reject while an unanticipated 14x1L 1-litre case becomes a review.
 const DISQUALIFY = /(1,25|0,5|0,33|0,2|\bdose\b|\bds\.|\b6\s*x|\b10\s*x|\b18\s*x|\b24\s*x)/;
 
 // Coca-Cola brand signal (brand field already lowercased into the blob).
@@ -81,6 +90,10 @@ export function classify(offer) {
   const isCase = IS_12x1L.test(text);
   const mixed = MIXED_BRAND.test(text);
   const caseWord = CASE_WORD.test(text);
+  // A 1-litre multipack whose count is NOT 12 (e.g. "14 x 1 l"). Case-like but
+  // not the canonical Kasten -> a review candidate below (D-08).
+  const nx1l = text.match(NX1L);
+  const otherCount1L = Boolean(nx1l) && nx1l[2] !== "12";
 
   // 3. Mixed-brand AND a 12x1L-ish case signal -> quarantine (D-08). Ambiguous
   //    which product the price applies to, so flag rather than accept/drop.
@@ -92,9 +105,12 @@ export function classify(offer) {
   // 5. Clean 12x1L token, Coca-Cola, no disqualifier, not mixed -> accept (D-06).
   if (isCase) return "accept";
 
-  // 6. "Kasten"/"case" with no confirming size and no contradicting
-  //    disqualifier -> ambiguous size, quarantine (D-08).
-  if (caseWord) return "review";
+  // 6. Either a "Kasten"/"case" with no confirming size, OR a 1-litre multipack
+  //    whose count is not 12 (e.g. 14 x 1 l). Both are case-like but ambiguous,
+  //    so quarantine as needsReview (D-08) rather than silently drop. Reached
+  //    only AFTER the DISQUALIFY reject above, so the known-wrong counts
+  //    (6x/10x/18x/24x) and wrong bottle sizes still hard-reject.
+  if (caseWord || otherCount1L) return "review";
 
   // 7. Coca-Cola but no recognizable 12x1L case signal at all -> reject.
   return "reject";
