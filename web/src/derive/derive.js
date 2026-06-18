@@ -30,8 +30,9 @@ export function berlinToday(now = new Date()) {
 
 // A store entry counts as a clean, brother-facing offer iff it is status "offer"
 // AND not quarantined. Every active/upcoming/best-deal predicate funnels through
-// this so a needsReview offer can never leak into the hero or the cards
-// (RESEARCH Pitfall 2 / T-03-04 / D-08).
+// this so a needsReview offer can never leak into the hero or the active/upcoming
+// tiers (RESEARCH Pitfall 2 / T-03-04 / D-08). A needsReview offer is NOT silently
+// dropped though — it surfaces in its own flagged "review" card (see isReview).
 const isCleanOffer = (o) => o?.status === "offer" && !o?.needsReview;
 
 /**
@@ -53,6 +54,21 @@ export function isActive(o, today) {
  */
 export function isUpcoming(o, today) {
   return isCleanOffer(o) && o.validFrom > today;
+}
+
+/**
+ * Is this a needs-review offer worth surfacing? A `needsReview` "offer" is a real
+ * but UNVERIFIED offer the matcher quarantined (e.g. a mixed-brand / odd pack-count
+ * 1-litre case — D-08). It is deliberately excluded from isActive/isUpcoming/
+ * bestDeal, so it never headlines the hero, but — unlike a silent drop — it earns
+ * its own flagged "review" card so the brother can verify it in store. Shown only
+ * while not expired (validTo covers today or is still ahead).
+ * @param {object} o StoreOffer
+ * @param {string} today "YYYY-MM-DD"
+ * @returns {boolean}
+ */
+export function isReview(o, today) {
+  return o?.status === "offer" && o?.needsReview === true && o.validTo >= today;
 }
 
 /**
@@ -97,23 +113,26 @@ export function soonestUpcoming(stores, today) {
 }
 
 // Card ordering buckets (RESEARCH Pattern 3 / D-09). Active offers lead
-// (cheapest-first), then upcoming, then no_offer, with error/unavailable last.
-const RANK = { active: 0, upcoming: 1, no_offer: 2, unavailable: 3, error: 3 };
+// (cheapest-first), then upcoming, then review (flagged-but-unverified), then
+// no_offer, with error/unavailable last.
+const RANK = { active: 0, upcoming: 1, review: 2, no_offer: 3, unavailable: 4, error: 4 };
 
 /**
  * Classify a store into a sort bucket for `today`. Active/upcoming are derived
- * (and respect !needsReview); everything else falls back to its raw status.
- * A needsReview "offer" is neither active nor upcoming, so it lands in no_offer.
+ * (and respect !needsReview); a live needsReview offer lands in "review";
+ * everything else falls back to its raw status. An expired/quarantined offer with
+ * nothing left to show lands in no_offer.
  * @param {object} o StoreOffer
  * @param {string} today "YYYY-MM-DD"
- * @returns {"active"|"upcoming"|"no_offer"|"unavailable"|"error"}
+ * @returns {"active"|"upcoming"|"review"|"no_offer"|"unavailable"|"error"}
  */
 function bucket(o, today) {
   if (isActive(o, today)) return "active";
   if (isUpcoming(o, today)) return "upcoming";
+  if (isReview(o, today)) return "review";
   if (o?.status === "unavailable") return "unavailable";
   if (o?.status === "error") return "error";
-  return "no_offer"; // no_offer, and any quarantined/expired "offer"
+  return "no_offer"; // no_offer, and any expired "offer"
 }
 
 /**

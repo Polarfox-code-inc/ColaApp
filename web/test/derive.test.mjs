@@ -12,6 +12,7 @@ import {
   berlinToday,
   isActive,
   isUpcoming,
+  isReview,
   isStale,
   bestDeal,
   soonestUpcoming,
@@ -87,6 +88,36 @@ test("an active offer is not upcoming and an upcoming offer is not active", () =
   assert.equal(isActive(reweUpcoming, "2026-06-15"), false);
 });
 
+// --- isReview: a live needsReview "offer" surfaces (flagged), expired ones don't ---
+
+test("isReview is true for a live needsReview offer (Edeka, 06-15..06-20)", () => {
+  const edeka = byStore(offerMock().stores, "Edeka"); // needsReview:true
+  assert.equal(isReview(edeka, "2026-06-16"), true);
+});
+
+test("isReview is false for a clean (non-review) offer", () => {
+  const rewe = byStore(offerMock().stores, "REWE"); // needsReview:false
+  assert.equal(isReview(rewe, "2026-06-16"), false);
+});
+
+test("isReview is false once the review offer has expired (validTo < today)", () => {
+  const edeka = byStore(offerMock().stores, "Edeka"); // validTo 2026-06-20
+  assert.equal(isReview(edeka, "2026-06-21"), false);
+});
+
+test("isReview is false for non-offer statuses", () => {
+  const stores = offerMock().stores;
+  assert.equal(isReview(byStore(stores, "Lidl"), "2026-06-16"), false); // no_offer
+  assert.equal(isReview(byStore(stores, "Kaufland"), "2026-06-16"), false); // error
+});
+
+test("a review offer is neither active nor upcoming (stays out of the hero tiers)", () => {
+  const edeka = byStore(offerMock().stores, "Edeka");
+  assert.equal(isActive(edeka, "2026-06-16"), false);
+  assert.equal(isUpcoming(edeka, "2026-06-10"), false);
+  assert.equal(isReview(edeka, "2026-06-16"), true);
+});
+
 // --- bestDeal: lowest active price, needsReview excluded, D-06 future-validFrom never wins ---
 
 test("bestDeal returns the cheapest active offer, excluding needsReview (REWE 999 not Edeka 1099)", () => {
@@ -147,15 +178,19 @@ test("isStale honours a custom day threshold", () => {
   assert.equal(isStale(store, NOW, 3), false);
 });
 
-// --- sortCards: bucket rank active(0)->upcoming(1)->no_offer(2)->unavailable/error(3) ---
+// --- sortCards: bucket rank active(0)->upcoming(1)->review(2)->no_offer(3)->unavailable/error(4) ---
 
-test("sortCards orders active(cheapest-first) then upcoming, no_offer, then unavailable/error", () => {
+test("sortCards orders active(cheapest-first) then review, no_offer, then unavailable/error", () => {
   const sorted = sortCards(offerMock().stores, "2026-06-16");
   const order = sorted.map((s) => s.store);
-  // At 2026-06-16: REWE active(0); Edeka needsReview -> not active/upcoming, bucketed by its
-  // raw status "offer" but excluded -> falls to no_offer-equivalent tier behaviour. Lidl no_offer(2),
-  // Kaufland error(3), Wasgau unavailable(3). Assert REWE leads and the error/unavailable trail.
+  // At 2026-06-16: REWE active(0); Edeka needsReview -> review(2); Lidl no_offer(3);
+  // Kaufland error(4); Wasgau unavailable(4). REWE leads, Edeka (review) sorts before
+  // Lidl (no_offer), and error/unavailable trail.
   assert.equal(order[0], "REWE");
+  assert.ok(
+    order.indexOf("Edeka") < order.indexOf("Lidl"),
+    "review (Edeka) sorts before no_offer (Lidl)"
+  );
   assert.ok(
     order.indexOf("Lidl") < order.indexOf("Kaufland"),
     "no_offer (Lidl) sorts before error (Kaufland)"
