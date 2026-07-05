@@ -4,7 +4,7 @@ milestone: v1.0
 milestone_name: milestone
 status: milestone_complete
 last_updated: "2026-06-18T12:00:00.000Z"
-last_activity: 2026-06-18 - Human approved the real-device verification (twin gates 03-05 + 04-03 Task 2): install/offline/fresh-when-online + six states pass against the live Pages site. INFR-01/02/03 closed; Phases 3 & 4 complete; milestone v1.0 feature-complete
+last_activity: 2026-07-05 - Quick task 260705-s9l: hardened CI pipeline.yml against re-run/concurrency failures (rebase -X theirs on commit step + one transient GitHub-Pages deploy retry) after scheduled run 28749099899 failed
 progress:
   total_phases: 4
   completed_phases: 4
@@ -115,6 +115,7 @@ None yet.
 | 260616-ixt | Add the cat logo image to the bottom of the ColaApp PWA page | 2026-06-16 | 5289848 | [260616-ixt-add-the-cat-logo-image-to-the-bottom-of-](./quick/260616-ixt-add-the-cat-logo-image-to-the-bottom-of-/) |
 | 260618-q81 | Clean placeholder history data + show offer duration as a price line over the valid week | 2026-06-18 | fa9d1b6, 4e1afea | [260618-q81-clean-non-real-placeholder-data-graph-ol](./quick/260618-q81-clean-non-real-placeholder-data-graph-ol/) |
 | 260618-qze | Fix scraper.run Case D/G: seed prior state from mocks, not live scraped data (drift-proof) | 2026-06-18 | 1dcc19a | [260618-qze-fix-scraper-run-test-mjs-case-d-and-hard](./quick/260618-qze-fix-scraper-run-test-mjs-case-d-and-hard/) |
+| 260705-s9l | Harden pipeline against re-run/concurrency failures (rebase -X theirs + one transient Pages-deploy retry) | 2026-07-05 | 53a6c04 | [260705-s9l-harden-pipeline-rerun-safety](./quick/260705-s9l-harden-pipeline-rerun-safety/) |
 
 ## Deferred Items
 
