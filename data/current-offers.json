@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-07-08T17:53:05.383Z",
+  "lastUpdated": "2026-07-09T07:48:12.388Z",
   "stores": [
     {
       "store": "REWE",
@@ -19,7 +19,13 @@
     {
       "store": "Kaufland",
       "displayName": "Kaufland",
-      "status": "no_offer"
+      "status": "offer",
+      "needsReview": false,
+      "price": 1099,
+      "currency": "EUR",
+      "pricePerLitre": 79,
+      "validFrom": "2026-07-09",
+      "validTo": "2026-07-15"
     },
     {
       "store": "Wasgau",
