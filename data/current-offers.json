@@ -1,10 +1,16 @@
 {
-  "lastUpdated": "2026-07-11T17:18:10.040Z",
+  "lastUpdated": "2026-07-12T06:42:16.407Z",
   "stores": [
     {
       "store": "REWE",
       "displayName": "REWE",
-      "status": "no_offer"
+      "status": "offer",
+      "needsReview": false,
+      "price": 1199,
+      "currency": "EUR",
+      "pricePerLitre": 100,
+      "validFrom": "2026-07-13",
+      "validTo": "2026-07-18"
     },
     {
       "store": "Edeka",
