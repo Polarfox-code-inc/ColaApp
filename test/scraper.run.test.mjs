@@ -20,6 +20,17 @@ import {
 } from "../contract/schema.mjs";
 import { parseCandidatesDoc } from "../scraper/wasgau/candidates.mjs";
 
+// Network tripwire (RESEARCH Pitfall 1): every run() below injects its seams,
+// so a real fetch would be a bug. Replace the global fetch with a recorder that
+// throws; the LAST test in this file asserts it was never called (node:test runs
+// a file's top-level tests in declaration order).
+const realFetch = globalThis.fetch;
+const tripwireCalls = [];
+globalThis.fetch = async (url) => {
+  tripwireCalls.push(String(url));
+  throw new Error("real network call in an offline test");
+};
+
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const readJson = (rel) => JSON.parse(readFileSync(join(ROOT, rel), "utf8"));
 const raw = readJson("spike/fixtures/raw-67105-search.json");
@@ -36,14 +47,23 @@ const WASGAU_OFF = {
 
 // Offline Wasgau source serving the real-derived fixtures by URL. Records every
 // requested URL in `calls` and throws on any URL outside the leaflet path.
+// `overrides` maps an exact URL to in-memory text (returned instead of the
+// fixture) or to an Error (thrown), so failure variants need no new fixture files.
 const WASGAU_FIXTURES = join(ROOT, "test", "fixtures", "wasgau");
 const LEAFLET_ROOT = "https://wasgau-dlog.1kcloud.com/ep1rP1V0/";
-function wasgauStub(pages = { 17: "page_17.positive.xml", 26: "page_26.xml" }) {
+const HOMEPAGE = "https://www.wasgau.de/";
+const wasgauFixture = (name) => readFileSync(join(WASGAU_FIXTURES, name), "utf8");
+function wasgauStub(pages = { 17: "page_17.positive.xml", 26: "page_26.xml" }, overrides = {}) {
   const calls = [];
-  const fixture = (name) => readFileSync(join(WASGAU_FIXTURES, name), "utf8");
+  const fixture = wasgauFixture;
   const fetchText = async (url) => {
     calls.push(url);
-    if (url === "https://www.wasgau.de/") return fixture("homepage.html");
+    if (Object.hasOwn(overrides, url)) {
+      const o = overrides[url];
+      if (o instanceof Error) throw o;
+      return o;
+    }
+    if (url === HOMEPAGE) return fixture("homepage.html");
     if (url === LEAFLET_ROOT) return fixture("index.html");
     const m = url.match(/^https:\/\/wasgau-dlog\.1kcloud\.com\/ep1rP1V0\/epaper\/coords\/page_(\d+)\.xml$/);
     if (m && pages[m[1]]) return fixture(pages[m[1]]);
@@ -354,4 +374,248 @@ test("Wasgau leaflet end-to-end: 4 sequential requests -> needsReview offer + ca
   } finally {
     await rm(d, { recursive: true, force: true });
   }
+});
+
+// =====================================================================
+// Phase 5 fault isolation + status semantics, run()-level (D-01..D-04, SC3)
+// =====================================================================
+
+const WASGAU_NOW_ISO = "2026-10-14T10:00:00.000Z";
+const MARKTGURU = ["REWE", "Edeka", "Lidl", "Kaufland"];
+
+// Copy committed mock snapshots into a tmp dataDir as the prior run's files.
+async function seedMocks(d, currentRel, statusRel) {
+  if (currentRel) {
+    await writeFile(join(d, "current-offers.json"), readFileSync(join(ROOT, currentRel), "utf8"), "utf8");
+  }
+  if (statusRel) {
+    await writeFile(join(d, "status.json"), readFileSync(join(ROOT, statusRel), "utf8"), "utf8");
+  }
+}
+
+// Does a file exist in the dataDir?
+async function exists(d, name) {
+  try {
+    await readFile(join(d, name), "utf8");
+    return true;
+  } catch (err) {
+    if (err?.code === "ENOENT") return false;
+    throw err;
+  }
+}
+
+// --- D-01 warm: Wasgau failure carries its last-known entry forward verbatim,
+//     freezes its per-store ts, and leaves the candidates file + REWE alone ---
+
+test("warm Wasgau failure: verbatim carry-forward, frozen ts, REWE still refreshes (D-01, D-03)", async () => {
+  const d = await freshDir();
+  try {
+    // Seed with a successful Case-H-style run.
+    await run({ now: WASGAU_NOW, dataDir: d, wasgau: { fetchText: wasgauStub().fetchText }, fetchOffers: async () => [] });
+    const seeded = find(await readCurrent(d), "Wasgau");
+    const seededCandidates = await readFile(join(d, "wasgau-candidates.json"), "utf8");
+    assert.equal(seeded.status, "offer");
+
+    // Next day: the homepage request throws; marktguru has a live REWE accept.
+    const stub = wasgauStub(undefined, { [HOMEPAGE]: new Error("ECONNRESET") });
+    const reweOffer = {
+      ...acceptOffer("rewe", 9.99),
+      validityDates: [{ from: "2026-10-12T00:00:00Z", to: "2026-10-18T00:00:00Z" }],
+    };
+    const NEXT = new Date("2026-10-15T10:00:00Z");
+    await run({ now: NEXT, dataDir: d, wasgau: { fetchText: stub.fetchText }, fetchOffers: async () => [reweOffer] });
+
+    const co = await readCurrent(d);
+    const st = await readStatus(d);
+    assert.deepEqual(find(co, "Wasgau"), seeded); // last-known data verbatim
+    assert.deepEqual(find(st, "Wasgau"), { store: "Wasgau", status: "error", lastUpdated: WASGAU_NOW_ISO }); // frozen
+    assert.equal(find(co, "REWE").status, "offer");
+    assert.equal(find(st, "REWE").status, "offer");
+    assert.equal(find(st, "REWE").lastUpdated, NEXT.toISOString()); // bumped
+    assert.equal(await readFile(join(d, "wasgau-candidates.json"), "utf8"), seededCandidates);
+  } finally {
+    await rm(d, { recursive: true, force: true });
+  }
+});
+
+// --- D-01 cold: no prior -> no_offer + error at now, no candidates file ---
+
+test("cold Wasgau failure: no_offer + error at now, no candidates file (D-01)", async () => {
+  const d = await freshDir();
+  try {
+    const stub = wasgauStub(undefined, { [HOMEPAGE]: new Error("ETIMEDOUT") });
+    await run({ now: WASGAU_NOW, dataDir: d, wasgau: { fetchText: stub.fetchText }, fetchOffers: async () => [] });
+
+    assert.equal(find(await readCurrent(d), "Wasgau").status, "no_offer");
+    assert.deepEqual(find(await readStatus(d), "Wasgau"), { store: "Wasgau", status: "error", lastUpdated: WASGAU_NOW_ISO });
+    assert.equal(await exists(d, "wasgau-candidates.json"), false);
+  } finally {
+    await rm(d, { recursive: true, force: true });
+  }
+});
+
+// --- Pitfall 2: a pre-Phase-5 "unavailable" prior counts as no prior ---
+
+test("pre-Phase-5 'unavailable' prior + Wasgau failure -> no_offer + error, never unavailable (D-01, Pitfall 2)", async () => {
+  const d = await freshDir();
+  try {
+    await seedMocks(d, "mocks/current-offers.unavailable.json", "mocks/status.stale.json");
+    const stub = wasgauStub(undefined, { [HOMEPAGE]: new Error("ECONNRESET") });
+    await run({ now: WASGAU_NOW, dataDir: d, wasgau: { fetchText: stub.fetchText }, fetchOffers: async () => [] });
+
+    assert.equal(find(await readCurrent(d), "Wasgau").status, "no_offer");
+    assert.deepEqual(find(await readStatus(d), "Wasgau"), { store: "Wasgau", status: "error", lastUpdated: WASGAU_NOW_ISO });
+  } finally {
+    await rm(d, { recursive: true, force: true });
+  }
+});
+
+// --- Shape changes: each degrades Wasgau alone to "error" (D-01, D-03, SC3) ---
+
+const homepage = wasgauFixture("homepage.html");
+const SHAPE_CHANGES = [
+  {
+    name: "homepage without the var wasgau script",
+    overrides: { [HOMEPAGE]: homepage.replace(/var\s+wasgau/, "var somethingElse") },
+  },
+  {
+    name: "angebotslink to a foreign host",
+    overrides: { [HOMEPAGE]: homepage.replace(LEAFLET_ROOT, "https://evil.example/ep1rP1V0/") },
+    calls: 1, // nothing is ever fetched from the foreign host
+  },
+  {
+    name: "1kcloud index without data-textpos blocks",
+    overrides: { [LEAFLET_ROOT]: wasgauFixture("index.html").replaceAll("data-textpos", "data-gone") },
+  },
+  {
+    name: "coords XML shape change (<pages></pages>)",
+    overrides: { [`${LEAFLET_ROOT}epaper/coords/page_17.xml`]: "<pages></pages>" },
+  },
+];
+
+for (const sc of SHAPE_CHANGES) {
+  test(`shape change (${sc.name}) -> Wasgau error, marktguru stores unaffected (D-01, D-03)`, async () => {
+    const d = await freshDir();
+    try {
+      const stub = wasgauStub(undefined, sc.overrides);
+      await run({ now: WASGAU_NOW, dataDir: d, wasgau: { fetchText: stub.fetchText }, fetchOffers: async () => raw.results });
+
+      const st = await readStatus(d);
+      assert.equal(find(st, "Wasgau").status, "error");
+      for (const store of MARKTGURU) assert.notEqual(find(st, store).status, "error");
+      if (sc.calls !== undefined) assert.equal(stub.calls.length, sc.calls);
+    } finally {
+      await rm(d, { recursive: true, force: true });
+    }
+  });
+}
+
+// --- D-03 reverse direction: a marktguru total failure never touches Wasgau ---
+
+test("marktguru total failure sweeps only the 4 marktguru stores; Wasgau success is written (D-03)", async () => {
+  const d = await freshDir();
+  try {
+    await run({
+      now: WASGAU_NOW,
+      dataDir: d,
+      wasgau: { fetchText: wasgauStub().fetchText },
+      fetchOffers: async () => { throw new Error("marktguru down"); },
+    });
+
+    const co = await readCurrent(d);
+    const st = await readStatus(d);
+    for (const store of MARKTGURU) assert.equal(find(st, store).status, "error");
+    assert.equal(find(co, "Wasgau").status, "offer");
+    assert.equal(find(co, "Wasgau").needsReview, true);
+    assert.deepEqual(find(st, "Wasgau"), { store: "Wasgau", status: "offer", lastUpdated: WASGAU_NOW_ISO });
+  } finally {
+    await rm(d, { recursive: true, force: true });
+  }
+});
+
+// --- D-02: a parsed leaflet without a qualifying Cola case is no_offer ---
+
+test("negatives-only leaflet -> Wasgau no_offer with bumped ts, rejects written for review (D-02, D-10)", async () => {
+  const d = await freshDir();
+  try {
+    const stub = wasgauStub({ 17: "page_17.xml", 26: "page_26.xml" });
+    await run({ now: WASGAU_NOW, dataDir: d, wasgau: { fetchText: stub.fetchText }, fetchOffers: async () => [] });
+
+    assert.equal(find(await readCurrent(d), "Wasgau").status, "no_offer");
+    assert.deepEqual(find(await readStatus(d), "Wasgau"), { store: "Wasgau", status: "no_offer", lastUpdated: WASGAU_NOW_ISO });
+
+    const doc = parseCandidatesDoc(JSON.parse(await readFile(join(d, "wasgau-candidates.json"), "utf8")));
+    assert.ok(doc, "candidates file must be schema-valid");
+    assert.equal(doc.candidates.length, 3);
+    for (const c of doc.candidates) assert.equal(c.verdict, "reject");
+  } finally {
+    await rm(d, { recursive: true, force: true });
+  }
+});
+
+// --- D-04 kill switch: zero Wasgau requests, unavailable in both files ---
+
+test("kill switch: zero Wasgau requests, no candidates file, unavailable with carried ts (D-04)", async () => {
+  const d = await freshDir();
+  try {
+    await seedMocks(d, "mocks/current-offers.unavailable.json", "mocks/status.stale.json");
+    const stub = wasgauStub();
+    await run({
+      now: WASGAU_NOW,
+      dataDir: d,
+      wasgau: { fetchText: stub.fetchText, config: { enabled: false } },
+      fetchOffers: async () => [],
+    });
+
+    assert.equal(stub.calls.length, 0);
+    assert.equal(await exists(d, "wasgau-candidates.json"), false);
+    assert.equal(find(await readCurrent(d), "Wasgau").status, "unavailable");
+    assert.deepEqual(find(await readStatus(d), "Wasgau"), {
+      store: "Wasgau",
+      status: "unavailable",
+      lastUpdated: "2026-06-05T04:00:00Z",
+    });
+  } finally {
+    await rm(d, { recursive: true, force: true });
+  }
+});
+
+// --- D-04 + WR-02: a validation drift marks Wasgau "error" when enabled ---
+
+test("validation drift with Wasgau enabled writes Wasgau 'error' in the error status.json (D-04, WR-02)", async () => {
+  const d = await freshDir();
+  try {
+    // Same drifted REWE seed as Case G (Case G covers the disabled side: "unavailable").
+    const goodCurrent = JSON.parse(readFileSync(join(ROOT, "mocks/current-offers.offer.json"), "utf8"));
+    const drifted = {
+      lastUpdated: goodCurrent.lastUpdated,
+      stores: goodCurrent.stores.map((s) =>
+        s.store === "REWE" ? { store: "REWE", displayName: "REWE", status: "offer" } : s
+      ),
+    };
+    await writeFile(join(d, "current-offers.json"), JSON.stringify(drifted), "utf8");
+    await seedMocks(d, null, "mocks/status.stale.json");
+
+    await assert.rejects(() =>
+      run({
+        now: WASGAU_NOW,
+        dataDir: d,
+        wasgau: { fetchText: wasgauStub().fetchText },
+        fetchOffers: async () => { throw new Error("boom"); },
+      })
+    );
+
+    const st = await readStatus(d);
+    assert.equal(find(st, "Wasgau").status, "error");
+    for (const store of MARKTGURU) assert.equal(find(st, store).status, "error");
+  } finally {
+    await rm(d, { recursive: true, force: true });
+  }
+});
+
+// --- Network tripwire: MUST stay the LAST test in this file ---
+
+test("network tripwire: no test in this file made a real fetch call (Pitfall 1)", () => {
+  globalThis.fetch = realFetch;
+  assert.deepEqual(tripwireCalls, []);
 });

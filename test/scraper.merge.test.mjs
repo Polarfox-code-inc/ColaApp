@@ -21,7 +21,9 @@ const builtOffer = (store, price = 999) => ({
 });
 
 // A prior snapshot mirroring data/current-offers.json + data/status.json shapes.
-const priorWith = (rewePrice = 1099, rewePriorTs = "2026-06-01T04:00:00Z") => ({
+// `wasgau` optionally replaces the pre-Phase-5 Wasgau "unavailable" entries:
+// { offer: <current-offers entry>, status: <status.json entry> }.
+const priorWith = (rewePrice = 1099, rewePriorTs = "2026-06-01T04:00:00Z", wasgau = null) => withWasgau(wasgau, {
   currentOffers: {
     lastUpdated: "2026-06-01T04:00:00Z",
     stores: [
@@ -53,6 +55,19 @@ const priorWith = (rewePrice = 1099, rewePriorTs = "2026-06-01T04:00:00Z") => ({
     ],
   },
 });
+
+// Swap the Wasgau entries of a prior snapshot (no-op when `wasgau` is null).
+function withWasgau(wasgau, prior) {
+  if (!wasgau) return prior;
+  const swap = (doc, entry) => ({
+    ...doc,
+    stores: doc.stores.map((s) => (s.store === "Wasgau" ? entry : s)),
+  });
+  return {
+    currentOffers: swap(prior.currentOffers, wasgau.offer),
+    status: swap(prior.status, wasgau.status),
+  };
+}
 
 const coldPrior = () => ({ currentOffers: null, status: null });
 const find = (doc, store) => doc.stores.find((s) => s.store === store);
@@ -200,4 +215,56 @@ test("a store absent from results with no override is no_offer, not error (Pitfa
   }
   assert.doesNotThrow(() => parseCurrentOffers(currentOffers));
   assert.doesNotThrow(() => parseStatusFile(status));
+});
+
+// --- Wasgau source enabled: the three paths (D-01, D-02, D-03, Pitfall 2) ---
+
+const WASGAU_PRIOR_TS = "2026-10-14T10:00:00.000Z";
+const priorWasgauOffer = () => ({
+  offer: { ...builtOffer("Wasgau", 899), needsReview: true },
+  status: { store: "Wasgau", status: "offer", lastUpdated: WASGAU_PRIOR_TS },
+});
+
+test("Wasgau enabled + error + prior offer -> verbatim carry-forward, frozen ts (D-01)", () => {
+  const prior = priorWith(1099, "2026-06-01T04:00:00Z", priorWasgauOffer());
+  const { currentOffers, status } = mergeWithPrior({}, { Wasgau: "error" }, prior, NOW);
+
+  assert.deepEqual(find(currentOffers, "Wasgau"), priorWasgauOffer().offer);
+  assert.deepEqual(find(status, "Wasgau"), { store: "Wasgau", status: "error", lastUpdated: WASGAU_PRIOR_TS });
+  assert.doesNotThrow(() => parseCurrentOffers(currentOffers));
+  assert.doesNotThrow(() => parseStatusFile(status));
+});
+
+test("Wasgau enabled + error + prior 'unavailable' -> treated as no prior: no_offer + error at now (Pitfall 2)", () => {
+  // priorWith() carries the pre-Phase-5 Wasgau "unavailable" entries.
+  const { currentOffers, status } = mergeWithPrior({}, { Wasgau: "error" }, priorWith(), NOW);
+
+  assert.deepEqual(find(currentOffers, "Wasgau"), { store: "Wasgau", displayName: "Wasgau", status: "no_offer" });
+  assert.deepEqual(find(status, "Wasgau"), { store: "Wasgau", status: "error", lastUpdated: NOW_ISO });
+});
+
+test("Wasgau enabled + error + cold start -> no_offer + error at now (D-01)", () => {
+  const { currentOffers, status } = mergeWithPrior({}, { Wasgau: "error" }, coldPrior(), NOW);
+
+  assert.deepEqual(find(currentOffers, "Wasgau"), { store: "Wasgau", displayName: "Wasgau", status: "no_offer" });
+  assert.deepEqual(find(status, "Wasgau"), { store: "Wasgau", status: "error", lastUpdated: NOW_ISO });
+});
+
+test("all 4 marktguru stores error + Wasgau built offer -> Wasgau offer with bumped ts (D-03)", () => {
+  const overrides = { REWE: "error", Edeka: "error", Lidl: "error", Kaufland: "error" };
+  const wasgauOffer = { ...builtOffer("Wasgau", 899), needsReview: true };
+  const prior = priorWith(1099, "2026-06-01T04:00:00Z", priorWasgauOffer());
+  const { currentOffers, status } = mergeWithPrior({ Wasgau: wasgauOffer }, overrides, prior, NOW);
+
+  for (const store of ["REWE", "Edeka", "Lidl", "Kaufland"]) assert.equal(find(status, store).status, "error");
+  assert.deepEqual(find(currentOffers, "Wasgau"), wasgauOffer);
+  assert.deepEqual(find(status, "Wasgau"), { store: "Wasgau", status: "offer", lastUpdated: NOW_ISO });
+});
+
+test("Wasgau enabled + { status: 'no_offer' } result -> no_offer with bumped ts (D-02)", () => {
+  const prior = priorWith(1099, "2026-06-01T04:00:00Z", priorWasgauOffer());
+  const { currentOffers, status } = mergeWithPrior({ Wasgau: { status: "no_offer" } }, {}, prior, NOW);
+
+  assert.deepEqual(find(currentOffers, "Wasgau"), { store: "Wasgau", displayName: "Wasgau", status: "no_offer" });
+  assert.deepEqual(find(status, "Wasgau"), { store: "Wasgau", status: "no_offer", lastUpdated: NOW_ISO });
 });
