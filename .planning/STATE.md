@@ -4,16 +4,16 @@ milestone: v1.0
 current_phase: 04
 current_phase_name: live-integration-all-stores-hardening
 status: milestone_complete
-stopped_at: "Milestone v1.0 feature-complete — human approved the twin real-device human-verify gates (03-05 + 04-03 Task 2); all 4 phases / 14 plans done. Doc sync of merged PRs #2-#4 also folded in (matcher scope, review card, NetworkFirst)."
-last_updated: "2026-10-12T06:36:55.827Z"
-last_activity: "2026-10-12 - Quick task 261012-bpz: deploy job now checks out branch tip so Pages ships the just-scraped data (was one run behind)"
-state_head: d0281aaf37704be16e731e3046ada6a1e70675d2
+stopped_at: Phase 5 context gathered
+last_updated: "2026-10-12T07:52:29.242Z"
+last_activity: 2026-10-12
+last_activity_desc: "Completed quick task 261012-bpz: Fix deploy job checking out pre-scrape commit (site served previous run's data)"
+state_head: 5f70c6d977d5c254ef5d635a16212960736147e3
 progress:
-  total_phases: 4
+  total_phases: 5
   completed_phases: 4
   total_plans: 14
   completed_plans: 14
-  percent: 100
 milestone_name: milestone
 ---
 
@@ -136,6 +136,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-06-18
-Stopped at: Milestone v1.0 feature-complete — human approved the twin real-device human-verify gates (03-05 + 04-03 Task 2); all 4 phases / 14 plans done. Doc sync of merged PRs #2-#4 also folded in (matcher scope, review card, NetworkFirst).
-Resume file: none — next is `/gsd-ship` (PR + review) or `/gsd-complete-milestone` (archive v1.0). Note: local doc commits are not yet pushed to origin.
+Last session: 2026-10-12T07:52:27.317Z
+Stopped at: Phase 5 context gathered
+Resume file: .planning/phases/05-wasgau-leaflet-source/05-CONTEXT.md
