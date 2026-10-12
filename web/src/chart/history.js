@@ -10,10 +10,12 @@
 //      that never existed (RESEARCH Pitfall 3 / HIST-02). To keep two back-to-back
 //      offers of the same store from joining into one sloped line, a one-second
 //      sentinel after each offer's validTo forces a null between them. Wasgau is
-//      never a series — it has no automatic data source (D-12 / HIST-03). This half
-//      is unit-locked in web/test/chart.test.mjs.
+//      the 5th line, fed by its weekly leaflet source since Phase 5 (D-16); it is
+//      dropped only while its kill switch is on, i.e. current-offers reports
+//      Wasgau status "unavailable" (D-04). This half is unit-locked in
+//      web/test/chart.test.mjs.
 //   2. renderHistory — the uPlot rendering that encodes the gap rule, per-store
-//      palette, the Wasgau-aware legend and the cold-start panel.
+//      palette, the kill-switch-aware legend and the cold-start panel.
 //
 // Price math: history `price` is integer cents (D-09); the chart axis is euros,
 // so each value is price/100. The x-axis is epoch SECONDS at UTC midnight of each
@@ -27,12 +29,28 @@
 // both fine and still code-splits the dynamic import into the browser build).
 
 /**
- * The four stores that get a chart line. Wasgau is INTENTIONALLY absent: it has
- * no automatic data source, so it never becomes a series (D-12 / HIST-03). The
- * legend still lists it, greyed, in renderHistory.
- * @type {ReadonlyArray<'REWE'|'Edeka'|'Lidl'|'Kaufland'>}
+ * The five stores that get a chart line. Wasgau is fed by its leaflet source
+ * since Phase 5 (D-16); its line simply stays empty until a clean (non-review)
+ * offer lands in the history. It is excluded only while the Wasgau kill switch
+ * is on — see lineStores().
+ * @type {ReadonlyArray<'REWE'|'Edeka'|'Lidl'|'Kaufland'|'Wasgau'>}
  */
-export const STORES_WITH_LINES = ["REWE", "Edeka", "Lidl", "Kaufland"];
+export const STORES_WITH_LINES = ["REWE", "Edeka", "Lidl", "Kaufland", "Wasgau"];
+
+const WASGAU = "Wasgau";
+
+/**
+ * The line-stores for the current kill-switch state. With the Wasgau kill switch
+ * on (current-offers status "unavailable", D-04) Wasgau has no line and the
+ * chart falls back to the four other stores.
+ * @param {boolean} [wasgauUnavailable=false]
+ * @returns {ReadonlyArray<string>}
+ */
+export function lineStores(wasgauUnavailable = false) {
+  return wasgauUnavailable
+    ? STORES_WITH_LINES.filter((s) => s !== WASGAU)
+    : STORES_WITH_LINES;
+}
 
 /**
  * Parse the append-only price-history JSONL text into HistoryLine objects.
@@ -66,18 +84,21 @@ const GAP_SECONDS = 1;
  * valid week and breaks between distinct offers (never interpolated).
  *
  * @param {import('../../../contract/types.d.ts').HistoryLine[]} historyLines
+ * @param {{ wasgauUnavailable?: boolean }} [options] kill switch on => no Wasgau line
  * @returns {{
- *   data: (number[] | (number|null)[])[],  // [xSeconds, ...one series per STORES_WITH_LINES]
+ *   data: (number[] | (number|null)[])[],  // [xSeconds, ...one series per line-store]
  *   x: number[],                            // shared epoch-seconds axis (empty => cold start)
- *   stores: typeof STORES_WITH_LINES,       // the four line-stores, in order (no Wasgau)
+ *   stores: ReadonlyArray<string>,          // lineStores(wasgauUnavailable), in order
  *   offerCounts: Record<string, number>,    // offers (segments) per store
  *   isEmpty: boolean,                       // true => renderHistory shows the cold-start panel
  * }}
  */
-export function prepareChartData(historyLines) {
-  // Collect each line-store's offer windows. Wasgau/unknown stores never become a
-  // series (D-12 / HIST-03); a row missing its validity window is skipped.
-  const offersByStore = new Map(STORES_WITH_LINES.map((s) => [s, []]));
+export function prepareChartData(historyLines, { wasgauUnavailable = false } = {}) {
+  const stores = lineStores(wasgauUnavailable);
+  // Collect each line-store's offer windows. Stores outside `stores` (Wasgau under
+  // the kill switch, unknown names) never become a series and never widen the
+  // x-axis; a row missing its validity window is skipped.
+  const offersByStore = new Map(stores.map((s) => [s, []]));
   for (const l of historyLines) {
     const offers = offersByStore.get(l.store);
     if (!offers || !l.validFrom || !l.validTo) continue;
@@ -101,7 +122,7 @@ export function prepareChartData(historyLines) {
   const x = [...xs].sort((a, b) => a - b);
 
   const offerCounts = {};
-  const series = STORES_WITH_LINES.map((store) => {
+  const series = stores.map((store) => {
     const offers = offersByStore.get(store);
     offerCounts[store] = offers.length;
     // Offer price where x is inside a window, else null (broken line — no interpolation).
@@ -114,7 +135,7 @@ export function prepareChartData(historyLines) {
   return {
     data: [x, ...series],
     x,
-    stores: STORES_WITH_LINES,
+    stores,
     offerCounts,
     isEmpty: x.length === 0,
   };
@@ -126,17 +147,32 @@ const CHART_HEIGHT = 240;
 
 // Stable per-store line palette (UI-SPEC; D-12). Chosen for legibility on white
 // and for red/green-deficiency distinguishability (each pair also differs in
-// lightness; markers double-encode by shape). Wasgau has NO colour — no line.
+// lightness; markers double-encode by shape). Wasgau (D-16) is teal — distinct
+// from the four store colours and from the amber warning token #9a5b00.
 const LINE_COLORS = {
   REWE: "#C2143C", // red
   Edeka: "#1B5FB0", // blue
   Lidl: "#0B7A3B", // green
   Kaufland: "#7A3FB0", // violet
+  Wasgau: "#00838F", // teal
 };
 
-// All five stores appear in the legend; Wasgau is greyed with an explanatory
-// note so its absence from the chart is explained, never silently missing (D-12).
-const WASGAU = "Wasgau";
+/**
+ * What the legend shows for the current kill-switch state: one colour swatch per
+ * line-store, plus (only while the Wasgau kill switch is on) the greyed Wasgau
+ * item explaining why it has no line (D-04). Pure — renderLegend just draws it.
+ * @param {{ wasgauUnavailable?: boolean }} [options]
+ * @returns {{ swatches: { store: string, color: string }[], greyedWasgau: boolean }}
+ */
+export function legendModel({ wasgauUnavailable = false } = {}) {
+  return {
+    swatches: lineStores(wasgauUnavailable).map((store) => ({
+      store,
+      color: LINE_COLORS[store],
+    })),
+    greyedWasgau: wasgauUnavailable,
+  };
+}
 
 // de-DE axis formatters. x ticks are epoch seconds -> "TT.MM."; y ticks are euros
 // rendered with a comma decimal + " €" (matches the rest of the de-DE display).
@@ -155,16 +191,20 @@ const formatYTick = (v) => `${v.toFixed(2).replace(".", ",")} €`;
  *    distinct offers stay broken apart.
  *  - points always shown so a one-day offer (validFrom == validTo) is still
  *    visible as a marker rather than a zero-length, invisible segment.
+ *  - Wasgau's markers are solid-filled so the 5th line is distinguishable by more
+ *    than hue alone (D-16).
  * @param {string} store
  * @param {string} color
  */
 function seriesFor(store, color) {
+  const points = { show: true, size: 6 };
+  if (store === WASGAU) points.fill = color;
   return {
     label: store,
     stroke: color,
     width: 3,
     spanGaps: false, // null => broken line, NO interpolation (HIST-02 / D-13-graph)
-    points: { show: true, size: 6 },
+    points,
   };
 }
 
@@ -188,19 +228,20 @@ function renderColdStart(container) {
   container.appendChild(panel);
 }
 
-// Build the legend below the chart: all four line-stores with a colour swatch,
-// then Wasgau greyed/struck with the "nicht automatisch verfügbar" note (D-12).
-function renderLegend(container) {
+// Build the legend below the chart from legendModel(): one colour swatch per
+// line-store, then — only while the Wasgau kill switch is on — Wasgau greyed/
+// struck with the "nicht automatisch verfügbar" note (D-04).
+function renderLegend(container, model) {
   const legend = document.createElement("ul");
   legend.className = "chart-legend";
 
-  for (const store of STORES_WITH_LINES) {
+  for (const { store, color } of model.swatches) {
     const item = document.createElement("li");
     item.className = "chart-legend__item";
 
     const swatch = document.createElement("span");
     swatch.className = "chart-legend__swatch";
-    swatch.style.backgroundColor = LINE_COLORS[store];
+    swatch.style.backgroundColor = color;
     swatch.setAttribute("aria-hidden", "true");
 
     const name = document.createElement("span");
@@ -211,21 +252,23 @@ function renderLegend(container) {
     legend.appendChild(item);
   }
 
-  // Wasgau: greyed, struck name + the explanatory note (no swatch colour).
-  const wasgau = document.createElement("li");
-  wasgau.className = "chart-legend__item chart-legend__item--unavailable";
+  // Kill switch on: Wasgau greyed, struck name + the explanatory note (no swatch).
+  if (model.greyedWasgau) {
+    const wasgau = document.createElement("li");
+    wasgau.className = "chart-legend__item chart-legend__item--unavailable";
 
-  const wasgauName = document.createElement("span");
-  wasgauName.className = "chart-legend__name--struck";
-  wasgauName.textContent = WASGAU;
+    const wasgauName = document.createElement("span");
+    wasgauName.className = "chart-legend__name--struck";
+    wasgauName.textContent = WASGAU;
 
-  const wasgauNote = document.createElement("span");
-  wasgauNote.className = "chart-legend__note";
-  wasgauNote.textContent = "nicht automatisch verfügbar";
+    const wasgauNote = document.createElement("span");
+    wasgauNote.className = "chart-legend__note";
+    wasgauNote.textContent = "nicht automatisch verfügbar";
 
-  wasgau.appendChild(wasgauName);
-  wasgau.appendChild(wasgauNote);
-  legend.appendChild(wasgau);
+    wasgau.appendChild(wasgauName);
+    wasgau.appendChild(wasgauNote);
+    legend.appendChild(wasgau);
+  }
 
   container.appendChild(legend);
 }
@@ -234,8 +277,8 @@ function renderLegend(container) {
  * Render the price-history chart into `container`. Reads the prepared data; on a
  * cold start (no offers) it renders the honest "Noch keine Daten" panel and returns
  * WITHOUT constructing uPlot (Pitfall 8 — an empty axis looks broken). Otherwise
- * it builds one flat-segment line per store with the gap rule, the Wasgau-aware
- * legend, and a ResizeObserver that keeps the canvas the width of its container.
+ * it builds one flat-segment line per store with the gap rule, the kill-switch-
+ * aware legend, and a ResizeObserver that keeps the canvas the width of its container.
  *
  * uPlot and its CSS are imported lazily here (see top-of-file note) so this
  * module stays Node-loadable for the pure data-prep tests. The cold-start path
@@ -243,10 +286,12 @@ function renderLegend(container) {
  *
  * @param {HTMLElement} container target element (its width drives the chart width)
  * @param {import('../../../contract/types.d.ts').HistoryLine[]} historyLines
+ * @param {{ wasgauUnavailable?: boolean }} [options] Wasgau kill switch on (D-04);
+ *   series and legend read the same flag so they can never disagree
  * @returns {Promise<import('uplot').default | null>} the uPlot instance, or null on cold start
  */
-export async function renderHistory(container, historyLines) {
-  const { data, stores, isEmpty } = prepareChartData(historyLines);
+export async function renderHistory(container, historyLines, { wasgauUnavailable = false } = {}) {
+  const { data, stores, isEmpty } = prepareChartData(historyLines, { wasgauUnavailable });
 
   // Cold start: no offers yet. Honest empty panel, no hollow uPlot axis.
   // Returns before any uPlot/CSS import is even evaluated (Pitfall 8).
@@ -275,7 +320,7 @@ export async function renderHistory(container, historyLines) {
 
   const plot = new uPlot(opts, data, container);
 
-  renderLegend(container);
+  renderLegend(container, legendModel({ wasgauUnavailable }));
 
   // Keep the canvas the width of its container as the viewport changes.
   const resize = new ResizeObserver(() => {
