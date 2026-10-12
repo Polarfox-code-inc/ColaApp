@@ -102,6 +102,10 @@ Recent decisions affecting current work:
 - [Post-04 / merged PR #4]: **PWA data caching → NetworkFirst (commit 94892ef)** — web/vite.config.js runtime route for data/*.json|jsonl switched from StaleWhileRevalidate to NetworkFirst (3s timeout). SWR painted the previous visit's data (app reads file once at startup) → permanent one-open stale-price lag. NetworkFirst restores PWA-03 (current price) while preserving PWA-02 (offline last-known). App-shell precache + autoUpdate unchanged.
 - [Post-04 / merged]: **Throwaway diagnostic workflow (commits e681d1f, 428cefa)** — .github/workflows/diagnose.yml + scripts/diagnose.mjs run the live marktguru fetch + frozen matcher on a GitHub runner (sandbox is 403-blocked) to dump the raw cola feed and classify() verdict. Read-only: no commit, no deploy. Spawned by the Kaufland 12×1L / 14×1L investigation; safe to delete once that closes.
 
+### Roadmap Evolution
+
+- Phase 5 added: Wasgau leaflet source — scrape Wasgau's weekly 1kcloud ePaper text layer (found 2026-10-12; marktguru still has no Wasgau) so Wasgau shows real offers instead of `unavailable`
+
 ### Pending Todos
 
 None yet.

@@ -17,6 +17,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 2: Core Scraper** - Fault-isolated ETL that fetches, normalizes, and appends a deduplicated price history (completed 2026-06-15)
 - [x] **Phase 3: PWA Frontend** - Installable offline PWA rendering best deal, per-store states, upcoming offers, and price history (completed 2026-06-18)
 - [x] **Phase 4: Live Integration, All Stores & Hardening** - Wire the free cron + Pages loop, land all 5 adapters, and harden against silent failure (completed 2026-06-18)
+- [ ] **Phase 5: Wasgau leaflet source** - Replace Wasgau's fixed `unavailable` with real offers parsed from its weekly 1kcloud ePaper text layer
 
 ## Phase Details
 
@@ -93,6 +94,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 **Wave 3** *(blocked on Wave 2 completion)*
 
 - [x] 03-05-PLAN.md — Human-verify checkpoint: build + localhost preview, README, and manual install / offline / fresh-when-online + six-state visual verification (Wave 3) *(real-device verification folded into Phase 4 / D-12; approved 2026-06-18)*
+
 **UI hint**: yes
 
 ### Phase 4: Live Integration, All Stores & Hardening
@@ -133,3 +135,27 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 | 2. Core Scraper | 3/3 | Complete    | 2026-06-15 |
 | 3. PWA Frontend | 5/5 | Complete    | 2026-06-18 |
 | 4. Live Integration, All Stores & Hardening | 3/3 | Complete    | 2026-06-18 |
+
+### Phase 5: Wasgau leaflet source
+
+**Goal:** Wasgau shows real 12×1L offers instead of the fixed `unavailable` status, sourced from Wasgau's own weekly leaflet text layer (no OCR — marktguru still has zero Wasgau offers as of 2026-10-12).
+
+Source findings (live-probed 2026-10-12):
+- Current leaflet URL is published on the wasgau.de homepage as `var wasgau = {"angebotslink": "https://wasgau-dlog.1kcloud.com/<id>/"}` (1kcloud ePaper; id changes weekly).
+- Each page has `epaper/coords/page_N.xml` — the PDF's embedded text as `<textbox bbox>` → `<textline>` → per-character `<text>` (~10 MB total for 26 pages). Product text, prices and dates are all in it.
+- Price sits in a separate textbox beside the product text (e.g. product box at x 23–101, price `8.99` at x 111–149, `10.99 -18%` above) → pair by geometry; the product text's own `1-l-Preis X` is a cross-check.
+- Validity on page 1: `GÜLTIG VOM 12. BIS 17. OKTOBER 2026`; some offers carry their own window (e.g. `Donnerstag 15.10. bis Samstag 17.10.`).
+- One leaflet for (almost) all stores. There is **no Wasgau in Schifferstadt** — nearest are Böhl-Iggelheim and Dudenhofen.
+
+Success criteria:
+1. A Wasgau 12×1L Coca-Cola offer in the leaflet appears in `current-offers.json` with correct price (cents) and validity dates, using the existing matcher on reconstructed textbox text.
+2. Fixtures from real leaflet XML (incl. the 2026-10-12 negative cases: 6×1L glass, 0.33 can, 2 L PET) cover textbox reconstruction, price pairing and date parsing.
+3. Any Wasgau-source failure (link missing, 1kcloud shape change, no price pairing) degrades Wasgau alone to `unavailable` — the marktguru stores are unaffected.
+4. Good-citizen fetching: sequential requests, descriptive User-Agent, stop early where possible.
+
+**Requirements**: TBD
+**Depends on:** Phase 4
+**Plans:** 0 plans
+
+Plans:
+- [ ] TBD (run /gsd-plan-phase 5 to break down)

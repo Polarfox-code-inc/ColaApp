@@ -1,0 +1,33 @@
+{
+  "contract": "1.0.0",
+  "flavor": "core",
+  "milestone": "v1.0",
+  "phases": [
+    {
+      "number": "1",
+      "name": "Data Contract & Source Spike",
+      "status": "complete"
+    },
+    {
+      "number": "2",
+      "name": "Core Scraper",
+      "status": "complete"
+    },
+    {
+      "number": "3",
+      "name": "PWA Frontend",
+      "status": "complete"
+    },
+    {
+      "number": "4",
+      "name": "Live Integration, All Stores & Hardening",
+      "status": "complete"
+    }
+  ],
+  "next": {
+    "command": "/gsd:progress",
+    "label": "Show progress",
+    "reason": "Unsure of state — showing progress"
+  },
+  "updated_at": "2026-10-12T06:43:22.146Z"
+}
