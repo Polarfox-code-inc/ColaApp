@@ -1,19 +1,19 @@
 ---
 gsd_state_version: "1.0"
 milestone: v1.0
-current_phase: 5
+current_phase: 05
 current_phase_name: Wasgau leaflet source
-status: milestone_complete
-stopped_at: Phase 5 context gathered
-last_updated: "2026-10-12T09:18:12.269Z"
+status: executing
+stopped_at: Completed 05-01-PLAN.md
+last_updated: "2026-10-12T16:56:10.841Z"
 last_activity: 2026-10-12
-last_activity_desc: "Completed quick task 261012-bpz: Fix deploy job checking out pre-scrape commit (site served previous run's data)"
-state_head: de5b23365ce683fffacb22d5eed914c8ba3534e1
+last_activity_desc: Phase 05 execution started
+state_head: 711a55711af53fac440b72503ef34db5f03fab63
 progress:
   total_phases: 5
   completed_phases: 4
   total_plans: 19
-  completed_plans: 14
+  completed_plans: 15
 milestone_name: milestone
 ---
 
@@ -24,14 +24,14 @@ milestone_name: milestone
 See: .planning/PROJECT.md (updated 2026-06-15)
 
 **Core value:** When the 12×1L Coca-Cola case goes on sale at one of the 5 Schifferstadt stores, the app shows it — accurately, with the price and the dates it's valid.
-**Current focus:** Milestone v1.0 feature-complete — all 4 phases done. Next: `/gsd-ship` (PR/review) or `/gsd-complete-milestone` to archive v1.0.
+**Current focus:** Phase 05 — Wasgau leaflet source
 
 ## Current Position
 
-Phase: 5 (Wasgau leaflet source) — READY TO EXECUTE
-Plan: 3 of 3 — done
-Status: Plan 04-03 COMPLETE — Task 1 (docs, 6f9e1e3) + Task 2 human-verify gate APPROVED 2026-06-18. Twin gate Phase 3 / 03-05 also closed.
-Last activity: 2026-10-12 - Completed quick task 261012-bpz: Fix deploy job checking out pre-scrape commit (site served previous run's data)
+Phase: 05 (Wasgau leaflet source) — EXECUTING
+Plan: 2 of 5
+Status: Ready to execute
+Last activity: 2026-10-12 — Phase 05 execution started
 
 Progress: [██████████] 100% (14/14 plans)
 
@@ -68,6 +68,11 @@ Progress: [██████████] 100% (14/14 plans)
 | Phase 03 P04 | 14 | 3 tasks | 14 files |
 | Phase 04 P01 | 5min | 2 tasks | 4 files |
 | Phase 04 P02 | ~1min | 2 tasks | 1 files |
+**Per-Plan Metrics:**
+
+| Plan | Duration | Tasks | Files |
+|------|----------|-------|-------|
+| Phase 05 P01 | 8min | 2 tasks | 13 files |
 
 ## Accumulated Context
 
@@ -101,6 +106,7 @@ Recent decisions affecting current work:
 - [Post-04 / merged PR #2]: **needsReview UI card (commit 81bb27a)** — web render layer no longer suppresses needsReview offers; a live review offer gets its own "bitte prüfen" amber-chip card (price/€l/validity, muted price), ranked below upcoming and above no_offer. isCleanOffer unchanged so review offers never headline the hero. isReview() helper + tests.
 - [Post-04 / merged PR #4]: **PWA data caching → NetworkFirst (commit 94892ef)** — web/vite.config.js runtime route for data/*.json|jsonl switched from StaleWhileRevalidate to NetworkFirst (3s timeout). SWR painted the previous visit's data (app reads file once at startup) → permanent one-open stale-price lag. NetworkFirst restores PWA-03 (current price) while preserving PWA-02 (offline last-known). App-shell precache + autoUpdate unchanged.
 - [Post-04 / merged]: **Throwaway diagnostic workflow (commits e681d1f, 428cefa)** — .github/workflows/diagnose.yml + scripts/diagnose.mjs run the live marktguru fetch + frozen matcher on a GitHub runner (sandbox is 403-blocked) to dump the raw cola feed and classify() verdict. Read-only: no commit, no deploy. Spawned by the Kaufland 12×1L / 14×1L investigation; safe to delete once that closes.
+- [Phase 05]: [Phase 05-01] Pure Wasgau leaflet core: allow-listed var wasgau link -> 1kcloud index Cola pages + page-1 window -> pdfminer XML reconstruction (size>=18 price tokens, non-price big runs kept as text) -> geometric pairing with 1-l-Preis cross-check (D-13 clean/ambiguous/mismatch/unpaired) -> zod .strict() candidates doc -> selectForStore; probation forces needsReview
 
 ### Roadmap Evolution
 
@@ -136,6 +142,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-10-12T07:52:27.317Z
-Stopped at: Phase 5 context gathered
-Resume file: .planning/phases/05-wasgau-leaflet-source/05-CONTEXT.md
+Last session: 2026-10-12T16:56:10.624Z
+Stopped at: Completed 05-01-PLAN.md
+Resume file: None

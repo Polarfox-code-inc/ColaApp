@@ -155,11 +155,11 @@ Success criteria:
 
 **Requirements**: TBD
 **Depends on:** Phase 4
-**Plans:** 5 plans
+**Plans:** 1/5 plans executed
 
 **Wave 1**
 
-- [ ] 05-01-PLAN.md — Tracer, pure half: real-derived fixtures → homepage link → 1kcloud index Cola pages → reconstructed textboxes → paired price → unchanged matcher → needsReview Wasgau StoreOffer (unit-tested on fixtures); then harden reconstruction/pairing on every real 2026-10-12 fixture (Wave 1)
+- [x] 05-01-PLAN.md — Tracer, pure half: real-derived fixtures → homepage link → 1kcloud index Cola pages → reconstructed textboxes → paired price → unchanged matcher → needsReview Wasgau StoreOffer (unit-tested on fixtures); then harden reconstruction/pairing on every real 2026-10-12 fixture (Wave 1)
 - [ ] 05-02-PLAN.md — PWA: 5th Wasgau chart line + kill-switch-aware legend (derived from Wasgau status), HIST-03 amended (Wave 1)
 
 **Wave 2** *(blocked on 05-01 completion)*
