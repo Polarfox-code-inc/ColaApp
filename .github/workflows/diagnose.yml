@@ -3,6 +3,10 @@
 # NOT blocked by marktguru, unlike a local sandbox) to dump the raw cola feed
 # and the frozen matcher's verdict for the Kaufland 12x1L investigation.
 # Read-only: no commit, no deploy. Safe to delete after the investigation.
+# Phase 5: it also serves as the read-only Wasgau runner-reachability probe
+# (RESEARCH A1) — the scraper step prints data/wasgau-candidates.json so a
+# manual run shows whether a GitHub runner can reach wasgau.de and the 1kcloud
+# leaflet. Still no commit, no deploy.
 name: diagnose
 
 on:
@@ -35,3 +39,5 @@ jobs:
           cat data/current-offers.json
           echo "===== data/status.json ====="
           cat data/status.json
+          echo "===== data/wasgau-candidates.json ====="
+          cat data/wasgau-candidates.json || echo "(not written - see the WASGAU FAILED line above)"
