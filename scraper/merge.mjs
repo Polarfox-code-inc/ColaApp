@@ -4,8 +4,9 @@
 // `now` is injected (Pattern 4); this module NEVER fetches, validates, or writes
 // (index.mjs owns validation + the atomic writes).
 //
-// The four marktguru stores (REWE/Edeka/Lidl/Kaufland) flow through one of three
-// paths per run:
+// All five contract stores flow through one of three paths per run. Wasgau is an
+// independent source since Phase 5 (its own leaflet fetch, D-01/D-03): it errors,
+// refreshes and carries forward exactly like the four marktguru stores.
 //   1. statusOverride === "error" WITH a prior offer entry  -> warm error:
 //      copy the prior current-offers entry VERBATIM (last-known data survives,
 //      D-04/Pitfall 2) and mark status "error" with the prior per-store
@@ -20,13 +21,17 @@
 //      now (D-05). An absent-from-results store (no override, no built entry)
 //      degrades to no_offer, never error (Pitfall 6).
 //
-// Wasgau is NEVER touched by statusOverrides: it is always "unavailable" in both
-// files, carrying its prior per-store timestamp when present else now (D-03).
+// A prior entry with status "unavailable" (the pre-Phase-5 fixed Wasgau value)
+// counts as NO prior, so a first Wasgau error goes down the cold-start path
+// instead of carrying "unavailable" next to "error" (RESEARCH Pitfall 2, D-01).
+//
+// Kill switch (D-04): with wasgauEnabled === false, Wasgau skips the three paths
+// and is "unavailable" in both files, carrying its prior per-store timestamp
+// when present else now — exactly the pre-Phase-5 behaviour.
 //
 // Both files' top-level lastUpdated ALWAYS bumps to the run clock (D-05).
 
-// The four marktguru-fed stores, in fixed order. Wasgau is appended separately.
-const MARKTGURU_STORES = ["REWE", "Edeka", "Lidl", "Kaufland"];
+import { STORES } from "../contract/schema.mjs";
 
 // Look up a store's prior entry in a (possibly null) prior document.
 const priorEntry = (priorDoc, store) =>
@@ -43,9 +48,11 @@ const priorEntry = (priorDoc, store) =>
  * @param {{ currentOffers: object | null, status: object | null }} prior  the
  *        prior snapshot from io.readPrior (nulls on cold start).
  * @param {Date} now  the injected run clock (captured once by the orchestrator).
+ * @param {{ wasgauEnabled?: boolean }} [opts]  wasgauEnabled=false is the D-04
+ *        kill switch (Wasgau fixed "unavailable").
  * @returns {{ currentOffers: object, status: object }}
  */
-export function mergeWithPrior(storeResults, statusOverrides, prior, now) {
+export function mergeWithPrior(storeResults, statusOverrides, prior, now, { wasgauEnabled = true } = {}) {
   const nowIso = now.toISOString();
   const results = storeResults ?? {};
   const overrides = statusOverrides ?? {};
@@ -55,11 +62,26 @@ export function mergeWithPrior(storeResults, statusOverrides, prior, now) {
   const offerStores = [];
   const statusStores = [];
 
-  for (const store of MARKTGURU_STORES) {
+  for (const store of STORES) {
+    if (store === "Wasgau" && !wasgauEnabled) {
+      // Kill switch (D-04): fixed unavailable, never routed through overrides.
+      // Per-store timestamp carries from prior when present, else the run clock.
+      const priorWasgau = priorEntry(priorStatus, "Wasgau");
+      offerStores.push({ store: "Wasgau", displayName: "Wasgau", status: "unavailable" });
+      statusStores.push({
+        store: "Wasgau",
+        status: "unavailable",
+        lastUpdated: priorWasgau?.lastUpdated ?? nowIso,
+      });
+      continue;
+    }
+
     if (overrides[store] === "error") {
       const priorOffer = priorEntry(priorCurrent, store);
       const priorSt = priorEntry(priorStatus, store);
-      if (priorOffer) {
+      // A prior "unavailable" is no last-known data: treat it as no prior
+      // (cold-start error), never carry it forward (Pitfall 2, D-01).
+      if (priorOffer && priorOffer.status !== "unavailable") {
         // Warm error: keep last-known data; freeze the per-store timestamp.
         offerStores.push({ ...priorOffer }); // verbatim copy (D-04, Pitfall 2)
         statusStores.push({
@@ -86,16 +108,6 @@ export function mergeWithPrior(storeResults, statusOverrides, prior, now) {
     }
     statusStores.push({ store, status, lastUpdated: nowIso }); // bumped on refresh (D-05)
   }
-
-  // Wasgau is always unavailable; never routed through overrides (D-03). Its
-  // per-store timestamp carries from prior when present, else the run clock.
-  const priorWasgau = priorEntry(priorStatus, "Wasgau");
-  offerStores.push({ store: "Wasgau", displayName: "Wasgau", status: "unavailable" });
-  statusStores.push({
-    store: "Wasgau",
-    status: "unavailable",
-    lastUpdated: priorWasgau?.lastUpdated ?? nowIso,
-  });
 
   return {
     currentOffers: { lastUpdated: nowIso, stores: offerStores }, // file-level bump (D-05)

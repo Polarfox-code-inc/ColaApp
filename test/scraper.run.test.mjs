@@ -18,10 +18,42 @@ import {
   parseStatusFile,
   parseHistoryLine,
 } from "../contract/schema.mjs";
+import { parseCandidatesDoc } from "../scraper/wasgau/candidates.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const readJson = (rel) => JSON.parse(readFileSync(join(ROOT, rel), "utf8"));
 const raw = readJson("spike/fixtures/raw-67105-search.json");
+
+// Wasgau seam for the marktguru cases: kill switch off (D-04), and a fetchText
+// that throws, so no run() in this file can ever reach wasgau.de or 1kcloud
+// (RESEARCH Pitfall 1). Cases A–G therefore keep asserting Wasgau "unavailable".
+const WASGAU_OFF = {
+  config: { enabled: false },
+  fetchText: async (url) => {
+    throw new Error(`test must not fetch Wasgau (${url})`);
+  },
+};
+
+// Offline Wasgau source serving the real-derived fixtures by URL. Records every
+// requested URL in `calls` and throws on any URL outside the leaflet path.
+const WASGAU_FIXTURES = join(ROOT, "test", "fixtures", "wasgau");
+const LEAFLET_ROOT = "https://wasgau-dlog.1kcloud.com/ep1rP1V0/";
+function wasgauStub(pages = { 17: "page_17.positive.xml", 26: "page_26.xml" }) {
+  const calls = [];
+  const fixture = (name) => readFileSync(join(WASGAU_FIXTURES, name), "utf8");
+  const fetchText = async (url) => {
+    calls.push(url);
+    if (url === "https://www.wasgau.de/") return fixture("homepage.html");
+    if (url === LEAFLET_ROOT) return fixture("index.html");
+    const m = url.match(/^https:\/\/wasgau-dlog\.1kcloud\.com\/ep1rP1V0\/epaper\/coords\/page_(\d+)\.xml$/);
+    if (m && pages[m[1]]) return fixture(pages[m[1]]);
+    throw new Error(`wasgauStub: unexpected URL ${url}`);
+  };
+  return { calls, fetchText };
+}
+
+// A Wednesday inside the 2026-10-12..17 leaflet window of the fixtures.
+const WASGAU_NOW = new Date("2026-10-14T10:00:00Z");
 
 // Fixed clock for every run (deterministic — Pattern 4).
 const NOW = new Date("2026-06-15T10:00:00Z");
@@ -68,7 +100,7 @@ const acceptOffer = (slug = "rewe", price = 9.99) => ({
 test("run() with the raw fixture writes valid 5-store docs, Wasgau unavailable (DATA-01)", async () => {
   const d = await freshDir();
   try {
-    await run({ now: NOW, dataDir: d, fetchOffers: async () => raw.results });
+    await run({ now: NOW, dataDir: d, wasgau: WASGAU_OFF, fetchOffers: async () => raw.results });
     const co = await readCurrent(d);
     const st = await readStatus(d);
 
@@ -92,7 +124,7 @@ test("run() with the raw fixture writes valid 5-store docs, Wasgau unavailable (
 test("run() with an accepted 12x1L offer marks the store offer and appends one history line (DATA-01/04)", async () => {
   const d = await freshDir();
   try {
-    await run({ now: NOW, dataDir: d, fetchOffers: async () => [acceptOffer("rewe", 9.99)] });
+    await run({ now: NOW, dataDir: d, wasgau: WASGAU_OFF, fetchOffers: async () => [acceptOffer("rewe", 9.99)] });
     const co = await readCurrent(d);
 
     const rewe = find(co, "REWE");
@@ -117,8 +149,8 @@ test("re-running over the same accepted offer appends the history line once, not
   const d = await freshDir();
   try {
     const fetchOffers = async () => [acceptOffer("rewe", 9.99)];
-    await run({ now: NOW, dataDir: d, fetchOffers });
-    await run({ now: NOW, dataDir: d, fetchOffers }); // identical second run
+    await run({ now: NOW, dataDir: d, wasgau: WASGAU_OFF, fetchOffers });
+    await run({ now: NOW, dataDir: d, wasgau: WASGAU_OFF, fetchOffers }); // identical second run
 
     const reweLines = (await readHistoryLines(d)).filter(
       (l) => JSON.parse(l).store === "REWE"
@@ -152,7 +184,7 @@ test("total fetch failure with a prior snapshot carries offers forward and freez
     const priorRewe = JSON.parse(priorCurrent).stores.find((s) => s.store === "REWE");
     const priorReweTs = JSON.parse(priorStatus).stores.find((s) => s.store === "REWE").lastUpdated;
 
-    await run({ now: NOW, dataDir: d, fetchOffers: async () => { throw new Error("boom"); } });
+    await run({ now: NOW, dataDir: d, wasgau: WASGAU_OFF, fetchOffers: async () => { throw new Error("boom"); } });
 
     const co = await readCurrent(d);
     const st = await readStatus(d);
@@ -177,7 +209,7 @@ test("total fetch failure with a prior snapshot carries offers forward and freez
 test("total fetch failure on a cold dir serializes no_offer + error, both files valid (DATA-05/D-06)", async () => {
   const d = await freshDir();
   try {
-    await run({ now: NOW, dataDir: d, fetchOffers: async () => { throw new Error("boom"); } });
+    await run({ now: NOW, dataDir: d, wasgau: WASGAU_OFF, fetchOffers: async () => { throw new Error("boom"); } });
 
     const co = await readCurrent(d); // throws if invalid
     const st = await readStatus(d);
@@ -229,7 +261,7 @@ test("a validation drift writes a valid error status.json and preserves current-
 
     // The run must FAIL LOUD (rethrow) — it is an alert-only hard stop.
     await assert.rejects(() =>
-      run({ now: NOW, dataDir: d, fetchOffers: async () => { throw new Error("boom"); } })
+      run({ now: NOW, dataDir: d, wasgau: WASGAU_OFF, fetchOffers: async () => { throw new Error("boom"); } })
     );
 
     // But status.json must now be a VALID error document (observable failure).
@@ -252,9 +284,73 @@ test("a validation drift writes a valid error status.json and preserves current-
 test("every run sets file-level lastUpdated on both files to the injected now (DATA-06)", async () => {
   const d = await freshDir();
   try {
-    await run({ now: NOW, dataDir: d, fetchOffers: async () => raw.results });
+    await run({ now: NOW, dataDir: d, wasgau: WASGAU_OFF, fetchOffers: async () => raw.results });
     assert.equal((await readCurrent(d)).lastUpdated, NOW_ISO);
     assert.equal((await readStatus(d)).lastUpdated, NOW_ISO);
+  } finally {
+    await rm(d, { recursive: true, force: true });
+  }
+});
+
+// --- Case H (Phase 5 tracer): wasgau.de homepage -> 1kcloud index -> Cola pages
+//     -> needsReview Wasgau offer + schema-valid wasgau-candidates.json, offline ---
+
+test("Wasgau leaflet end-to-end: 4 sequential requests -> needsReview offer + candidates file (P5-SC1, SC4, D-12)", async () => {
+  const d = await freshDir();
+  try {
+    const stub = wasgauStub();
+    // Default WASGAU_CONFIG (no config override): proves probation defaults ON.
+    await run({ now: WASGAU_NOW, dataDir: d, wasgau: { fetchText: stub.fetchText }, fetchOffers: async () => [] });
+
+    // Exactly 4 requests, in order: homepage, index, then ONLY Cola pages 17 + 26.
+    assert.deepEqual(stub.calls, [
+      "https://www.wasgau.de/",
+      LEAFLET_ROOT,
+      `${LEAFLET_ROOT}epaper/coords/page_17.xml`,
+      `${LEAFLET_ROOT}epaper/coords/page_26.xml`,
+    ]);
+
+    // Classified by the unchanged matcher; probation forces needsReview.
+    const co = await readCurrent(d);
+    assert.deepEqual(find(co, "Wasgau"), {
+      store: "Wasgau",
+      displayName: "Wasgau",
+      status: "offer",
+      needsReview: true,
+      price: 899,
+      currency: "EUR",
+      pricePerLitre: 75,
+      validFrom: "2026-10-12",
+      validTo: "2026-10-17",
+    });
+
+    const st = await readStatus(d);
+    assert.deepEqual(find(st, "Wasgau"), {
+      store: "Wasgau",
+      status: "offer",
+      lastUpdated: "2026-10-14T10:00:00.000Z",
+    });
+
+    // needsReview never enters the history graph (D-12).
+    const wasgauLines = (await readHistoryLines(d)).filter((l) => JSON.parse(l).store === "Wasgau");
+    assert.equal(wasgauLines.length, 0);
+
+    // Candidates file: accepts AND rejects, schema-valid, trailing newline (D-10/D-11).
+    const text = await readFile(join(d, "wasgau-candidates.json"), "utf8");
+    assert.ok(text.endsWith("\n"));
+    const doc = parseCandidatesDoc(JSON.parse(text));
+    assert.ok(doc, "wasgau-candidates.json must pass parseCandidatesDoc");
+    assert.equal(doc.leafletId, "ep1rP1V0");
+    assert.deepEqual(doc.leafletWindow, { from: "2026-10-12", to: "2026-10-17" });
+    assert.deepEqual(doc.colaPages, [17, 26]);
+    assert.equal(doc.candidates.length, 3);
+    const c14 = doc.candidates.find((c) => c.page === 17 && c.box === 14);
+    assert.ok(c14, "page 17 box 14 must be a candidate");
+    assert.equal(c14.verdict, "accept");
+    assert.equal(c14.pairing, "clean");
+    assert.equal(c14.priceCents, 899);
+    assert.equal(c14.unitPriceCents, 75);
+    assert.equal(c14.litres, 12);
   } finally {
     await rm(d, { recursive: true, force: true });
   }

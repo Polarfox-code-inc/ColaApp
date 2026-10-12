@@ -4,8 +4,8 @@
 // defensively optional-chained (ASVS V5), mirroring matcher.normalize().
 //
 // Wasgau is intentionally ABSENT from the slug map (D-03): it is never a
-// marktguru advertiser at PLZ 67105, so it is handled downstream as a fixed
-// "unavailable" store, never routed through this filter. Out-of-scope slugs
+// marktguru advertiser at PLZ 67105 and has its own leaflet source (Phase 5,
+// scraper/wasgau/), so it is never routed through this filter. Out-of-scope slugs
 // (netto-marken-discount, penny, scheck-in-center, thomas-philipps, ...) match
 // no bucket and are silently dropped (threat T-02-03, accept).
 

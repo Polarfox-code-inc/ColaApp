@@ -10,6 +10,11 @@
 // forward last-known data and the writes still happen. A hostile/failed run can
 // never wipe data/.
 //
+// Wasgau (Phase 5) is an independent leaflet source with its OWN try/catch
+// after the marktguru loop (D-03): a Wasgau failure marks only Wasgau "error"
+// and a marktguru failure never touches Wasgau. WASGAU_CONFIG.enabled=false is
+// the kill switch (D-04): no leaflet request, Wasgau fixed "unavailable".
+//
 // Tampering guard (T-02-08): parseCurrentOffers/parseStatusFile/parseHistoryLine
 // validate BEFORE any write; a drifted payload throws and no corrupt file lands.
 //
@@ -38,12 +43,16 @@ import { filterToAllowList } from "./filter.mjs";
 import { selectForStore } from "./select.mjs";
 import { keyOf, historyLinesToAppend } from "./dedup.mjs";
 import { mergeWithPrior } from "./merge.mjs";
+import { WASGAU_CONFIG } from "./wasgau/config.mjs";
+import { createFetchText } from "./wasgau/source.mjs";
+import { CANDIDATES_FILE, readCandidates, fetchCandidates } from "./wasgau/build.mjs";
+import { evaluateCandidates } from "./wasgau/candidates.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const DEFAULT_DATA_DIR = join(HERE, "..", "data");
 
-// The four marktguru-fed stores swept on a total fetch failure (Wasgau is fixed
-// "unavailable" and never an error — D-03).
+// The four marktguru-fed stores swept on a total marktguru fetch failure. Wasgau
+// is not among them: it has its own leaflet source and its own try/catch (D-03).
 const MARKTGURU_STORES = ["REWE", "Edeka", "Lidl", "Kaufland"];
 
 // Read the prior price-history.jsonl and return the Set of existing dedup keys.
@@ -74,20 +83,22 @@ async function readHistoryKeys(historyPath) {
 /**
  * On a schema-validation drift we cannot trust the assembled documents, but we
  * MUST still surface the failure in a machine-readable way (WR-02). Build a
- * minimal status.json — the four marktguru stores marked "error", Wasgau its
- * fixed "unavailable" — validate it against the FROZEN StatusFileSchema (so a
+ * minimal status.json — the four marktguru stores marked "error", Wasgau
+ * "error" too when its source is enabled, or "unavailable" when the kill switch
+ * is off (D-04) — validate it against the FROZEN StatusFileSchema (so a
  * malformed error-status can never land either), and atomically write ONLY
- * status.json. current-offers.json and price-history.jsonl are left untouched
- * so last-known data is preserved.
+ * status.json. current-offers.json, wasgau-candidates.json and
+ * price-history.jsonl are left untouched so last-known data is preserved.
  *
- * @param {string} dataDir directory holding the data files
- * @param {Date}   now      injected run clock
+ * @param {string}  dataDir       directory holding the data files
+ * @param {Date}    now           injected run clock
+ * @param {boolean} wasgauEnabled Wasgau source switch (D-04)
  */
-async function writeErrorStatus(dataDir, now) {
+async function writeErrorStatus(dataDir, now, wasgauEnabled) {
   const nowIso = now.toISOString();
   const stores = [
     ...MARKTGURU_STORES.map((store) => ({ store, status: "error", lastUpdated: nowIso })),
-    { store: "Wasgau", status: "unavailable", lastUpdated: nowIso }, // fixed (D-03)
+    { store: "Wasgau", status: wasgauEnabled ? "error" : "unavailable", lastUpdated: nowIso },
   ];
   const status = { lastUpdated: nowIso, stores };
   // Validate the minimal doc against the frozen schema before it can land.
@@ -105,12 +116,17 @@ async function writeErrorStatus(dataDir, now) {
  * @param {Date}   [opts.now]          injected run clock (captured once)
  * @param {string} [opts.dataDir]      directory holding the data files
  * @param {() => Promise<Array<object>>} [opts.fetchOffers] injectable fetch seam
+ * @param {{ fetchText?: (url: string) => Promise<string>,
+ *   config?: { enabled?: boolean, probation?: boolean } }} [opts.wasgau]
+ *   injectable Wasgau seam: fetchText replaces the real network, config
+ *   overrides WASGAU_CONFIG for this run
  * @returns {Promise<{ currentOffers: object, status: object }>}
  */
 export async function run({
   now = systemNow(),
   dataDir = DEFAULT_DATA_DIR,
   fetchOffers = realFetchOffers,
+  wasgau = {},
 } = {}) {
   // (1) Capture `now` once (already injected above) and read the prior snapshot.
   const prior = await readPrior(dataDir);
@@ -148,12 +164,33 @@ export async function run({
     }
   }
 
+  // (4b) Wasgau leaflet source in its OWN try/catch (D-03): a throw marks only
+  //      Wasgau "error" (D-01) and never aborts the run. Disabled -> no request
+  //      at all (D-04 kill switch). An evaluation throw keeps the parsed doc in
+  //      wasgauDoc so it is still written for review; a fetch/parse throw leaves
+  //      it null, so the old cache file survives and the next run retries.
+  const wasgauCfg = { ...WASGAU_CONFIG, ...(wasgau.config ?? {}) };
+  let wasgauDoc = null;
+  if (wasgauCfg.enabled) {
+    try {
+      const fetchText = wasgau.fetchText ?? createFetchText();
+      const priorDoc = await readCandidates(dataDir);
+      wasgauDoc = await fetchCandidates({ fetchText, priorDoc });
+      storeResults.Wasgau = evaluateCandidates(wasgauDoc, now, wasgauCfg);
+    } catch (err) {
+      // err.message only — never a response body (Mapbox token, T-05-04).
+      console.error("WASGAU FAILED:", err.message);
+      statusOverrides.Wasgau = "error";
+    }
+  }
+
   // (5) Assemble the two whole-file documents (carry-forward / cold-start / D-03).
   const { currentOffers, status } = mergeWithPrior(
     storeResults,
     statusOverrides,
     prior,
-    now
+    now,
+    { wasgauEnabled: wasgauCfg.enabled }
   );
 
   // (6) Validate BEFORE any write (T-02-08). A drift throws here so a corrupt
@@ -170,7 +207,7 @@ export async function run({
     parseStatusFile(status);
   } catch (err) {
     console.error("VALIDATION DRIFT (assembled docs invalid):", err.message);
-    await writeErrorStatus(dataDir, now).catch((writeErr) => {
+    await writeErrorStatus(dataDir, now, wasgauCfg.enabled).catch((writeErr) => {
       // Best-effort: never let the error-status write mask the original drift.
       console.error("could not write error status.json:", writeErr.message);
     });
@@ -185,7 +222,8 @@ export async function run({
   const existingKeys = await readHistoryKeys(historyPath);
   const lines = historyLinesToAppend(currentOffers.stores, existingKeys, now);
 
-  // (8) Write order: atomic current-offers.json, atomic status.json, append
+  // (8) Write order: atomic current-offers.json, atomic status.json, atomic
+  //     wasgau-candidates.json (only when a leaflet was parsed, D-11), append
   //     history LAST — the brother-facing snapshot is replaced before the
   //     append-only graph grows.
   await writeAtomic(
@@ -196,6 +234,13 @@ export async function run({
     join(dataDir, "status.json"),
     JSON.stringify(status, null, 2) + "\n"
   );
+  if (wasgauDoc) {
+    // Already zod-validated by buildCandidatesDoc / parseCandidatesDoc.
+    await writeAtomic(
+      join(dataDir, CANDIDATES_FILE),
+      JSON.stringify(wasgauDoc, null, 2) + "\n"
+    );
+  }
   await appendLines(historyPath, lines);
 
   return { currentOffers, status };

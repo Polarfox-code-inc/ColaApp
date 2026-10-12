@@ -93,11 +93,12 @@ test("file-level lastUpdated on BOTH files === injected now (D-05)", () => {
   assert.equal(status.lastUpdated, NOW_ISO);
 });
 
-// --- Wasgau is ALWAYS unavailable, even under a total-failure override (D-03) ---
+// --- Kill switch off: Wasgau is fixed unavailable, even under a total-failure
+//     override map (D-04, the pre-Phase-5 behaviour) ---
 
-test("Wasgau stays unavailable under a total-failure override map (D-03)", () => {
+test("kill switch: Wasgau stays unavailable under a total-failure override map (D-04)", () => {
   const overrides = { REWE: "error", Edeka: "error", Lidl: "error", Kaufland: "error" };
-  const { currentOffers, status } = mergeWithPrior({}, overrides, coldPrior(), NOW);
+  const { currentOffers, status } = mergeWithPrior({}, overrides, coldPrior(), NOW, { wasgauEnabled: false });
 
   assert.equal(find(currentOffers, "Wasgau").status, "unavailable");
   assert.equal(find(status, "Wasgau").status, "unavailable");
@@ -105,13 +106,25 @@ test("Wasgau stays unavailable under a total-failure override map (D-03)", () =>
   assert.doesNotThrow(() => parseStatusFile(status));
 });
 
-test("Wasgau per-store lastUpdated carries from prior when present, else now (D-03)", () => {
+test("kill switch: Wasgau per-store lastUpdated carries from prior when present, else now (D-04)", () => {
   // With prior -> prior Wasgau ts is carried.
-  const warm = mergeWithPrior({}, {}, priorWith(), NOW);
+  const warm = mergeWithPrior({}, {}, priorWith(), NOW, { wasgauEnabled: false });
   assert.equal(find(warm.status, "Wasgau").lastUpdated, "2026-06-01T04:00:00Z");
   // Cold -> synthetic now.
-  const cold = mergeWithPrior({}, {}, coldPrior(), NOW);
+  const cold = mergeWithPrior({}, {}, coldPrior(), NOW, { wasgauEnabled: false });
   assert.equal(find(cold.status, "Wasgau").lastUpdated, NOW_ISO);
+});
+
+// --- Source enabled: a built Wasgau offer takes the normal refresh path (D-01/D-03) ---
+
+test("Wasgau enabled with a built offer takes the refresh path (D-01/D-03)", () => {
+  const wasgauOffer = { ...builtOffer("Wasgau", 899), needsReview: true };
+  const { currentOffers, status } = mergeWithPrior({ Wasgau: wasgauOffer }, {}, priorWith(), NOW);
+
+  assert.deepEqual(find(currentOffers, "Wasgau"), wasgauOffer); // entry copied
+  assert.deepEqual(find(status, "Wasgau"), { store: "Wasgau", status: "offer", lastUpdated: NOW_ISO });
+  assert.doesNotThrow(() => parseCurrentOffers(currentOffers));
+  assert.doesNotThrow(() => parseStatusFile(status));
 });
 
 // --- Warm error: verbatim carry-forward + frozen per-store lastUpdated (D-04/D-05) ---

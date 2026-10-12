@@ -17,7 +17,7 @@
 //
 // Node 22+ (native fetch, AbortSignal.timeout, top-level ESM). No dependencies.
 
-const UA = "colaapp-scraper/0.1 (personal, low-volume)";
+export const UA = "colaapp-scraper/0.1 (personal, low-volume)";
 const HOME = "https://www.marktguru.de/";
 const API = "https://api.marktguru.de/api/v1/offers/search";
 const ZIP = "67105";
