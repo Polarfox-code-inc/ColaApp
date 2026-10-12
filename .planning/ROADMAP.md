@@ -155,7 +155,7 @@ Success criteria:
 
 **Requirements**: TBD
 **Depends on:** Phase 4
-**Plans:** 2/5 plans executed
+**Plans:** 3/5 plans executed
 
 **Wave 1**
 
@@ -164,7 +164,7 @@ Success criteria:
 
 **Wave 2** *(blocked on 05-01 completion)*
 
-- [ ] 05-03-PLAN.md — Tracer, completion: network seam + config flags + build orchestration wired into run()/5-store merge → Wasgau entry in current-offers.json + data/wasgau-candidates.json, end-to-end Case H (Wave 2)
+- [x] 05-03-PLAN.md — Tracer, completion: network seam + config flags + build orchestration wired into run()/5-store merge → Wasgau entry in current-offers.json + data/wasgau-candidates.json, end-to-end Case H (Wave 2)
 
 **Wave 3** *(blocked on 05-03 completion)*
 

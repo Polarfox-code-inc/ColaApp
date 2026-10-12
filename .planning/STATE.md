@@ -4,16 +4,16 @@ milestone: v1.0
 current_phase: 05
 current_phase_name: Wasgau leaflet source
 status: executing
-stopped_at: Completed 05-02-PLAN.md
-last_updated: "2026-10-12T17:01:56.652Z"
+stopped_at: Completed 05-03-PLAN.md
+last_updated: "2026-10-12T18:12:12.600Z"
 last_activity: 2026-10-12
 last_activity_desc: Phase 05 execution started
-state_head: 2d3e3f86049ca0eebde6ac83915d2c71dc7e9fb3
+state_head: 4f8343cf9d73f740b1fcde450f54b41396849740
 progress:
   total_phases: 5
   completed_phases: 4
   total_plans: 19
-  completed_plans: 16
+  completed_plans: 17
 milestone_name: milestone
 ---
 
@@ -29,7 +29,7 @@ See: .planning/PROJECT.md (updated 2026-06-15)
 ## Current Position
 
 Phase: 05 (Wasgau leaflet source) — EXECUTING
-Plan: 3 of 5
+Plan: 4 of 5
 Status: Ready to execute
 Last activity: 2026-10-12 — Phase 05 execution started
 
@@ -74,6 +74,7 @@ Progress: [██████████] 100% (14/14 plans)
 |------|----------|-------|-------|
 | Phase 05 P01 | 8min | 2 tasks | 13 files |
 | Phase 05 P02 | 4 min | 2 tasks | 4 files |
+| Phase 05 P03 | 3 min | 1 tasks | 9 files |
 
 ## Accumulated Context
 
@@ -109,6 +110,9 @@ Recent decisions affecting current work:
 - [Post-04 / merged]: **Throwaway diagnostic workflow (commits e681d1f, 428cefa)** — .github/workflows/diagnose.yml + scripts/diagnose.mjs run the live marktguru fetch + frozen matcher on a GitHub runner (sandbox is 403-blocked) to dump the raw cola feed and classify() verdict. Read-only: no commit, no deploy. Spawned by the Kaufland 12×1L / 14×1L investigation; safe to delete once that closes.
 - [Phase 05]: [Phase 05-01] Pure Wasgau leaflet core: allow-listed var wasgau link -> 1kcloud index Cola pages + page-1 window -> pdfminer XML reconstruction (size>=18 price tokens, non-price big runs kept as text) -> geometric pairing with 1-l-Preis cross-check (D-13 clean/ambiguous/mismatch/unpaired) -> zod .strict() candidates doc -> selectForStore; probation forces needsReview
 - [Phase 05]: 05-02: Wasgau chart line is teal #00838F with filled markers; PWA reads the kill switch from current-offers Wasgau status 'unavailable' (series + legend share one wasgauUnavailable flag)
+- [Phase 05]: Wasgau kill switch + probation are a committed frozen constant (scraper/wasgau/config.mjs), not GitHub repository variables
+- [Phase 05]: mergeWithPrior treats a prior 'unavailable' entry as no prior, so the first Wasgau error takes the cold-start path (no_offer + error)
+- [Phase 05]: wasgau-candidates.json is written only when a leaflet doc exists; a fetch/parse failure leaves the old cache for a retry
 
 ### Roadmap Evolution
 
@@ -144,6 +148,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-10-12T17:01:56.429Z
-Stopped at: Completed 05-02-PLAN.md
+Last session: 2026-10-12T18:12:12.387Z
+Stopped at: Completed 05-03-PLAN.md
 Resume file: None
