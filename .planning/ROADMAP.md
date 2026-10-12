@@ -155,7 +155,14 @@ Success criteria:
 
 **Requirements**: TBD
 **Depends on:** Phase 4
-**Plans:** 0 plans
+**Plans:** 4 plans
 
-Plans:
-- [ ] TBD (run /gsd-plan-phase 5 to break down)
+**Wave 1**
+
+- [ ] 05-01-PLAN.md — Tracer: wasgau.de → 1kcloud Cola pages → reconstructed textboxes → paired price → unchanged matcher → Wasgau offer + data/wasgau-candidates.json; then harden reconstruction/pairing on the real 2026-10-12 fixtures (Wave 1)
+- [ ] 05-02-PLAN.md — PWA: 5th Wasgau chart line + kill-switch-aware legend (derived from Wasgau status), HIST-03 amended (Wave 1)
+
+**Wave 2** *(blocked on 05-01 completion)*
+
+- [ ] 05-03-PLAN.md — Validity-window precedence (own box > page top band > leaflet, incl. the real letter-spaced p26 weekend header) + candidate cache, re-evaluation and review gating (Wave 2)
+- [ ] 05-04-PLAN.md — Fault-isolation proofs (D-01..D-04), good-citizen network hardening (allow-list, size cap, sequential), diagnose runner probe + end-of-phase live check (Wave 2)
