@@ -4,16 +4,16 @@ milestone: v1.0
 current_phase: 05
 current_phase_name: Wasgau leaflet source
 status: executing
-stopped_at: Completed 05-03-PLAN.md
-last_updated: "2026-10-12T18:12:12.600Z"
+stopped_at: Completed 05-04-PLAN.md
+last_updated: "2026-10-12T18:21:20.736Z"
 last_activity: 2026-10-12
 last_activity_desc: Phase 05 execution started
-state_head: 4f8343cf9d73f740b1fcde450f54b41396849740
+state_head: c7f2985ed4d91501fcbd81e002c39e28ef45d435
 progress:
   total_phases: 5
   completed_phases: 4
   total_plans: 19
-  completed_plans: 17
+  completed_plans: 18
 milestone_name: milestone
 ---
 
@@ -29,7 +29,7 @@ See: .planning/PROJECT.md (updated 2026-06-15)
 ## Current Position
 
 Phase: 05 (Wasgau leaflet source) — EXECUTING
-Plan: 4 of 5
+Plan: 5 of 5
 Status: Ready to execute
 Last activity: 2026-10-12 — Phase 05 execution started
 
@@ -75,6 +75,7 @@ Progress: [██████████] 100% (14/14 plans)
 | Phase 05 P01 | 8min | 2 tasks | 13 files |
 | Phase 05 P02 | 4 min | 2 tasks | 4 files |
 | Phase 05 P03 | 3 min | 1 tasks | 9 files |
+| Phase 05 P04 | 6min | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -113,6 +114,8 @@ Recent decisions affecting current work:
 - [Phase 05]: Wasgau kill switch + probation are a committed frozen constant (scraper/wasgau/config.mjs), not GitHub repository variables
 - [Phase 05]: mergeWithPrior treats a prior 'unavailable' entry as no prior, so the first Wasgau error takes the cold-start path (no_offer + error)
 - [Phase 05]: wasgau-candidates.json is written only when a leaflet doc exists; a fetch/parse failure leaves the old cache for a retry
+- [Phase 05]: Wasgau window top band is y0 >= 0.8 x page height (measured: headers 0.966/0.967/0.844, coupon 0.706, monthly 0.642), not RESEARCH's 0.9
+- [Phase 05]: Year-less Wasgau window phrases resolve against the leaflet window start (closest of Y-1/Y/Y+1); an unpaired Cola case candidate always makes Wasgau 'error'
 
 ### Roadmap Evolution
 
@@ -148,6 +151,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-10-12T18:12:12.387Z
-Stopped at: Completed 05-03-PLAN.md
+Last session: 2026-10-12T18:21:20.514Z
+Stopped at: Completed 05-04-PLAN.md
 Resume file: None

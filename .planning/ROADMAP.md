@@ -155,7 +155,7 @@ Success criteria:
 
 **Requirements**: TBD
 **Depends on:** Phase 4
-**Plans:** 3/5 plans executed
+**Plans:** 4/5 plans executed
 
 **Wave 1**
 
@@ -168,5 +168,5 @@ Success criteria:
 
 **Wave 3** *(blocked on 05-03 completion)*
 
-- [ ] 05-04-PLAN.md — Validity-window precedence (own box > page top band > leaflet, incl. the real letter-spaced p26 weekend header) + candidate cache, re-evaluation and review gating (Wave 3)
+- [x] 05-04-PLAN.md — Validity-window precedence (own box > page top band > leaflet, incl. the real letter-spaced p26 weekend header) + candidate cache, re-evaluation and review gating (Wave 3)
 - [ ] 05-05-PLAN.md — Fault-isolation proofs (D-01..D-04), good-citizen network hardening (allow-list, size cap, sequential), diagnose runner probe + end-of-phase live check (Wave 3)
