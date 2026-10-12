@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-10-12T11:50:45.622Z",
+  "lastUpdated": "2026-10-12T20:02:25.245Z",
   "stores": [
     {
       "store": "REWE",
@@ -24,7 +24,7 @@
     {
       "store": "Wasgau",
       "displayName": "Wasgau",
-      "status": "unavailable"
+      "status": "no_offer"
     }
   ]
 }
