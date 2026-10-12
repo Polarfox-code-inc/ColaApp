@@ -23,6 +23,18 @@
 // escaped pdfminer.six format (no CDATA/namespaces/DTD) and the project keeps a
 // single dependency.
 //
+// ACCEPTED RESIDUAL RISK — glyph dropout (RESEARCH Pitfall 7): some leaflet
+// fonts lack Unicode maps (e.g. p20 reads "Aktionszeitrum", "Kuf"). A Cola
+// offer set in such a font is invisible to this text layer (a false no_offer),
+// and a dropped price digit surfaces as a pairing "mismatch" -> needsReview,
+// never as a wrong clean price. Fixing it would need OCR, which CLAUDE.md
+// excludes.
+//
+// ACCEPTED ASSUMPTION (RESEARCH Open Question 4): a multi-variant box such as
+// "6 x 1-l-Glas ... oder Kiste mit je 12 x 1-l-PET" is classified by the
+// matcher's FIRST "N x 1 l" token (count 6 -> reject). It stays visible as a
+// near-miss in data/wasgau-candidates.json; the matcher is not changed (D-14).
+//
 // Node 22+, no new dependencies.
 
 export const HOMEPAGE_URL = "https://www.wasgau.de/";

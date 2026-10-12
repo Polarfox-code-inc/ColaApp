@@ -69,7 +69,12 @@ function gaps(p, t) {
 /**
  * Pair a product box with one of the page's price tokens.
  * Adjacent = tokens overlapping the box on at least one axis with an edge gap
- * <= MAX_GAP, ordered by gap, then x0, then y0.
+ * <= MAX_GAP, ordered by gap, then x0, then y0. Outcome classes (D-13):
+ *   clean     - cross-checkable and exactly one adjacent token is consistent
+ *   ambiguous - several consistent tokens (nearest consistent), or no usable
+ *               cross-check (first consistent, else nearest adjacent)
+ *   mismatch  - cross-checkable but no adjacent token is consistent (nearest)
+ *   unpaired  - no adjacent token at all (priceCents null)
  * @param {{ bbox: number[], text: string }} box reconstructed product box
  * @param {Array<{ cents: number, bbox: number[] }>} priceTokens page-wide tokens
  * @returns {{ priceCents: number|null,
@@ -95,16 +100,37 @@ export function pairPrice(box, priceTokens) {
     litres,
   };
 
-  // Tolerance absorbs the leaflet's rounding (12 x 0.75 = 9.00 vs 8.99).
-  const crossCheckable = unit && !unit.from && !unit.multi && litres !== null;
+  // No price token near the box at all.
+  if (!adjacent.length) return { priceCents: null, pairing: "unpaired", ...base };
+
+  // Tokens that litres x 1-l-Preis reproduces; the tolerance absorbs the
+  // leaflet's rounding (12 x 0.75 = 9.00 vs 8.99). Kept in gap order.
+  const consistent =
+    unit && litres !== null
+      ? adjacent.filter(
+          (a) => Math.abs(unit.cents * litres - a.tok.cents) <= Math.ceil(0.5 * litres) + 2,
+        )
+      : [];
+  const nearest = adjacent[0].tok.cents;
+
+  // Outcome table (D-13). Deliberately NO "mutual-nearest exclusion": in the
+  // research prototype it stole granini's 1.69 for Sinalco.
+  const crossCheckable = unit !== null && !unit.from && !unit.multi && litres !== null;
   if (crossCheckable) {
-    const tolerance = Math.ceil(0.5 * litres) + 2;
-    const consistent = adjacent.filter(
-      (a) => Math.abs(unit.cents * litres - a.tok.cents) <= tolerance,
-    );
     if (consistent.length === 1) {
       return { priceCents: consistent[0].tok.cents, pairing: "clean", ...base };
     }
+    if (consistent.length > 1) {
+      return { priceCents: consistent[0].tok.cents, pairing: "ambiguous", ...base };
+    }
+    // The 1-l-Preis contradicts every nearby price (e.g. a dropped glyph).
+    return { priceCents: nearest, pairing: "mismatch", ...base };
   }
-  return { priceCents: null, pairing: "unpaired", ...base };
+  // No usable cross-check (no 1-l-Preis, an "ab" price, or a multi-variant box):
+  // best guess only — the first consistent token if any, else the nearest.
+  return {
+    priceCents: consistent.length ? consistent[0].tok.cents : nearest,
+    pairing: "ambiguous",
+    ...base,
+  };
 }
