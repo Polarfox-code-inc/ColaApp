@@ -573,18 +573,22 @@ SYNTH accept 12             | Coca Cola1), Fanta, Sprite oder Mezzo Mix1) und we
 | A7 | Teal `#00838F` (or similar) is an acceptable 5th line colour | PWA changes | Cosmetic only |
 | A8 | `MAX_GAP` 200 pt and the cross-check tolerance `ceil(0.5·L)+2` cents generalize beyond the 4 probed pages | Pattern 3 | Mis-classification → needsReview (safe direction), not a wrong clean price |
 
-## Open Questions
+## Open Questions (RESOLVED)
 
 1. **Kill-switch storage (D-04 "without a code change").**
    - What we know: a constant/JSON flag needs a commit (web editor, one line); repo variables need no commit but add hidden state.
    - Recommendation: constant in `scraper/wasgau/config.mjs` (A3). Confirm with the user at plan review.
+   - RESOLVED: committed constant `WASGAU_CONFIG = Object.freeze({ enabled: true, probation: true })` in `scraper/wasgau/config.mjs` (Plan 05-03 Task 1, D-04/D-12); its header comment records the versioned-over-hidden-state rationale and the one-line flip procedure.
 2. **Runner reachability (A1).**
    - Recommendation: the final plan includes a `workflow_dispatch` run of `pipeline.yml` (or a temporary `diagnose.yml` step running only the Wasgau source and printing the candidates) as a human-verify checkpoint.
+   - RESOLVED: Plan 05-05 Task 2 makes `diagnose.yml` print `data/wasgau-candidates.json` and carries the end-of-phase `<human-check>` (diagnose run + post-push pipeline run + live PWA), with the kill switch as the fallback.
 3. **What a real positive looks like (CONTEXT "specifics").**
    - Recommendation: probation ON by default. Plan a later manual task: "after the first real candidate with verdict accept appears in `data/wasgau-candidates.json`, verify it against the leaflet image and flip probation off". This is not part of this phase's automated scope.
+   - RESOLVED: probation defaults ON (D-12, `WASGAU_CONFIG.probation`, Plan 05-03); flipping it off after eyeballing a real accept candidate is a post-phase maintainer action documented in the `config.mjs` header, not phase scope.
 4. **Multi-variant Cola box ("6 x 1-l-Glas … oder Kiste mit je 12 x 1-l-PET").**
    - What we know: `classify` uses the **first** `NX1L` match, so such a box would read as count 6 → reject. That is a false negative, still captured in candidates as a near-miss.
    - Recommendation: accept for now (D-14 "matcher as-is"). The candidates file makes it visible. Revisit only if observed.
+   - RESOLVED: accepted as-is (D-14, matcher unchanged); Plan 05-01 Task 2 records the assumption in the `scraper/wasgau/leaflet.mjs` header comment, and the near-miss stays visible in `data/wasgau-candidates.json`.
 
 ## Environment Availability
 

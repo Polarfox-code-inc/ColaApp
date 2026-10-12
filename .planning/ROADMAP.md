@@ -155,14 +155,18 @@ Success criteria:
 
 **Requirements**: TBD
 **Depends on:** Phase 4
-**Plans:** 4 plans
+**Plans:** 5 plans
 
 **Wave 1**
 
-- [ ] 05-01-PLAN.md — Tracer: wasgau.de → 1kcloud Cola pages → reconstructed textboxes → paired price → unchanged matcher → Wasgau offer + data/wasgau-candidates.json; then harden reconstruction/pairing on the real 2026-10-12 fixtures (Wave 1)
+- [ ] 05-01-PLAN.md — Tracer, pure half: real-derived fixtures → homepage link → 1kcloud index Cola pages → reconstructed textboxes → paired price → unchanged matcher → needsReview Wasgau StoreOffer (unit-tested on fixtures); then harden reconstruction/pairing on every real 2026-10-12 fixture (Wave 1)
 - [ ] 05-02-PLAN.md — PWA: 5th Wasgau chart line + kill-switch-aware legend (derived from Wasgau status), HIST-03 amended (Wave 1)
 
 **Wave 2** *(blocked on 05-01 completion)*
 
-- [ ] 05-03-PLAN.md — Validity-window precedence (own box > page top band > leaflet, incl. the real letter-spaced p26 weekend header) + candidate cache, re-evaluation and review gating (Wave 2)
-- [ ] 05-04-PLAN.md — Fault-isolation proofs (D-01..D-04), good-citizen network hardening (allow-list, size cap, sequential), diagnose runner probe + end-of-phase live check (Wave 2)
+- [ ] 05-03-PLAN.md — Tracer, completion: network seam + config flags + build orchestration wired into run()/5-store merge → Wasgau entry in current-offers.json + data/wasgau-candidates.json, end-to-end Case H (Wave 2)
+
+**Wave 3** *(blocked on 05-03 completion)*
+
+- [ ] 05-04-PLAN.md — Validity-window precedence (own box > page top band > leaflet, incl. the real letter-spaced p26 weekend header) + candidate cache, re-evaluation and review gating (Wave 3)
+- [ ] 05-05-PLAN.md — Fault-isolation proofs (D-01..D-04), good-citizen network hardening (allow-list, size cap, sequential), diagnose runner probe + end-of-phase live check (Wave 3)
