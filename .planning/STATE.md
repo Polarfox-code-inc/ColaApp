@@ -3,17 +3,17 @@ gsd_state_version: "1.0"
 milestone: v1.0
 current_phase: 05
 current_phase_name: Wasgau leaflet source
-status: executing
-stopped_at: Completed 05-04-PLAN.md
-last_updated: "2026-10-12T18:21:20.736Z"
+status: verifying
+stopped_at: Completed 05-05-PLAN.md
+last_updated: "2026-10-12T18:28:57.847Z"
 last_activity: 2026-10-12
 last_activity_desc: Phase 05 execution started
-state_head: c7f2985ed4d91501fcbd81e002c39e28ef45d435
+state_head: 9c9902fe06dacbe0c5128603fc88f744e0e5b4fd
 progress:
   total_phases: 5
   completed_phases: 4
   total_plans: 19
-  completed_plans: 18
+  completed_plans: 19
 milestone_name: milestone
 ---
 
@@ -30,7 +30,7 @@ See: .planning/PROJECT.md (updated 2026-06-15)
 
 Phase: 05 (Wasgau leaflet source) — EXECUTING
 Plan: 5 of 5
-Status: Ready to execute
+Status: Phase complete — ready for verification
 Last activity: 2026-10-12 — Phase 05 execution started
 
 Progress: [██████████] 100% (14/14 plans)
@@ -76,6 +76,7 @@ Progress: [██████████] 100% (14/14 plans)
 | Phase 05 P02 | 4 min | 2 tasks | 4 files |
 | Phase 05 P03 | 3 min | 1 tasks | 9 files |
 | Phase 05 P04 | 6min | 2 tasks | 5 files |
+| Phase 05 P05 | 5min | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -116,6 +117,8 @@ Recent decisions affecting current work:
 - [Phase 05]: wasgau-candidates.json is written only when a leaflet doc exists; a fetch/parse failure leaves the old cache for a retry
 - [Phase 05]: Wasgau window top band is y0 >= 0.8 x page height (measured: headers 0.966/0.967/0.844, coupon 0.706, monthly 0.642), not RESEARCH's 0.9
 - [Phase 05]: Year-less Wasgau window phrases resolve against the leaflet window start (closest of Y-1/Y/Y+1); an unpaired Cola case candidate always makes Wasgau 'error'
+- [Phase 05]: 05-05: No defect surfaced in merge.mjs/index.mjs; every D-01..D-04 run()-level and merge proof passed against Plan 05-03, so both files are unchanged
+- [Phase 05]: 05-05: Wasgau fetch seam enforces https + exact ALLOWED_HOSTS before the request (never retried) and on res.url after redirects, plus a 5,000,000-char body cap
 
 ### Roadmap Evolution
 
@@ -151,6 +154,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-10-12T18:21:20.514Z
-Stopped at: Completed 05-04-PLAN.md
+Last session: 2026-10-12T18:28:57.615Z
+Stopped at: Completed 05-05-PLAN.md
 Resume file: None
