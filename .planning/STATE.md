@@ -1,16 +1,20 @@
 ---
-gsd_state_version: 1.0
+gsd_state_version: "1.0"
 milestone: v1.0
-milestone_name: milestone
+current_phase: 04
+current_phase_name: live-integration-all-stores-hardening
 status: milestone_complete
-last_updated: "2026-06-18T12:00:00.000Z"
-last_activity: 2026-07-05 - Quick task 260705-s9l: hardened CI pipeline.yml against re-run/concurrency failures (rebase -X theirs on commit step + one transient GitHub-Pages deploy retry) after scheduled run 28749099899 failed
+stopped_at: "Milestone v1.0 feature-complete — human approved the twin real-device human-verify gates (03-05 + 04-03 Task 2); all 4 phases / 14 plans done. Doc sync of merged PRs #2-#4 also folded in (matcher scope, review card, NetworkFirst)."
+last_updated: "2026-10-12T06:36:55.827Z"
+last_activity: "2026-10-12 - Quick task 261012-bpz: deploy job now checks out branch tip so Pages ships the just-scraped data (was one run behind)"
+state_head: d0281aaf37704be16e731e3046ada6a1e70675d2
 progress:
   total_phases: 4
   completed_phases: 4
   total_plans: 14
   completed_plans: 14
   percent: 100
+milestone_name: milestone
 ---
 
 # Project State
@@ -27,7 +31,7 @@ See: .planning/PROJECT.md (updated 2026-06-15)
 Phase: 04 (live-integration-all-stores-hardening) — COMPLETE (all phases complete)
 Plan: 3 of 3 — done
 Status: Plan 04-03 COMPLETE — Task 1 (docs, 6f9e1e3) + Task 2 human-verify gate APPROVED 2026-06-18. Twin gate Phase 3 / 03-05 also closed.
-Last activity: 2026-06-18
+Last activity: 2026-10-12 - Completed quick task 261012-bpz: Fix deploy job checking out pre-scrape commit (site served previous run's data)
 
 Progress: [██████████] 100% (14/14 plans)
 
@@ -116,6 +120,7 @@ None yet.
 | 260618-q81 | Clean placeholder history data + show offer duration as a price line over the valid week | 2026-06-18 | fa9d1b6, 4e1afea | [260618-q81-clean-non-real-placeholder-data-graph-ol](./quick/260618-q81-clean-non-real-placeholder-data-graph-ol/) |
 | 260618-qze | Fix scraper.run Case D/G: seed prior state from mocks, not live scraped data (drift-proof) | 2026-06-18 | 1dcc19a | [260618-qze-fix-scraper-run-test-mjs-case-d-and-hard](./quick/260618-qze-fix-scraper-run-test-mjs-case-d-and-hard/) |
 | 260705-s9l | Harden pipeline against re-run/concurrency failures (rebase -X theirs + one transient Pages-deploy retry) | 2026-07-05 | 53a6c04 | [260705-s9l-harden-pipeline-rerun-safety](./quick/260705-s9l-harden-pipeline-rerun-safety/) |
+| 261012-bpz | Fix deploy job checking out pre-scrape commit (site served previous run's data) | 2026-10-12 | e3e64b6 | [261012-bpz-fix-deploy-job-checking-out-pre-scrape-c](./quick/261012-bpz-fix-deploy-job-checking-out-pre-scrape-c/) |
 
 ## Deferred Items
 
