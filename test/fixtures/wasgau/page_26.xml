@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Real 1kcloud coords XML, leaflet ep1rP1V0 (WASGAU Prospekt ab 12.10.2026), captured 2026-10-12 from https://wasgau-dlog.1kcloud.com/ep1rP1V0/epaper/coords/page_26.xml - NEGATIVE: 2 L PET Coca Cola (box 36) with price BELOW (box 37), strike (box 38). Planner addition 2026-10-12: weekend PAGE-level window header kept (box 0 "ENDLICH WOCHENENDE", box 1 letter-spaced "VO N D O N N E R STAG 1 5. O KTO B E R / B I S SA M STAG 1 7. O KTO B E R" at y0=710.5 = 0.844 x page height, i.e. BELOW a 0.9 top band) -->
+<pages>
+<page id="1" bbox="0.000,0.000,476.220,841.890" rotate="0">
+<textbox id="0" bbox="213.447,774.138,430.737,828.322">
+<textline bbox="213.447,806.308,344.785,828.322">
+<text font="XETNDK+Interstate-Black" bbox="213.447,806.308,232.692,828.322" size="22.015">E</text>
+<text font="XETNDK+Interstate-Black" bbox="232.692,806.308,254.505,828.322" size="22.015">N</text>
+<text font="XETNDK+Interstate-Black" bbox="254.505,806.308,275.336,828.322" size="22.015">D</text>
+<text font="XETNDK+Interstate-Black" bbox="275.336,806.308,293.081,828.322" size="22.015">L</text>
+<text font="XETNDK+Interstate-Black" bbox="293.081,806.308,303.179,828.322" size="22.015">I</text>
+<text font="XETNDK+Interstate-Black" bbox="303.179,806.308,322.972,828.322" size="22.015">C</text>
+<text font="XETNDK+Interstate-Black" bbox="322.972,806.308,344.785,828.322" size="22.015">H</text>
+<text>
+</text>
+</textline>
+<textline bbox="219.679,774.138,430.737,796.152">
+<text font="XETNDK+Interstate-Black" bbox="219.679,774.138,246.397,796.152" size="22.015">W</text>
+<text font="XETNDK+Interstate-Black" bbox="245.820,774.138,266.940,796.152" size="22.015">O</text>
+<text font="XETNDK+Interstate-Black" bbox="266.940,774.138,286.733,796.152" size="22.015">C</text>
+<text font="XETNDK+Interstate-Black" bbox="286.733,774.138,308.546,796.152" size="22.015">H</text>
+<text font="XETNDK+Interstate-Black" bbox="308.546,774.138,327.790,796.152" size="22.015">E</text>
+<text font="XETNDK+Interstate-Black" bbox="327.790,774.138,349.603,796.152" size="22.015">N</text>
+<text font="XETNDK+Interstate-Black" bbox="349.603,774.138,368.848,796.152" size="22.015">E</text>
+<text font="XETNDK+Interstate-Black" bbox="368.848,774.138,390.661,796.152" size="22.015">N</text>
+<text font="XETNDK+Interstate-Black" bbox="390.661,774.138,411.492,796.152" size="22.015">D</text>
+<text font="XETNDK+Interstate-Black" bbox="411.492,774.138,430.737,796.152" size="22.015">E</text>
+<text>
+</text>
+</textline>
+</textbox>
+<textbox id="1" bbox="116.913,710.487,313.937,758.673">
+<textline bbox="116.913,722.448,313.937,758.673">
+<text font="ABRLEC+Interstate-Light" bbox="116.913,722.448,123.958,737.027" size="14.579">V</text>
+<text font="ABRLEC+Interstate-Light" bbox="125.122,723.383,132.643,738.017" size="14.634">O</text>
+<text> </text>
+<text font="ABRLEC+Interstate-Light" bbox="134.193,724.417,141.496,739.025" size="14.609">N</text>
+<text> </text>
+<text font="XETNDK+Interstate-Black" bbox="142.798,727.600,145.925,737.901" size="10.301"> </text>
+<text> </text>
+<text font="XETNDK+Interstate-Black" bbox="147.044,728.083,155.215,738.959" size="10.876">D</text>
+<text> </text>
+<text font="XETNDK+Interstate-Black" bbox="156.333,729.142,164.633,740.032" size="10.890">O</text>
+<text> </text>
+<text font="XETNDK+Interstate-Black" bbox="165.752,730.215,174.361,741.141" size="10.926">N</text>
+<text> </text>
+<text font="XETNDK+Interstate-Black" bbox="175.479,731.323,184.088,742.249" size="10.926">N</text>
+<text> </text>
+<text font="XETNDK+Interstate-Black" bbox="185.206,732.432,192.670,743.227" size="10.795">E</text>
+<text> </text>
+<text font="XETNDK+Interstate-Black" bbox="193.789,733.409,201.883,744.276" size="10.867">R</text>
+<text> </text>
+<text font="XETNDK+Interstate-Black" bbox="203.001,734.459,210.619,745.272" size="10.813">S</text>
+<text font="XETNDK+Interstate-Black" bbox="211.403,735.416,218.905,746.216" size="10.800">T</text>
+<text font="XETNDK+Interstate-Black" bbox="218.803,736.259,227.489,747.194" size="10.934">A</text>
+<text font="XETNDK+Interstate-Black" bbox="228.246,737.335,236.404,748.210" size="10.874">G</text>
+<text> </text>
+<text font="XETNDK+Interstate-Black" bbox="237.523,738.392,240.650,748.693" size="10.301"> </text>
+<text font="ABRLEC+Interstate-Light" bbox="242.017,736.702,244.482,750.759" size="14.058">1</text>
+<text> </text>
+<text font="ABRLEC+Interstate-Light" bbox="246.031,737.159,252.266,751.646" size="14.487">5</text>
+<text font="ABRLEC+Interstate-Light" bbox="253.558,738.017,255.097,751.969" size="13.952">.</text>
+<text> </text>
+<text font="ABRLEC+Interstate-Light" bbox="258.293,738.556,265.815,753.190" size="14.634">O</text>
+<text> </text>
+<text font="ABRLEC+Interstate-Light" bbox="267.364,739.590,274.075,754.131" size="14.541">K</text>
+<text font="ABRLEC+Interstate-Light" bbox="275.239,740.487,281.255,754.949" size="14.462">T</text>
+<text font="ABRLEC+Interstate-Light" bbox="282.444,741.308,289.966,755.941" size="14.634">O</text>
+<text> </text>
+<text font="ABRLEC+Interstate-Light" bbox="291.516,742.341,298.021,756.859" size="14.518">B</text>
+<text> </text>
+<text font="ABRLEC+Interstate-Light" bbox="299.570,743.259,305.573,757.720" size="14.461">E</text>
+<text> </text>
+<text font="ABRLEC+Interstate-Light" bbox="307.123,744.120,313.937,758.673" size="14.553">R</text>
+<text>
+</text>
+</textline>
+<textline bbox="136.686,710.487,297.361,742.570">
+<text font="ABRLEC+Interstate-Light" bbox="136.686,710.487,143.191,725.005" size="14.518">B</text>
+<text> </text>
+<text font="ABRLEC+Interstate-Light" bbox="144.741,711.404,146.691,725.403" size="13.999">I</text>
+<text> </text>
+<text font="ABRLEC+Interstate-Light" bbox="148.240,711.803,154.308,726.271" size="14.468">S</text>
+<text> </text>
+<text font="XETNDK+Interstate-Black" bbox="155.610,714.846,158.737,725.147" size="10.301"> </text>
+<text> </text>
+<text font="XETNDK+Interstate-Black" bbox="159.856,715.329,167.474,726.142" size="10.813">S</text>
+<text font="XETNDK+Interstate-Black" bbox="168.258,716.287,176.944,727.221" size="10.934">A</text>
+<text> </text>
+<text font="XETNDK+Interstate-Black" bbox="178.062,717.404,187.803,728.458" size="11.055">M</text>
+<text> </text>
+<text font="XETNDK+Interstate-Black" bbox="188.922,718.641,196.540,729.454" size="10.813">S</text>
+<text font="XETNDK+Interstate-Black" bbox="197.324,719.598,204.826,730.398" size="10.800">T</text>
+<text font="XETNDK+Interstate-Black" bbox="204.723,720.441,213.409,731.376" size="10.934">A</text>
+<text font="XETNDK+Interstate-Black" bbox="214.166,721.517,222.324,732.392" size="10.874">G</text>
+<text> </text>
+<text font="XETNDK+Interstate-Black" bbox="223.443,722.574,226.570,732.875" size="10.301"> </text>
+<text font="ABRLEC+Interstate-Light" bbox="227.937,720.884,230.402,734.941" size="14.058">1</text>
+<text> </text>
+<text font="ABRLEC+Interstate-Light" bbox="231.952,721.341,237.556,735.756" size="14.415">7</text>
+<text font="ABRLEC+Interstate-Light" bbox="237.497,721.973,239.036,735.925" size="13.952">.</text>
+<text> </text>
+<text font="ABRLEC+Interstate-Light" bbox="241.717,722.454,249.239,737.087" size="14.634">O</text>
+<text> </text>
+<text font="ABRLEC+Interstate-Light" bbox="250.789,723.487,257.499,738.028" size="14.541">K</text>
+<text font="ABRLEC+Interstate-Light" bbox="258.663,724.384,264.679,738.847" size="14.462">T</text>
+<text font="ABRLEC+Interstate-Light" bbox="265.869,725.205,273.390,739.839" size="14.634">O</text>
+<text> </text>
+<text font="ABRLEC+Interstate-Light" bbox="274.940,726.239,281.445,740.757" size="14.518">B</text>
+<text> </text>
+<text font="ABRLEC+Interstate-Light" bbox="282.994,727.157,288.997,741.617" size="14.461">E</text>
+<text> </text>
+<text font="ABRLEC+Interstate-Light" bbox="290.547,728.017,297.361,742.570" size="14.553">R</text>
+<text>
+</text>
+</textline>
+</textbox>
+<textbox id="36" bbox="404.646,141.437,451.661,210.639">
+<textline bbox="404.646,200.838,443.909,210.639">
+<text font="XQCOEE+Interstate-BlackCondensed" bbox="404.646,200.838,409.470,210.639" size="9.801">C</text>
+<text font="XQCOEE+Interstate-BlackCondensed" bbox="409.344,200.838,413.493,210.639" size="9.801">o</text>
+<text font="XQCOEE+Interstate-BlackCondensed" bbox="413.493,200.838,417.354,210.639" size="9.801">c</text>
+<text font="XQCOEE+Interstate-BlackCondensed" bbox="417.327,200.838,421.395,210.639" size="9.801">a</text>
+<text font="XQCOEE+Interstate-BlackCondensed" bbox="421.395,200.838,423.726,210.639" size="9.801"> </text>
+<text font="XQCOEE+Interstate-BlackCondensed" bbox="423.726,200.838,428.550,210.639" size="9.801">C</text>
+<text font="XQCOEE+Interstate-BlackCondensed" bbox="428.424,200.838,432.573,210.639" size="9.801">o</text>
+<text font="XQCOEE+Interstate-BlackCondensed" bbox="432.573,200.838,434.751,210.639" size="9.801">l</text>
+<text font="XQCOEE+Interstate-BlackCondensed" bbox="434.751,200.838,438.819,210.639" size="9.801">a</text>
+<text font="XQCOEE+Interstate-BlackCondensed" bbox="438.819,200.838,441.150,210.639" size="9.801"> </text>
+<text font="YBHKFF+Interstate-BoldCondensed" bbox="440.925,204.339,442.394,209.380" size="5.042">1</text>
+<text font="YBHKFF+Interstate-BoldCondensed" bbox="442.394,204.339,443.909,209.380" size="5.042">)</text>
+<text>
+</text>
+</textline>
+<textline bbox="404.646,193.224,444.944,200.665">
+<text font="TZHAJU+Interstate-RegularCondensed" bbox="404.646,193.224,407.558,200.665" size="7.441">v</text>
+<text font="TZHAJU+Interstate-RegularCondensed" bbox="407.474,193.224,410.624,200.665" size="7.441">e</text>
+<text font="TZHAJU+Interstate-RegularCondensed" bbox="410.624,193.224,412.976,200.665" size="7.441">r</text>
+<text font="TZHAJU+Interstate-RegularCondensed" bbox="412.885,193.224,415.608,200.665" size="7.441">s</text>
+<text font="TZHAJU+Interstate-RegularCondensed" bbox="415.566,193.224,418.436,200.665" size="7.441">c</text>
+<text font="TZHAJU+Interstate-RegularCondensed" bbox="418.436,193.224,421.558,200.665" size="7.441">h</text>
+<text font="TZHAJU+Interstate-RegularCondensed" bbox="421.558,193.224,423.182,200.665" size="7.441">.</text>
+<text font="TZHAJU+Interstate-RegularCondensed" bbox="423.182,193.224,424.722,200.665" size="7.441"> </text>
+<text font="TZHAJU+Interstate-RegularCondensed" bbox="424.722,193.224,427.823,200.665" size="7.441">S</text>
+<text font="TZHAJU+Interstate-RegularCondensed" bbox="427.781,193.224,430.973,200.665" size="7.441">o</text>
+<text font="TZHAJU+Interstate-RegularCondensed" bbox="430.973,193.224,433.325,200.665" size="7.441">r</text>
+<text font="TZHAJU+Interstate-RegularCondensed" bbox="433.366,193.224,435.599,200.665" size="7.441">t</text>
+<text font="TZHAJU+Interstate-RegularCondensed" bbox="435.508,193.224,438.658,200.665" size="7.441">e</text>
+<text font="TZHAJU+Interstate-RegularCondensed" bbox="438.658,193.224,441.780,200.665" size="7.441">n</text>
+<text font="TZHAJU+Interstate-RegularCondensed" bbox="441.780,193.224,443.404,200.665" size="7.441">,</text>
+<text font="TZHAJU+Interstate-RegularCondensed" bbox="443.404,193.224,444.944,200.665" size="7.441"> </text>
+<text>
+</text>
+</textline>
+<textline bbox="404.646,185.223,451.588,192.664">
+<text font="TZHAJU+Interstate-RegularCondensed" bbox="404.646,185.223,406.186,192.664" size="7.441">j</text>
+<text font="TZHAJU+Interstate-RegularCondensed" bbox="406.186,185.223,409.336,192.664" size="7.441">e</text>
+<text font="TZHAJU+Interstate-RegularCondensed" bbox="409.336,185.223,410.876,192.664" size="7.441"> </text>
+<text font="TZHAJU+Interstate-RegularCondensed" bbox="410.876,185.223,414.194,192.664" size="7.441">2</text>
+<text font="TZHAJU+Interstate-RegularCondensed" bbox="414.033,185.223,416.133,192.664" size="7.441">-</text>
+<text font="TZHAJU+Interstate-RegularCondensed" bbox="416.133,185.223,417.673,192.664" size="7.441">l</text>
+<text font="TZHAJU+Interstate-RegularCondensed" bbox="417.673,185.223,419.773,192.664" size="7.441">-</text>
+<text font="TZHAJU+Interstate-RegularCondensed" bbox="419.773,185.223,423.119,192.664" size="7.441">P</text>
+<text font="TZHAJU+Interstate-RegularCondensed" bbox="423.119,185.223,426.234,192.664" size="7.441">E</text>
+<text font="TZHAJU+Interstate-RegularCondensed" bbox="426.234,185.223,429.188,192.664" size="7.441">T</text>
+<text font="TZHAJU+Interstate-RegularCondensed" bbox="428.578,185.223,430.678,192.664" size="7.441">-</text>
+<text font="TZHAJU+Interstate-RegularCondensed" bbox="430.678,185.223,433.674,192.664" size="7.441">F</text>
+<text font="TZHAJU+Interstate-RegularCondensed" bbox="433.674,185.223,435.214,192.664" size="7.441">l</text>
+<text font="TZHAJU+Interstate-RegularCondensed" bbox="435.214,185.223,438.252,192.664" size="7.441">a</text>
+<text font="TZHAJU+Interstate-RegularCondensed" bbox="438.252,185.223,440.975,192.664" size="7.441">s</text>
+<text font="TZHAJU+Interstate-RegularCondensed" bbox="440.934,185.223,443.804,192.664" size="7.441">c</text>
+<text font="TZHAJU+Interstate-RegularCondensed" bbox="443.804,185.223,446.926,192.664" size="7.441">h</text>
+<text font="TZHAJU+Interstate-RegularCondensed" bbox="446.926,185.223,450.076,192.664" size="7.441">e</text>
+<text font="TZHAJU+Interstate-RegularCondensed" bbox="449.964,185.223,451.588,192.664" size="7.441">,</text>
+<text>
+</text>
+</textline>
+<textline bbox="404.646,177.222,448.857,184.663">
+<text font="TZHAJU+Interstate-RegularCondensed" bbox="404.646,177.222,407.495,184.663" size="7.441">z</text>
+<text font="TZHAJU+Interstate-RegularCondensed" bbox="407.453,177.222,410.302,184.663" size="7.441">z</text>
+<text font="TZHAJU+Interstate-RegularCondensed" bbox="410.211,177.222,413.347,184.663" size="7.441">g</text>
+<text font="TZHAJU+Interstate-RegularCondensed" bbox="413.347,177.222,414.887,184.663" size="7.441">l</text>
+<text font="TZHAJU+Interstate-RegularCondensed" bbox="414.887,177.222,416.511,184.663" size="7.441">.</text>
+<text font="TZHAJU+Interstate-RegularCondensed" bbox="416.511,177.222,418.051,184.663" size="7.441"> </text>
+<text font="TZHAJU+Interstate-RegularCondensed" bbox="418.051,177.222,421.544,184.663" size="7.441">0</text>
+<text font="TZHAJU+Interstate-RegularCondensed" bbox="421.432,177.222,423.056,184.663" size="7.441">.</text>
+<text font="TZHAJU+Interstate-RegularCondensed" bbox="423.056,177.222,426.374,184.663" size="7.441">2</text>
+<text font="TZHAJU+Interstate-RegularCondensed" bbox="426.241,177.222,429.559,184.663" size="7.441">5</text>
+<text font="TZHAJU+Interstate-RegularCondensed" bbox="429.559,177.222,431.099,184.663" size="7.441"> </text>
+<text font="TZHAJU+Interstate-RegularCondensed" bbox="431.099,177.222,434.445,184.663" size="7.441">P</text>
+<text font="TZHAJU+Interstate-RegularCondensed" bbox="434.466,177.222,436.503,184.663" size="7.441">f</text>
+<text font="TZHAJU+Interstate-RegularCondensed" bbox="436.397,177.222,439.435,184.663" size="7.441">a</text>
+<text font="TZHAJU+Interstate-RegularCondensed" bbox="439.435,177.222,442.557,184.663" size="7.441">n</text>
+<text font="TZHAJU+Interstate-RegularCondensed" bbox="442.557,177.222,445.693,184.663" size="7.441">d</text>
+<text font="TZHAJU+Interstate-RegularCondensed" bbox="445.693,177.222,447.317,184.663" size="7.441">,</text>
+<text font="TZHAJU+Interstate-RegularCondensed" bbox="447.317,177.222,448.857,184.663" size="7.441"> </text>
+<text>
+</text>
+</textline>
+<textline bbox="404.646,169.220,439.246,176.661">
+<text font="TZHAJU+Interstate-RegularCondensed" bbox="404.646,169.220,406.571,176.661" size="7.441">1</text>
+<text font="TZHAJU+Interstate-RegularCondensed" bbox="406.571,169.220,408.671,176.661" size="7.441">-</text>
+<text font="TZHAJU+Interstate-RegularCondensed" bbox="408.671,169.220,410.211,176.661" size="7.441">l</text>
+<text font="TZHAJU+Interstate-RegularCondensed" bbox="410.211,169.220,412.311,176.661" size="7.441">-</text>
+<text font="TZHAJU+Interstate-RegularCondensed" bbox="412.311,169.220,415.657,176.661" size="7.441">P</text>
+<text font="TZHAJU+Interstate-RegularCondensed" bbox="415.657,169.220,418.009,176.661" size="7.441">r</text>
+<text font="TZHAJU+Interstate-RegularCondensed" bbox="417.869,169.220,421.019,176.661" size="7.441">e</text>
+<text font="TZHAJU+Interstate-RegularCondensed" bbox="421.019,169.220,422.559,176.661" size="7.441">i</text>
+<text font="TZHAJU+Interstate-RegularCondensed" bbox="422.559,169.220,425.282,176.661" size="7.441">s</text>
+<text font="TZHAJU+Interstate-RegularCondensed" bbox="425.282,169.220,426.822,176.661" size="7.441"> </text>
+<text font="TZHAJU+Interstate-RegularCondensed" bbox="426.822,169.220,430.315,176.661" size="7.441">0</text>
+<text font="TZHAJU+Interstate-RegularCondensed" bbox="430.202,169.220,431.826,176.661" size="7.441">.</text>
+<text font="TZHAJU+Interstate-RegularCondensed" bbox="431.546,169.220,434.626,176.661" size="7.441">7</text>
+<text font="TZHAJU+Interstate-RegularCondensed" bbox="434.395,169.220,437.713,176.661" size="7.441">5</text>
+<text font="TZHAJU+Interstate-RegularCondensed" bbox="437.622,169.220,439.246,176.661" size="7.441">,</text>
+<text>
+</text>
+</textline>
+<textline bbox="404.646,160.224,440.636,167.665">
+<text font="YBHKFF+Interstate-BoldCondensed" bbox="404.646,162.118,405.932,166.529" size="4.412">1</text>
+<text font="YBHKFF+Interstate-BoldCondensed" bbox="405.932,162.118,407.258,166.529" size="4.412">)</text>
+<text> </text>
+<text font="TZHAJU+Interstate-RegularCondensed" bbox="408.380,160.224,411.348,167.665" size="7.441">k</text>
+<text font="TZHAJU+Interstate-RegularCondensed" bbox="411.187,160.224,414.379,167.665" size="7.441">o</text>
+<text font="TZHAJU+Interstate-RegularCondensed" bbox="414.309,160.224,416.346,167.665" size="7.441">f</text>
+<text font="TZHAJU+Interstate-RegularCondensed" bbox="416.276,160.224,418.313,167.665" size="7.441">f</text>
+<text font="TZHAJU+Interstate-RegularCondensed" bbox="418.215,160.224,421.365,167.665" size="7.441">e</text>
+<text font="TZHAJU+Interstate-RegularCondensed" bbox="421.365,160.224,422.905,167.665" size="7.441">i</text>
+<text font="TZHAJU+Interstate-RegularCondensed" bbox="422.905,160.224,426.027,167.665" size="7.441">n</text>
+<text font="TZHAJU+Interstate-RegularCondensed" bbox="426.027,160.224,429.149,167.665" size="7.441">h</text>
+<text font="TZHAJU+Interstate-RegularCondensed" bbox="429.149,160.224,432.187,167.665" size="7.441">a</text>
+<text font="TZHAJU+Interstate-RegularCondensed" bbox="432.187,160.224,433.727,167.665" size="7.441">l</text>
+<text font="TZHAJU+Interstate-RegularCondensed" bbox="433.727,160.224,435.960,167.665" size="7.441">t</text>
+<text font="TZHAJU+Interstate-RegularCondensed" bbox="435.960,160.224,437.500,167.665" size="7.441">i</text>
+<text font="TZHAJU+Interstate-RegularCondensed" bbox="437.500,160.224,440.636,167.665" size="7.441">g</text>
+<text>
+</text>
+</textline>
+<textline bbox="408.371,141.437,451.661,154.178">
+<text font="XQCOEE+Interstate-BlackCondensed" bbox="408.371,141.437,414.947,154.178" size="12.741">K</text>
+<text font="XQCOEE+Interstate-BlackCondensed" bbox="414.947,141.437,421.756,154.178" size="12.741">N</text>
+<text font="XQCOEE+Interstate-BlackCondensed" bbox="421.756,141.437,428.495,154.178" size="12.741">Ü</text>
+<text font="XQCOEE+Interstate-BlackCondensed" bbox="428.495,141.437,433.912,154.178" size="12.741">L</text>
+<text font="XQCOEE+Interstate-BlackCondensed" bbox="433.912,141.437,439.330,154.178" size="12.741">L</text>
+<text font="XQCOEE+Interstate-BlackCondensed" bbox="439.329,141.437,445.215,154.178" size="12.741">E</text>
+<text font="XQCOEE+Interstate-BlackCondensed" bbox="445.215,141.437,451.661,154.178" size="12.741">R</text>
+<text>
+</text>
+</textline>
+</textbox>
+<textbox id="37" bbox="413.992,107.275,446.040,139.912">
+<textline bbox="413.992,107.275,446.040,139.912">
+<text font="XQCOEE+Interstate-BlackCondensed" bbox="413.992,107.275,423.972,139.912" size="32.637">1</text>
+<text font="XQCOEE+Interstate-BlackCondensed" bbox="423.972,107.275,431.794,139.912" size="32.637">.</text>
+<text font="XQCOEE+Interstate-BlackCondensed" bbox="425.200,116.597,435.873,137.767" size="21.170">4</text>
+<text font="XQCOEE+Interstate-BlackCondensed" bbox="435.737,116.597,446.040,137.767" size="21.170">9</text>
+<text>
+</text>
+</textline>
+</textbox>
+<textbox id="38" bbox="409.465,98.257,453.599,109.961">
+<textline bbox="409.465,98.257,453.599,109.961">
+<text font="XQCOEE+Interstate-BlackCondensed" bbox="409.465,98.935,414.831,109.961" size="11.026">2</text>
+<text font="XQCOEE+Interstate-BlackCondensed" bbox="414.831,98.935,417.474,109.961" size="11.026">.</text>
+<text font="XQCOEE+Interstate-BlackCondensed" bbox="417.140,98.935,420.511,109.961" size="11.026">1</text>
+<text font="XQCOEE+Interstate-BlackCondensed" bbox="420.511,98.935,425.877,109.961" size="11.026">9</text>
+<text> </text>
+<text font="XQCOEE+Interstate-BlackCondensed" bbox="432.459,98.257,436.215,109.283" size="11.026">-</text>
+<text font="XQCOEE+Interstate-BlackCondensed" bbox="435.810,98.257,441.116,109.283" size="11.026">3</text>
+<text font="XQCOEE+Interstate-BlackCondensed" bbox="441.055,98.257,444.427,109.283" size="11.026">1</text>
+<text font="XQCOEE+Interstate-BlackCondensed" bbox="444.426,98.257,453.599,109.283" size="11.026">%</text>
+<text>
+</text>
+</textline>
+</textbox>
+</page>
+</pages>
