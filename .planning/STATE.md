@@ -2,18 +2,18 @@
 gsd_state_version: "1.0"
 milestone: v1.0
 current_phase: 05
-current_phase_name: Wasgau leaflet source
-status: verifying
-stopped_at: Completed 05-05-PLAN.md
-last_updated: "2026-10-12T18:28:57.847Z"
+status: completed
+stopped_at: Phase 05 complete — all phases complete
+last_updated: "2026-10-12T20:15:10.573Z"
 last_activity: 2026-10-12
-last_activity_desc: Phase 05 execution started
-state_head: 9c9902fe06dacbe0c5128603fc88f744e0e5b4fd
+last_activity_desc: Phase 05 complete
+state_head: 1e7afa3981bf0064f44a59b5caf92d435aad16e2
 progress:
   total_phases: 5
   completed_phases: 4
   total_plans: 19
   completed_plans: 19
+  percent: 100
 milestone_name: milestone
 ---
 
@@ -21,25 +21,25 @@ milestone_name: milestone
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-06-15)
+See: .planning/PROJECT.md (updated 2026-10-12)
 
 **Core value:** When the 12×1L Coca-Cola case goes on sale at one of the 5 Schifferstadt stores, the app shows it — accurately, with the price and the dates it's valid.
-**Current focus:** Phase 05 — Wasgau leaflet source
+**Current focus:** All roadmap phases complete — milestone v1.0 ready to close
 
 ## Current Position
 
-Phase: 05 (Wasgau leaflet source) — EXECUTING
-Plan: 5 of 5
-Status: Phase complete — ready for verification
-Last activity: 2026-10-12 — Phase 05 execution started
+Phase: 05
+Plan: Not started
+Status: All phases complete
+Last activity: 2026-10-12 — Phase 05 complete
 
-Progress: [██████████] 100% (14/14 plans)
+Progress: [██████████] 100% (19/19 plans)
 
 ## Performance Metrics
 
 **Velocity:**
 
-- Total plans completed: 6
+- Total plans completed: 11
 - Average duration: -
 - Total execution time: 0 hours
 
@@ -49,6 +49,7 @@ Progress: [██████████] 100% (14/14 plans)
 |-------|-------|-------|----------|
 | 01 | 3 | - | - |
 | 02 | 3 | - | - |
+| 05 | 5 | - | - |
 
 **Recent Trend:**
 
@@ -130,7 +131,7 @@ None yet.
 
 ### Blockers/Concerns
 
-- [Phase 1]: marktguru is an unofficial API and Wasgau Cola coverage at PLZ 67105 is unconfirmed — the Phase 1 live spike must resolve this before the schema is finalized. "Not automatically available" for Wasgau is an acceptable designed outcome, not a failure.
+- [Phase 1]: marktguru is an unofficial API and Wasgau Cola coverage at PLZ 67105 is unconfirmed — the Phase 1 live spike must resolve this before the schema is finalized. "Not automatically available" for Wasgau is an acceptable designed outcome, not a failure. — ✅ SUPERSEDED 2026-10-12 by Phase 5: Wasgau is scraped from its own leaflet text layer (live: `no_offer`, not `unavailable`).
 - [Phase 04 L-1, RESIDUAL — accepted] A GITHUB_TOKEN bot commit may not reliably reset GitHub's 60-day scheduled-workflow inactivity timer. Decided accept-residual-risk in 04-02: a 60-day auto-disable surfaces via the in-app stale chip (one click re-enables). Monitor over time; revisit only if the schedule silently disables.
 - [Phase 04-03 / 03-05 human-verify gate] — ✅ RESOLVED 2026-06-18. Human approved the real-device acceptance run (install/offline/fresh-when-online + six states) against https://polarfox-code-inc.github.io/ColaApp/. INFR-01/02/03 complete; both twin checkpoints closed with SUMMARYs.
 
@@ -154,6 +155,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-10-12T18:28:57.615Z
-Stopped at: Completed 05-05-PLAN.md
+Last session: 2026-10-12T20:20:00Z
+Stopped at: Phase 05 complete — all phases complete
 Resume file: None

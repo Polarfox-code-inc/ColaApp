@@ -17,7 +17,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 2: Core Scraper** - Fault-isolated ETL that fetches, normalizes, and appends a deduplicated price history (completed 2026-06-15)
 - [x] **Phase 3: PWA Frontend** - Installable offline PWA rendering best deal, per-store states, upcoming offers, and price history (completed 2026-06-18)
 - [x] **Phase 4: Live Integration, All Stores & Hardening** - Wire the free cron + Pages loop, land all 5 adapters, and harden against silent failure (completed 2026-06-18)
-- [ ] **Phase 5: Wasgau leaflet source** - Replace Wasgau's fixed `unavailable` with real offers parsed from its weekly 1kcloud ePaper text layer
+- [x] **Phase 5: Wasgau leaflet source** - Replace Wasgau's fixed `unavailable` with real offers parsed from its weekly 1kcloud ePaper text layer (completed 2026-10-12)
 
 ## Phase Details
 
@@ -155,7 +155,7 @@ Success criteria:
 
 **Requirements**: TBD
 **Depends on:** Phase 4
-**Plans:** 5/5 plans executed
+**Plans:** 5/5 plans complete
 
 **Wave 1**
 

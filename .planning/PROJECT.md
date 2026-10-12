@@ -69,12 +69,13 @@ When the 12×1L Coca-Cola case goes on sale at one of the 5 Schifferstadt stores
 | PWA, no push notifications | He opens and checks himself; keeps it a static, installable web app with no sideloading | — Pending |
 | Price-history graph in v1 | Nearly free since data is stored over time anyway; useful for spotting a genuinely good price | — Pending |
 | Track 5 individual advertisers — REWE, Edeka, Lidl, Kaufland, Wasgau (drop Aldi/Penny/Netto) | Aldi never carries the 12×1L case; Penny and Netto are not on the brother's route. Lidl and Kaufland tracked separately, not as a group | — Decided Phase 1 |
+| Source Wasgau from its own weekly 1kcloud ePaper **text layer** (no OCR), with a committed kill switch + probation (every Wasgau offer `needsReview` until trusted) | marktguru still lists zero Wasgau offers; the leaflet's pdfminer text layer gives prices and geometry without OCR. Probation keeps a mis-parsed price out of the hero/history; the kill switch reverts Wasgau to `unavailable` in one commit | — Shipped Phase 5 (2026-10-12); live on runner, Wasgau `no_offer` |
 
 ## Known Risks
 
 <!-- Surfaced during questioning; for research/roadmap to address. -->
 
-- **Per-store data feasibility varies.** Larger chains (REWE, Edeka, Lidl, Kaufland) more often expose machine-readable offer data or stable endpoints; smaller/regional ones — especially **Wasgau** — may only publish PDF/image leaflets, which are far harder to parse reliably. The research phase must assess each store and may recommend a fallback (e.g., an aggregator like marktguru, or accepting partial coverage) for stores without good data.
+- **Per-store data feasibility varies.** Larger chains (REWE, Edeka, Lidl, Kaufland) more often expose machine-readable offer data or stable endpoints; smaller/regional ones — especially **Wasgau** — may only publish PDF/image leaflets, which are far harder to parse reliably. *(Phase 5: Wasgau's leaflet turned out to have a machine-readable text layer — now scraped directly; see Key Decisions.)* The research phase must assess each store and may recommend a fallback (e.g., an aggregator like marktguru, or accepting partial coverage) for stores without good data.
 - **Pinning to exactly 12×1L may yield long "no offer" stretches.** That's accepted (it reflects reality), but the UI should make "no current offer" a clear, non-broken state.
 - **Scrapers are brittle.** Store sites/endpoints change; the scheduled job must fail gracefully and keep serving the last-known data.
 
@@ -96,5 +97,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-06-18 — Synced 19 merged commits (PRs #2–#4). Matcher scope broadened from "strictly 12×1L" to "≥12×1L PET case including Coca-Cola" (mixed-brand bundles + odd counts accepted; "versch. Sorten" no longer demotes; €/litre over actual bottle count); `needsReview` offers now shown as a flagged "bitte prüfen" card; PWA data route switched to NetworkFirst so current prices show on open. New throwaway GitHub-runner diagnostic workflow (live fetch + matcher, read-only) added for the Kaufland investigation.*
-*Earlier: 2026-06-15 — Phase 2 complete: fault-isolated core scraper (fetch → filter → select → normalize → merge → validate → atomic write) built on the frozen schema, 96/96 tests green. Requirements remain Active (not yet Validated) — nothing is live to the brother until the cron + Pages loop ships in Phase 4.*
+*Last updated: 2026-10-12 after Phase 5 — Wasgau now sourced from its own weekly leaflet text layer (probation on, kill switch available); verified live on GitHub Actions.*
