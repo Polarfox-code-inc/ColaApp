@@ -29,7 +29,7 @@ Requirements for initial release. Each maps to roadmap phases.
 
 - [x] **HIST-01**: User sees a price-history graph of the 12×1L case best price over time
 - [x] **HIST-02**: The graph handles sparse/early data gracefully — no misleading trend with too few points, and no interpolation across "no offer" gaps
-- [x] **HIST-03**: The graph shows a separate per-store line (REWE, Edeka, Lidl, Kaufland; Wasgau has none — always unavailable) — *pulled into v1 during Phase 3 discuss*
+- [x] **HIST-03**: The graph shows a separate per-store line (REWE, Edeka, Lidl, Kaufland, Wasgau); Wasgau's line is fed by its weekly leaflet source since Phase 5 and stays empty until a clean (non-review) Wasgau offer lands; only while the Wasgau kill switch is on does Wasgau revert to a greyed "nicht automatisch verfügbar" legend item — *pulled into v1 during Phase 3 discuss; amended Phase 5 (D-16/D-04)*
 
 ### PWA & Delivery
 
@@ -113,6 +113,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 ---
 *Requirements defined: 2026-06-15*
-*Last updated: 2026-06-18 — Synced 19 merged commits: DATA-02 broadened to ≥12×1L cases incl. Coca-Cola mixed-brand bundles & odd counts (review only an unconfirmable-size Kasten); PWA-03 pinned to NetworkFirst data caching*
+*Last updated: 2026-10-12 — Phase 5: HIST-03 amended (Wasgau gets a 5th chart line from its leaflet source; greyed only under the kill switch)*
+*Earlier: 2026-06-18 — Synced 19 merged commits: DATA-02 broadened to ≥12×1L cases incl. Coca-Cola mixed-brand bundles & odd counts (review only an unconfirmable-size Kasten); PWA-03 pinned to NetworkFirst data caching*
 *Earlier: 2026-06-15 — Phase 3 discuss: HIST-03 (per-store history lines) pulled from v2 into v1/Phase 3 by user decision*
 *Earlier: 2026-06-15 — Phase 1 discuss: store set narrowed to REWE, Edeka, Lidl, Kaufland, Wasgau (individual advertisers); Aldi/Penny/Netto dropped*

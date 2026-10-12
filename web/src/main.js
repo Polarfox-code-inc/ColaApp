@@ -101,9 +101,13 @@ async function main() {
   // --- Cards: all five, sorted active(cheapest)->upcoming->no_offer->unavailable/error ---
   renderCards(cards, sortCards(stores, today), statusByStore, now);
 
+  // The scraper writes Wasgau status "unavailable" only while its kill switch is
+  // on (D-04), so the chart reads the switch from data — no PWA config of its own.
+  const wasgauUnavailable = stores.find((s) => s.store === "Wasgau")?.status === "unavailable";
+
   // --- Graph: price history (async — lazy uPlot import; null on cold start) ---
   try {
-    await renderHistory(graph, data.history ?? []);
+    await renderHistory(graph, data.history ?? [], { wasgauUnavailable });
   } catch (err) {
     // A chart failure must not blank the rest of the screen — log and move on.
     // eslint-disable-next-line no-console
