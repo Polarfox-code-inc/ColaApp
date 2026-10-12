@@ -111,7 +111,16 @@ jobs:
       # Coalesce across the first attempt and the transient-error retry (below).
       url: ${{ steps.deployment.outputs.page_url || steps.deployment_retry.outputs.page_url }}
     steps:
-      - uses: actions/checkout@v6          # gets the just-pushed data/ (schedule path)
+      # Check out the BRANCH TIP (github.ref_name), not the default triggering
+      # SHA: on schedule/dispatch runs that SHA is the pre-scrape commit, so the
+      # default checkout always shipped the PREVIOUS run's data. The workflow-level
+      # cola-pipeline concurrency group stops another pipeline run pushing in
+      # between, so the tip is Job A's just-pushed data commit (anything newer is
+      # also fine — newest data is the goal). It also makes a deploy-only Re-run
+      # ship the current tip instead of a stale replayed SHA (complements 260705-s9l).
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.ref_name }}
       - uses: actions/setup-node@v6
         with:
           node-version: 22
