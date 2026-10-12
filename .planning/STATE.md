@@ -1,18 +1,18 @@
 ---
 gsd_state_version: "1.0"
 milestone: v1.0
-current_phase: 04
-current_phase_name: live-integration-all-stores-hardening
+current_phase: 5
+current_phase_name: Wasgau leaflet source
 status: milestone_complete
 stopped_at: Phase 5 context gathered
-last_updated: "2026-10-12T07:52:29.242Z"
+last_updated: "2026-10-12T09:18:12.269Z"
 last_activity: 2026-10-12
 last_activity_desc: "Completed quick task 261012-bpz: Fix deploy job checking out pre-scrape commit (site served previous run's data)"
-state_head: 5f70c6d977d5c254ef5d635a16212960736147e3
+state_head: de5b23365ce683fffacb22d5eed914c8ba3534e1
 progress:
   total_phases: 5
   completed_phases: 4
-  total_plans: 14
+  total_plans: 19
   completed_plans: 14
 milestone_name: milestone
 ---
@@ -28,7 +28,7 @@ See: .planning/PROJECT.md (updated 2026-06-15)
 
 ## Current Position
 
-Phase: 04 (live-integration-all-stores-hardening) — COMPLETE (all phases complete)
+Phase: 5 (Wasgau leaflet source) — READY TO EXECUTE
 Plan: 3 of 3 — done
 Status: Plan 04-03 COMPLETE — Task 1 (docs, 6f9e1e3) + Task 2 human-verify gate APPROVED 2026-06-18. Twin gate Phase 3 / 03-05 also closed.
 Last activity: 2026-10-12 - Completed quick task 261012-bpz: Fix deploy job checking out pre-scrape commit (site served previous run's data)
