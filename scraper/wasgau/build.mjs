@@ -30,7 +30,7 @@ import {
   reconstructPage,
 } from "./leaflet.mjs";
 import { leafletWindowFromIndex } from "./dates.mjs";
-import { extractCandidates, buildCandidatesDoc, parseCandidatesDoc } from "./candidates.mjs";
+import { extractCandidates, buildCandidatesDoc, parseCandidatesDoc, refreshVerdicts } from "./candidates.mjs";
 
 // Lives beside current-offers.json / status.json in data/ (D-11).
 export const CANDIDATES_FILE = "wasgau-candidates.json";
@@ -60,8 +60,10 @@ export async function fetchCandidates({ fetchText, priorDoc }) {
   const html = await fetchText(HOMEPAGE_URL);
   const { id, url } = parseLeafletLink(html);
 
-  // Same leaflet as last run: one request per unchanged week (D-05).
-  if (priorDoc?.leafletId === id) return priorDoc;
+  // Same leaflet as last run: one request per unchanged week (D-05). Verdicts
+  // are re-computed with the current matcher so the written file stays truthful
+  // (D-06); with an unchanged matcher it is byte-identical (D-11).
+  if (priorDoc?.leafletId === id) return refreshVerdicts(priorDoc);
 
   const index = parseIndex(await fetchText(url));
   const leafletWindow = leafletWindowFromIndex(index.pages);

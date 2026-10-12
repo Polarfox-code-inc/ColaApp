@@ -138,30 +138,67 @@ export function parseCandidatesDoc(value) {
 }
 
 /**
+ * Re-run the current matcher over a (cached) doc's candidate texts (D-06).
+ * Only `verdict` changes; with an unchanged matcher the doc serializes to the
+ * same bytes, so a cache-hit run causes no git churn (D-11).
+ * @param {object} doc validated candidates doc (not mutated)
+ * @returns {object} a new doc with fresh verdicts
+ */
+export function refreshVerdicts(doc) {
+  return {
+    ...doc,
+    candidates: doc.candidates.map((c) => ({ ...c, verdict: classify({ description: c.text }) })),
+  };
+}
+
+// Shape a candidate like a marktguru offer so selectForStore/toStoreOffer are
+// reused unchanged (one ranking rule for all stores).
+const shape = (c) => ({
+  store: "Wasgau",
+  description: c.text,
+  price: c.priceCents / 100,
+  // Noon UTC is the same Berlin calendar day under CET and CEST, so
+  // berlinDay() inside selectForStore round-trips the date exactly.
+  validityDates: [{ from: `${c.validFrom}T12:00:00Z`, to: `${c.validTo}T12:00:00Z` }],
+});
+
+/**
  * Turn a candidates doc into the Wasgau StoreOffer for this run.
+ *
+ * Gating (all on the FRESH matcher verdict, never the stored one — D-06):
+ *  1. an accept/review candidate without a paired price throws (the caller
+ *     marks Wasgau "error" and still writes the doc for review, P5-SC3);
+ *  2. rejects are dropped;
+ *  3. clean-paired accepts are ranked first and may become a normal offer;
+ *  4. otherwise ambiguous/mismatch accepts and review candidates are ranked
+ *     and any offer is forced needsReview (D-13, best-guess price kept);
+ *  5. probation forces needsReview on every offer (D-12).
+ * Expired windows fall out in selectForStore (no_offer); future windows
+ * surface as upcoming offers (D-07).
+ *
  * @param {object} doc validated candidates doc
  * @param {Date} now injected clock instant
  * @param {{ probation?: boolean }} config Wasgau source config
  * @returns {object} StoreOffer or { status: "no_offer" }
+ * @throws when a Coca-Cola case candidate has no paired price
  */
 export function evaluateCandidates(doc, now, config) {
-  const shaped = [];
+  const clean = [];
+  const rest = [];
   for (const c of doc?.candidates ?? []) {
-    if (c.priceCents === null) continue;
-    // FRESH verdict from the current matcher; the stored one may be stale or
-    // tampered (D-06).
-    if (classify({ description: c.text }) === "reject") continue;
-    shaped.push({
-      store: "Wasgau",
-      description: c.text,
-      price: c.priceCents / 100,
-      // Noon UTC is the same Berlin calendar day under CET and CEST, so
-      // berlinDay() inside selectForStore round-trips the date exactly.
-      validityDates: [{ from: `${c.validFrom}T12:00:00Z`, to: `${c.validTo}T12:00:00Z` }],
-    });
+    const verdict = classify({ description: c.text });
+    if (verdict === "reject") continue;
+    if (c.pairing === "unpaired" || c.priceCents === null) {
+      throw new Error(`wasgau: Cola case candidate without a paired price (page ${c.page} box ${c.box})`);
+    }
+    (verdict === "accept" && c.pairing === "clean" ? clean : rest).push(shape(c));
   }
 
-  const result = selectForStore(shaped, now);
+  let result = selectForStore(clean, now);
+  if (result.status !== "offer") {
+    const fallback = selectForStore(rest, now);
+    if (fallback.status === "offer") result = { ...fallback, needsReview: true }; // D-13
+  }
   if (result.status === "offer" && config?.probation) {
     return { ...result, needsReview: true }; // probation (D-12)
   }
