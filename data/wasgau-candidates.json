@@ -1,84 +1,57 @@
 {
-  "leafletId": "ep1rP1V0",
-  "leafletUrl": "https://wasgau-dlog.1kcloud.com/ep1rP1V0/",
-  "title": "WASGAU Prospekt ab 12.10.",
+  "leafletId": "ep16264f89869cea",
+  "leafletUrl": "https://wasgau-dlog.1kcloud.com/ep16264f89869cea/",
+  "title": "WASGAU Prospekt ab 19.10.",
   "leafletWindow": {
-    "from": "2026-10-12",
-    "to": "2026-10-17"
+    "from": "2026-10-19",
+    "to": "2026-10-24"
   },
   "colaPages": [
     17,
-    26
+    20
   ],
   "candidates": [
     {
       "page": 17,
-      "box": 14,
+      "box": 22,
       "bbox": [
-        22.8,
-        215.6,
+        23.4,
+        44,
         101.3,
-        268
+        96.4
       ],
-      "text": "*Coca Cola1) oder *Coca Cola Zero 1) und weitere Sorten je 6 x 1-l-MW-Glasflaschen, zzgl. 2.40 Pfand, 1-l-Preis 1.50, 1)koffeinhaltig",
-      "priceCents": 899,
+      "text": "Coca Cola* 1) oder Mezzo Mix* 1) und weitere Sorten je 6 x 0,33-l-MW-Glasflaschen, zzgl. 0.90 Pfand, 1-l-Preis 2.42 1)koffeinhaltig",
+      "priceCents": 479,
       "pairing": "clean",
       "adjacentCents": [
-        899
-      ],
-      "unitPriceCents": 150,
-      "litres": 6,
-      "validFrom": "2026-10-12",
-      "validTo": "2026-10-17",
-      "windowSource": "leaflet",
-      "verdict": "reject"
-    },
-    {
-      "page": 17,
-      "box": 17,
-      "bbox": [
-        175.7,
-        215.4,
-        250,
-        268.8
-      ],
-      "text": "Coca Cola1), Fanta oder Mezzo Mix1) und weitere Sorten je 0,33-l-Dose, zzgl. 0.25 Pfand, 1-l-Preis 2.39 1)koffeinhaltig",
-      "priceCents": 79,
-      "pairing": "clean",
-      "adjacentCents": [
-        899,
-        79
-      ],
-      "unitPriceCents": 239,
-      "litres": 0.33,
-      "validFrom": "2026-10-12",
-      "validTo": "2026-10-17",
-      "windowSource": "leaflet",
-      "verdict": "reject"
-    },
-    {
-      "page": 26,
-      "box": 36,
-      "bbox": [
-        404.6,
-        141.4,
-        451.7,
-        210.6
-      ],
-      "text": "Coca Cola 1) versch. Sorten, je 2-l-PET-Flasche, zzgl. 0.25 Pfand, 1-l-Preis 0.75, 1) koffeinhaltig KNÜLLER",
-      "priceCents": 149,
-      "pairing": "clean",
-      "adjacentCents": [
-        149,
-        699,
-        649,
+        479,
         99
       ],
-      "unitPriceCents": 75,
-      "litres": 2,
-      "validFrom": "2026-10-15",
-      "validTo": "2026-10-17",
-      "windowSource": "page",
+      "unitPriceCents": 242,
+      "litres": 1.98,
+      "validFrom": "2026-10-19",
+      "validTo": "2026-10-24",
+      "windowSource": "leaflet",
+      "verdict": "reject"
+    },
+    {
+      "page": 20,
+      "box": 3,
+      "bbox": [
+        27.5,
+        486.3,
+        81.3,
+        562.2
+      ],
+      "text": "Coca Cola1) oder Mezzo Mix1) und weitere Sorten je 1,25-l-PET-Flasche, zzgl. 0.25 Pfand, 1-l-Preis 0.95 1)koffeinhaltig",
+      "priceCents": null,
+      "pairing": "unpaired",
+      "adjacentCents": [],
+      "unitPriceCents": 95,
+      "litres": 1.25,
+      "validFrom": "2026-10-19",
+      "validTo": "2026-10-24",
+      "windowSource": "leaflet",
       "verdict": "reject"
     }
   ]
