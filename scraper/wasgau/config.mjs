@@ -12,6 +12,11 @@
 //             to `false` only after checking a real `verdict: "accept"`
 //             candidate in data/wasgau-candidates.json against the leaflet image
 //             (price, size 12 x 1 l, dates).
+//             Status: lifted 2026-10-26 after checking the page-1 accept
+//             candidate of leaflet ep1rP1V0 ("WASGAU Prospekt ab 26.10.") against
+//             the leaflet image: 10.99 EUR, Kiste 12 x 1-l-MW-Flaschen, valid
+//             26.-31.10. Set it back to `true` if a mis-parsed Wasgau price ever
+//             reaches the hero or price-history.jsonl.
 //
 // Flipping either flag is a one-line commit (the GitHub web editor is enough);
 // the pipeline's push trigger then runs the scrape immediately.
@@ -22,4 +27,4 @@
 //
 // Tests override these per run via run({ wasgau: { config } }).
 
-export const WASGAU_CONFIG = Object.freeze({ enabled: true, probation: true });
+export const WASGAU_CONFIG = Object.freeze({ enabled: true, probation: false });

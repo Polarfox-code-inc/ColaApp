@@ -318,13 +318,13 @@ test("every run sets file-level lastUpdated on both files to the injected now (D
 });
 
 // --- Case H (Phase 5 tracer): wasgau.de homepage -> 1kcloud index -> every leaflet page
-//     -> needsReview Wasgau offer + schema-valid wasgau-candidates.json, offline ---
+//     -> normal Wasgau offer + history line + schema-valid wasgau-candidates.json, offline ---
 
-test("Wasgau leaflet end-to-end: 6 sequential requests -> needsReview offer + candidates file (P5-SC1, SC4, D-12)", async () => {
+test("Wasgau leaflet end-to-end: 6 sequential requests -> offer + history line + candidates file (P5-SC1, SC4, probation lifted)", async () => {
   const d = await freshDir();
   try {
     const stub = wasgauStub();
-    // Default WASGAU_CONFIG (no config override): proves probation defaults ON.
+    // Default WASGAU_CONFIG (no config override): proves probation defaults OFF (lifted 2026-10-26).
     await run({ now: WASGAU_NOW, dataDir: d, wasgau: { fetchText: stub.fetchText }, fetchOffers: async () => [] });
 
     // Exactly 6 requests, in order: homepage, index, then every index page 1, 2, 17, 26.
@@ -337,13 +337,13 @@ test("Wasgau leaflet end-to-end: 6 sequential requests -> needsReview offer + ca
       `${LEAFLET_ROOT}epaper/coords/page_26.xml`,
     ]);
 
-    // Classified by the unchanged matcher; probation forces needsReview.
+    // Classified by the unchanged matcher; clean accept -> normal offer.
     const co = await readCurrent(d);
     assert.deepEqual(find(co, "Wasgau"), {
       store: "Wasgau",
       displayName: "Wasgau",
       status: "offer",
-      needsReview: true,
+      needsReview: false,
       price: 899,
       currency: "EUR",
       pricePerLitre: 75,
@@ -358,9 +358,11 @@ test("Wasgau leaflet end-to-end: 6 sequential requests -> needsReview offer + ca
       lastUpdated: "2026-10-14T10:00:00.000Z",
     });
 
-    // needsReview never enters the history graph (D-12).
-    const wasgauLines = (await readHistoryLines(d)).filter((l) => JSON.parse(l).store === "Wasgau");
-    assert.equal(wasgauLines.length, 0);
+    // A normal offer enters the history graph: exactly one Wasgau line.
+    const wasgauLines = (await readHistoryLines(d)).map((l) => JSON.parse(l)).filter((l) => l.store === "Wasgau");
+    assert.deepEqual(wasgauLines, [
+      { date: "2026-10-14", store: "Wasgau", price: 899, pricePerLitre: 75, validFrom: "2026-10-12", validTo: "2026-10-17" },
+    ]);
 
     // Candidates file: accepts AND rejects, schema-valid, trailing newline (D-10/D-11).
     const text = await readFile(join(d, "wasgau-candidates.json"), "utf8");
@@ -533,7 +535,7 @@ test("marktguru total failure sweeps only the 4 marktguru stores; Wasgau success
     const st = await readStatus(d);
     for (const store of MARKTGURU) assert.equal(find(st, store).status, "error");
     assert.equal(find(co, "Wasgau").status, "offer");
-    assert.equal(find(co, "Wasgau").needsReview, true);
+    assert.equal(find(co, "Wasgau").needsReview, false);
     assert.deepEqual(find(st, "Wasgau"), { store: "Wasgau", status: "offer", lastUpdated: WASGAU_NOW_ISO });
   } finally {
     await rm(d, { recursive: true, force: true });
