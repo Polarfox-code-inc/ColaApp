@@ -1,4 +1,5 @@
 {
+  "version": 2,
   "leafletId": "ep1rP1V0",
   "leafletUrl": "https://wasgau-dlog.1kcloud.com/ep1rP1V0/",
   "title": "WASGAU Prospekt ab 26.10.",
@@ -7,10 +8,34 @@
     "to": "2026-10-31"
   },
   "colaPages": [
+    1,
     20,
     21
   ],
   "candidates": [
+    {
+      "page": 1,
+      "box": 31,
+      "bbox": [
+        247.8,
+        44.3,
+        332.1,
+        85.7
+      ],
+      "text": "Coca-Cola1) verschiedene Sorten, Kiste mit je 12 x 1-l-MW-Flaschen, zzgl. 3.30 Pfand, 1-l-Preis 0.92, 1) koffeinhaltig",
+      "priceCents": 1099,
+      "pairing": "clean",
+      "adjacentCents": [
+        1799,
+        1099
+      ],
+      "unitPriceCents": 92,
+      "litres": 12,
+      "validFrom": "2026-10-26",
+      "validTo": "2026-10-31",
+      "windowSource": "page",
+      "verdict": "accept"
+    },
     {
       "page": 20,
       "box": 6,

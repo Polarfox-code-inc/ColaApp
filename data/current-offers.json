@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-10-26T09:59:47.197Z",
+  "lastUpdated": "2026-10-26T19:34:57.991Z",
   "stores": [
     {
       "store": "REWE",
@@ -30,7 +30,13 @@
     {
       "store": "Wasgau",
       "displayName": "Wasgau",
-      "status": "no_offer"
+      "status": "offer",
+      "needsReview": false,
+      "price": 1099,
+      "currency": "EUR",
+      "pricePerLitre": 92,
+      "validFrom": "2026-10-26",
+      "validTo": "2026-10-31"
     }
   ]
 }

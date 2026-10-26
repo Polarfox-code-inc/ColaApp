@@ -8,3 +8,4 @@
 {"date":"2026-08-09","store":"Edeka","price":1199,"pricePerLitre":100,"validFrom":"2026-08-10","validTo":"2026-08-15"}
 {"date":"2026-08-30","store":"Edeka","price":1199,"pricePerLitre":100,"validFrom":"2026-08-31","validTo":"2026-09-05"}
 {"date":"2026-10-25","store":"REWE","price":1199,"pricePerLitre":100,"validFrom":"2026-10-26","validTo":"2026-10-31"}
+{"date":"2026-10-26","store":"Wasgau","price":1099,"pricePerLitre":92,"validFrom":"2026-10-26","validTo":"2026-10-31"}
