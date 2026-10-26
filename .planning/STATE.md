@@ -4,10 +4,10 @@ milestone: v1.0
 current_phase: 05
 status: completed
 stopped_at: Phase 05 complete — all phases complete
-last_updated: "2026-10-12T20:15:10.573Z"
+last_updated: "2026-10-26T17:30:55.902Z"
 last_activity: 2026-10-12
 last_activity_desc: Phase 05 complete
-state_head: 1e7afa3981bf0064f44a59b5caf92d435aad16e2
+state_head: 10d03a894bc7cf3342b391c9544f2f11c8bd4a46
 progress:
   total_phases: 5
   completed_phases: 4
@@ -31,7 +31,7 @@ See: .planning/PROJECT.md (updated 2026-10-12)
 Phase: 05
 Plan: Not started
 Status: All phases complete
-Last activity: 2026-10-12 — Phase 05 complete
+Last activity: 2026-10-26 - Completed quick task 261026-p9z: Wasgau: fetch every leaflet page and lift probation
 
 Progress: [██████████] 100% (19/19 plans)
 
@@ -144,6 +144,7 @@ None yet.
 | 260618-qze | Fix scraper.run Case D/G: seed prior state from mocks, not live scraped data (drift-proof) | 2026-06-18 | 1dcc19a | [260618-qze-fix-scraper-run-test-mjs-case-d-and-hard](./quick/260618-qze-fix-scraper-run-test-mjs-case-d-and-hard/) |
 | 260705-s9l | Harden pipeline against re-run/concurrency failures (rebase -X theirs + one transient Pages-deploy retry) | 2026-07-05 | 53a6c04 | [260705-s9l-harden-pipeline-rerun-safety](./quick/260705-s9l-harden-pipeline-rerun-safety/) |
 | 261012-bpz | Fix deploy job checking out pre-scrape commit (site served previous run's data) | 2026-10-12 | e3e64b6 | [261012-bpz-fix-deploy-job-checking-out-pre-scrape-c](./quick/261012-bpz-fix-deploy-job-checking-out-pre-scrape-c/) |
+| 261026-p9z | Wasgau: fetch every leaflet page and lift probation | 2026-10-26 | 10d03a8 | [261026-p9z-wasgau-fetch-every-leaflet-page-and-lift](./quick/261026-p9z-wasgau-fetch-every-leaflet-page-and-lift/) |
 
 ## Deferred Items
 
