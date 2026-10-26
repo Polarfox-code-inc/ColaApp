@@ -3,7 +3,7 @@
 // Wasgau candidate capture and evaluation (Phase 5).
 // Pure + clock-free: `now` is injected, no I/O, no logging.
 //
-// Every Coca-Cola/Coke textbox on a Cola page becomes a Candidate — accepts AND
+// Every Coca-Cola/Coke textbox on any leaflet page becomes a Candidate — accepts AND
 // rejects (D-10) — so near-misses stay reviewable in data/wasgau-candidates.json.
 // The doc is validated by a .strict() zod schema before it is returned (D-11),
 // so an invalid doc can never be written.
@@ -19,7 +19,7 @@
 import { z } from "zod";
 import { classify } from "../../contract/matcher.mjs";
 import { selectForStore } from "../select.mjs";
-import { COLA_RE } from "./leaflet.mjs";
+import { COLA_RE, MAX_LEAFLET_PAGES } from "./leaflet.mjs";
 import { pairPrice } from "./pair.mjs";
 import { resolveWindow } from "./dates.mjs";
 
@@ -44,13 +44,25 @@ const CandidateSchema = z
   })
   .strict();
 
+// Bump whenever the rule that produces the doc changes, so a cached doc from
+// the old rule is a cache miss (readCandidates treats a schema failure as a
+// miss). History: docs without the field = index-text Cola pages only (until
+// 2026-10-26); 2 = every index page scanned.
+export const CANDIDATES_DOC_VERSION = 2;
+
 export const CandidatesDocSchema = z
   .object({
+    // First key: zod output follows schema key order (byte-deterministic file).
+    version: z.literal(CANDIDATES_DOC_VERSION),
     leafletId: z.string().regex(/^[A-Za-z0-9]{4,32}$/),
     leafletUrl: z.string().max(100),
     title: z.string().max(200),
     leafletWindow: z.object({ from: DateOnly, to: DateOnly }).strict(),
-    colaPages: z.array(z.number().int().min(1).max(200)).max(8),
+    // Pages whose coords XML yielded Cola candidates — a subset of the fetched pages.
+    colaPages: z.array(z.number().int().min(1).max(200)).max(MAX_LEAFLET_PAGES),
+    // Implausibility guard (2026-10-26 full scan: 3 candidates over 28 pages). A
+    // violation throws in buildCandidatesDoc, so Wasgau goes "error" and the old
+    // cache file survives.
     candidates: z.array(CandidateSchema).max(50),
   })
   .strict();
@@ -91,7 +103,8 @@ const round1 = (n) => Math.round(n * 10) / 10;
 
 /**
  * Assemble and validate the candidates doc (deterministic for clean git diffs:
- * fixed key order, candidates sorted by (page, box), bbox rounded to 0.1 pt).
+ * fixed key order starting with version = CANDIDATES_DOC_VERSION, candidates
+ * sorted by (page, box), bbox rounded to 0.1 pt).
  * @param {{ leafletId: string, leafletUrl: string, title: string,
  *   leafletWindow: { from: string, to: string }, colaPages: number[],
  *   candidates: Array<object> }} parts
@@ -117,6 +130,7 @@ export function buildCandidatesDoc({ leafletId, leafletUrl, title, leafletWindow
       verdict: c.verdict,
     }));
   const doc = {
+    version: CANDIDATES_DOC_VERSION,
     leafletId,
     leafletUrl,
     title,

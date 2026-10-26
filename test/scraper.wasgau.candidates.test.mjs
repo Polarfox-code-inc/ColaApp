@@ -6,6 +6,9 @@
 //   - run(): the leaflet-id cache (one request per unchanged week, D-05/D-06),
 //     byte-identical candidates file, partial-failure safety (Pitfall 10),
 //     unpaired near-miss written for review, probation off -> history.
+//   - all-pages discovery (2026-10-26): a new leaflet fetches EVERY index page,
+//     so a Cola case whose 1kcloud index text is truncated is still found; the
+//     CANDIDATES_DOC_VERSION cache-buster makes an old-rule cached doc a miss.
 // Fully offline: every run() injects a URL-recording fixture stub; fixture
 // variants are in-memory string edits (no new fixture files, Pitfall 9).
 
@@ -21,6 +24,7 @@ import { run } from "../scraper/index.mjs";
 import { parseCurrentOffers, parseStatusFile } from "../contract/schema.mjs";
 import * as cands from "../scraper/wasgau/candidates.mjs";
 import { CANDIDATES_FILE } from "../scraper/wasgau/build.mjs";
+import { COLA_RE, parseIndex } from "../scraper/wasgau/leaflet.mjs";
 
 const { evaluateCandidates, buildCandidatesDoc, parseCandidatesDoc, CandidatesDocSchema } = cands;
 
@@ -194,17 +198,36 @@ test("candidates doc: extra key, bad leafletId, bad date are rejected on build a
   assert.equal(parseCandidatesDoc({ ...good, candidates: [{ ...good.candidates[0], validFrom: "15.10.2026" }] }), null);
 });
 
+test("candidates doc: version is the first key (2); a doc without it or with an old version is a cache miss", () => {
+  const good = JSON.parse(JSON.stringify(docOf([cand()])));
+  assert.equal(cands.CANDIDATES_DOC_VERSION, 2);
+  assert.equal(Object.keys(good)[0], "version");
+  assert.equal(good.version, 2);
+  assert.ok(parseCandidatesDoc(good), "a current-version doc stays valid");
+  const { version, ...unversioned } = good;
+  assert.equal(parseCandidatesDoc(unversioned), null);
+  assert.equal(parseCandidatesDoc({ ...good, version: 1 }), null);
+});
+
 // ---------------------------------------------------------------------------
 // run()-level proofs (offline fixture stub, fresh tmp dir per case)
 // ---------------------------------------------------------------------------
 
+// The index fixture lists pages 1, 2, 17, 26 and every listed page is now
+// fetched. Page 2 has no captured XML, so the real no-Cola page_24 capture
+// stands in (extractCandidates takes the page number from the URL, not the XML).
+const DEFAULT_PAGES = {
+  1: fx("page_1.xml"),
+  2: fx("page_24.xml"),
+  17: fx("page_17.positive.xml"),
+  26: fx("page_26.xml"),
+};
+
 // URL -> fixture stub for one leaflet id. `pages` maps page number to the XML
-// text, or to an Error to throw. Records every requested URL; unknown URLs throw.
-function leafletStub({
-  id = "ep1rP1V0",
-  index = fx("index.html"),
-  pages = { 17: fx("page_17.positive.xml"), 26: fx("page_26.xml") },
-} = {}) {
+// text, or to an Error to throw, and is MERGED over DEFAULT_PAGES. Records every
+// requested URL; unknown URLs throw.
+function leafletStub({ id = "ep1rP1V0", index = fx("index.html"), pages = {} } = {}) {
+  pages = { ...DEFAULT_PAGES, ...pages };
   const calls = [];
   const root = `https://wasgau-dlog.1kcloud.com/${id}/`;
   const homepage = fx("homepage.html").replaceAll("ep1rP1V0", id);
@@ -258,7 +281,7 @@ test(
   inDir(async (d) => {
     const s1 = leafletStub();
     await runW(d, T1, { fetchText: s1.fetchText });
-    assert.equal(s1.calls.length, 4);
+    assert.equal(s1.calls.length, 6); // homepage, index, pages 1, 2, 17, 26
     const file1 = await readText(d, CANDIDATES_FILE);
     const offer1 = await wasgauOffer(d);
 
@@ -292,6 +315,8 @@ test(
     assert.deepEqual(s2.calls, [
       HOME,
       s2.root,
+      `${s2.root}epaper/coords/page_1.xml`,
+      `${s2.root}epaper/coords/page_2.xml`,
       `${s2.root}epaper/coords/page_17.xml`,
       `${s2.root}epaper/coords/page_26.xml`,
     ]);
@@ -305,7 +330,7 @@ test(
     await writeFile(join(d, CANDIDATES_FILE), "{not json");
     const s = leafletStub();
     await runW(d, T1, { fetchText: s.fetchText });
-    assert.equal(s.calls.length, 4);
+    assert.equal(s.calls.length, 6);
     const doc = await readDoc(d);
     assert.ok(doc, "rewritten file must be schema-valid");
     assert.equal(doc.leafletId, "ep1rP1V0");
@@ -320,7 +345,7 @@ test(
 
     const failing = leafletStub({
       id: "ep2NEW99",
-      pages: { 17: fx("page_17.positive.xml"), 26: new Error("boom page_26") },
+      pages: { 26: new Error("boom page_26") },
     });
     await runW(d, T2, { fetchText: failing.fetchText });
     assert.equal((await wasgauStatus(d)).status, "error");
@@ -333,7 +358,7 @@ test(
   inDir(async (d) => {
     const failing = leafletStub({
       id: "ep2NEW99",
-      pages: { 17: fx("page_17.positive.xml"), 26: new Error("boom page_26") },
+      pages: { 26: new Error("boom page_26") },
     });
     await runW(d, T1, { fetchText: failing.fetchText });
     assert.equal((await wasgauStatus(d)).status, "error");
@@ -346,7 +371,7 @@ test(
   inDir(async (d) => {
     const noPrice = fx("page_17.positive.xml").replace(/<textbox id="15"[\s\S]*?<\/textbox>\r?\n?/, "");
     assert.notEqual(noPrice, fx("page_17.positive.xml"), "textbox 15 must have been removed");
-    await runW(d, T1, { fetchText: leafletStub({ pages: { 17: noPrice, 26: fx("page_26.xml") } }).fetchText });
+    await runW(d, T1, { fetchText: leafletStub({ pages: { 17: noPrice } }).fetchText });
     assert.equal((await wasgauStatus(d)).status, "error");
     const doc = await readDoc(d);
     assert.ok(doc, "candidates file must be written and valid");
@@ -369,11 +394,19 @@ test(
 );
 
 test(
-  "run: a leaflet without Coca Cola costs 2 requests and yields no_offer",
+  "run: a leaflet without any Cola box fetches every page once and yields no_offer",
   inDir(async (d) => {
-    const s = leafletStub({ index: fx("index.html").replaceAll("Coca Cola", "Sinalco") });
+    // Pages 1 and 2 are already Cola-free; swap the two Cola pages for p24.
+    const s = leafletStub({ pages: { 17: fx("page_24.xml"), 26: fx("page_24.xml") } });
     await runW(d, T1, { fetchText: s.fetchText });
-    assert.deepEqual(s.calls, [HOME, LEAFLET_ROOT]);
+    assert.deepEqual(s.calls, [
+      HOME,
+      LEAFLET_ROOT,
+      `${LEAFLET_ROOT}epaper/coords/page_1.xml`,
+      `${LEAFLET_ROOT}epaper/coords/page_2.xml`,
+      `${LEAFLET_ROOT}epaper/coords/page_17.xml`,
+      `${LEAFLET_ROOT}epaper/coords/page_26.xml`,
+    ]);
     assert.deepEqual((await readDoc(d)).colaPages, []);
     assert.equal((await wasgauOffer(d)).status, "no_offer");
     assert.equal((await wasgauStatus(d)).status, "no_offer");
@@ -398,5 +431,55 @@ test(
     const o = await wasgauOffer(d);
     assert.equal(o.status, "offer");
     assert.equal(o.validFrom, "2026-10-12");
+  })
+);
+
+test(
+  "run: a 12x1 l case on a page whose index text lacks Coca-Cola is still found (1kcloud index truncation, 2026-10-26)",
+  inDir(async (d) => {
+    // Precondition: the index text of page 1 has no Cola mention, so the old
+    // index-text Cola page picker would never have downloaded page 1.
+    const p1 = parseIndex(fx("index.html")).pages.find((p) => p.page === 1);
+    assert.ok(p1, "index fixture must list page 1");
+    assert.equal(COLA_RE.test(p1.text), false, "index text lacks Coca-Cola on page 1");
+
+    // Page 1's coords XML carries the 12x1 l box (positive p17 capture).
+    const s = leafletStub({ pages: { 1: fx("page_17.positive.xml"), 17: fx("page_17.xml") } });
+    await runW(d, T1, { fetchText: s.fetchText, config: { probation: false } });
+    assert.deepEqual(s.calls, [
+      HOME,
+      LEAFLET_ROOT,
+      `${LEAFLET_ROOT}epaper/coords/page_1.xml`,
+      `${LEAFLET_ROOT}epaper/coords/page_2.xml`,
+      `${LEAFLET_ROOT}epaper/coords/page_17.xml`,
+      `${LEAFLET_ROOT}epaper/coords/page_26.xml`,
+    ]);
+
+    const doc = await readDoc(d);
+    assert.deepEqual(doc.colaPages, [1, 17, 26]);
+    const hit = doc.candidates.find((c) => c.page === 1 && c.box === 14);
+    assert.ok(hit, "page 1 box 14 must be a candidate");
+    assert.equal(hit.verdict, "accept");
+    assert.equal(hit.pairing, "clean");
+    assert.equal(hit.priceCents, 899);
+    assert.equal(hit.litres, 12);
+
+    const o = await wasgauOffer(d);
+    assert.equal(o.status, "offer");
+    assert.equal(o.price, 899);
+    assert.equal(o.needsReview, false);
+  })
+);
+
+test(
+  "run: a cached doc from the old discovery rule (no version) is a cache miss and is rebuilt",
+  inDir(async (d) => {
+    const old = JSON.parse(JSON.stringify(docOf([cand()])));
+    delete old.version; // what the old rule wrote (same leafletId as the stub)
+    await writeFile(join(d, CANDIDATES_FILE), JSON.stringify(old, null, 2));
+    const s = leafletStub();
+    await runW(d, T1, { fetchText: s.fetchText });
+    assert.equal(s.calls.length, 6, "full download, not the homepage-only cache hit");
+    assert.equal((await readDoc(d)).version, cands.CANDIDATES_DOC_VERSION);
   })
 );

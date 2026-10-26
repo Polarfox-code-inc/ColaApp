@@ -1,20 +1,27 @@
 // scraper/wasgau/build.mjs
 //
-// Wasgau leaflet orchestration (Phase 5): homepage -> 1kcloud index -> Cola
-// pages -> validated candidates doc, plus the candidates-file cache read.
+// Wasgau leaflet orchestration (Phase 5): homepage -> 1kcloud index -> every
+// leaflet page -> validated candidates doc, plus the candidates-file cache read.
 // No logging and no writes here; scraper/index.mjs owns both.
 //
 // Request budget (D-05, D-09, SC4): a new leaflet costs the homepage, the index
-// and one coords XML per Cola page, strictly one awaited request at a time. An
-// unchanged leaflet id costs the homepage only (the prior doc is reused).
+// and one coords XML per index page (at most MAX_LEAFLET_PAGES; 28 pages /
+// ~12 MB / ~2.6 s measured 2026-10-26), strictly one awaited request at a time.
+// An unchanged leaflet id still costs the homepage only (the prior doc is reused).
+// WHY every page: the 1kcloud index text is truncated for some pages. On the
+// 2026-10-26 leaflet, page 1's index text stops before the Coca-Cola 12 x 1 l
+// case, so the old index-text Cola page picker never downloaded page 1 and the
+// scraper reported no_offer while the coords XML had the offer.
 //
 // SECURITY (T-05-18): only HOMEPAGE_URL, the URL rebuilt by parseLeafletLink
 // from a validated id, and coordsUrl(id, page) results are ever fetched — never
 // a raw string taken from a response. A foreign angebotslink throws before any
 // second request.
 //
-// Cache safety (Pitfall 10): the doc only exists after every Cola page parsed,
-// so a partial failure throws and the old cache file survives for a retry.
+// Cache safety (Pitfall 10): the doc only exists after every leaflet page parsed,
+// so a partial failure throws and the old cache file survives for a retry. A doc
+// written by an older discovery rule fails the CANDIDATES_DOC_VERSION literal
+// and is therefore a cache miss.
 //
 // Node 22+, no new dependencies.
 
@@ -25,7 +32,7 @@ import {
   HOMEPAGE_URL,
   parseLeafletLink,
   parseIndex,
-  colaPageNumbers,
+  leafletPageNumbers,
   coordsUrl,
   reconstructPage,
 } from "./leaflet.mjs";
@@ -67,13 +74,16 @@ export async function fetchCandidates({ fetchText, priorDoc }) {
 
   const index = parseIndex(await fetchText(url));
   const leafletWindow = leafletWindowFromIndex(index.pages);
-  const colaPages = colaPageNumbers(index.pages);
 
-  // Strictly sequential: one awaited request at a time (D-09), ascending pages.
+  // Strictly sequential: one awaited request at a time (D-09), ascending pages,
+  // every page of the index. colaPages = pages that yielded Cola candidates.
   const candidates = [];
-  for (const page of colaPages) {
+  const colaPages = [];
+  for (const page of leafletPageNumbers(index.pages)) {
     const xml = await fetchText(coordsUrl(id, page));
-    candidates.push(...extractCandidates(page, reconstructPage(xml), leafletWindow));
+    const found = extractCandidates(page, reconstructPage(xml), leafletWindow);
+    candidates.push(...found);
+    if (found.length > 0) colaPages.push(page);
   }
 
   return buildCandidatesDoc({

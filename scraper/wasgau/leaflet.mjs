@@ -6,9 +6,13 @@
 // feeds these strings in lives elsewhere (Plan 05-03).
 //
 // Decisions honoured: D-07/D-18 (the leaflet link comes ONLY from the homepage
-// `var wasgau` JSON and must match the 1kcloud allow-list), D-09/SC4 (only index
-// pages mentioning Coca-Cola/Coke are selected, capped), D-10 (COLA_RE is
-// deliberately wide so near-misses are captured too), D-15 (fixture-proven).
+// `var wasgau` JSON and must match the 1kcloud allow-list), D-09/SC4 (every page
+// listed in the index is fetched, capped at MAX_LEAFLET_PAGES, because the
+// 1kcloud index text is truncated for some pages — observed 2026-10-26: page 1
+// stops at "WaHNsINnS" where the PDF has control chars / unknown-font glyphs,
+// hiding the Coca-Cola 12 x 1 l case; the index is used only for the page list,
+// the title and the leaflet window), D-10 (COLA_RE is deliberately wide so
+// near-misses are captured too), D-15 (fixture-proven).
 //
 // SECURITY (T-05-01, Pitfall 11): the angebotslink is untrusted third-party
 // data. It is read via JSON.parse (never eval), must match
@@ -145,24 +149,20 @@ export function parseIndex(html) {
 // matcher decides later. Bounded separator run keeps it linear.
 export const COLA_RE = /coca[\s-]{0,3}cola|\bcoke\b/i;
 
-// More Cola pages than this in one weekly leaflet means a bad parse.
-export const MAX_COLA_PAGES = 8;
+// More pages than this in one weekly leaflet means a bad parse (observed 26 and 28).
+export const MAX_LEAFLET_PAGES = 60;
 
 /**
- * Pick the leaflet pages worth downloading: those whose index text mentions
- * Coca-Cola/Coke. An empty result is valid (no Cola this week -> no_offer).
+ * The leaflet pages to download: every page listed in the index. The index
+ * text is NOT used to pre-select Cola pages (it is truncated for some pages).
  * @param {Array<{ page: number, text: string }>} pages from parseIndex
  * @returns {number[]} unique ascending page numbers
- * @throws when more than MAX_COLA_PAGES pages match (implausible)
+ * @throws when more than MAX_LEAFLET_PAGES pages are listed (implausible)
  */
-export function colaPageNumbers(pages) {
-  const hits = new Set();
-  for (const p of pages ?? []) {
-    if (COLA_RE.test(p?.text ?? "")) hits.add(p.page);
-  }
-  const out = [...hits].sort((a, b) => a - b);
-  if (out.length > MAX_COLA_PAGES) {
-    throw new Error("1kcloud index: implausible Cola page count");
+export function leafletPageNumbers(pages) {
+  const out = [...new Set((pages ?? []).map((p) => p?.page))].sort((a, b) => a - b);
+  if (out.length > MAX_LEAFLET_PAGES) {
+    throw new Error("1kcloud index: implausible page count");
   }
   return out;
 }
