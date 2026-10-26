@@ -1,7 +1,7 @@
 // test/scraper.wasgau.leaflet.test.mjs
 //
 // Offline tests for the pure Wasgau leaflet slice (Phase 5): homepage link ->
-// 1kcloud index (Cola pages + leaflet window) -> pdfminer coords XML
+// 1kcloud index (page list + leaflet window) -> pdfminer coords XML
 // reconstruction -> price pairing -> candidates doc -> needsReview StoreOffer.
 //
 // Fixtures are real 2026-10-12 captures (D-15) read with readFileSync; the only
@@ -18,7 +18,8 @@ import {
   parseLeafletLink,
   coordsUrl,
   parseIndex,
-  colaPageNumbers,
+  leafletPageNumbers,
+  MAX_LEAFLET_PAGES,
   reconstructPage,
   decodeEntities,
 } from "../scraper/wasgau/leaflet.mjs";
@@ -46,10 +47,10 @@ test("pure leaflet slice (tracer): homepage -> index -> positive p17 -> needsRev
     "https://wasgau-dlog.1kcloud.com/ep1rP1V0/epaper/coords/page_17.xml",
   );
 
-  // 2. Index -> Cola pages + leaflet-wide validity window (page-1 text).
+  // 2. Index -> every listed page (all are fetched) + leaflet-wide validity
+  //    window (page-1 text).
   const index = parseIndex(fixture("index.html"));
-  const colaPages = colaPageNumbers(index.pages);
-  assert.deepEqual(colaPages, [17, 26]);
+  assert.deepEqual(leafletPageNumbers(index.pages), [1, 2, 17, 26]);
   const leafletWindow = leafletWindowFromIndex(index.pages);
   assert.deepEqual(leafletWindow, { from: "2026-10-12", to: "2026-10-17" });
 
@@ -74,7 +75,7 @@ test("pure leaflet slice (tracer): homepage -> index -> positive p17 -> needsRev
     leafletUrl: link.url,
     title: index.title,
     leafletWindow,
-    colaPages,
+    colaPages: [17], // the one page this pure slice reconstructs, and it yields candidates
     candidates,
   });
   const roundTripped = parseCandidatesDoc(JSON.parse(JSON.stringify(doc)));
@@ -152,17 +153,19 @@ test("parseIndex: real index -> title, pages [1, 2, 17, 26], page-1 window text"
   assert.equal(title, "WASGAU Prospekt ab 12.10.");
   assert.deepEqual(pages.map((p) => p.page), [1, 2, 17, 26]);
   assert.ok(pages[0].text.startsWith("GÜLTIG VOM 12. BIS 17. OKTOBER 2026"), pages[0].text.slice(0, 60));
-  assert.deepEqual(colaPageNumbers(pages), [17, 26]);
+  assert.deepEqual(leafletPageNumbers(pages), [1, 2, 17, 26]);
 });
 
 test("parseIndex: no searchable pages throws", () => {
   assert.throws(() => parseIndex("<html></html>"), /no searchable pages/);
 });
 
-test("colaPageNumbers: more than 8 Cola pages is implausible and throws; zero is valid", () => {
-  const nine = Array.from({ length: 9 }, (_, i) => ({ page: i + 1, text: "Coca-Cola je 12 x 1-l" }));
-  assert.throws(() => colaPageNumbers(nine), /implausible Cola page count/);
-  assert.deepEqual(colaPageNumbers([{ page: 1, text: "Pepsi only" }]), []);
+test("leafletPageNumbers: dedupes and sorts; more than MAX_LEAFLET_PAGES pages is implausible and throws", () => {
+  assert.equal(MAX_LEAFLET_PAGES, 60);
+  assert.deepEqual(leafletPageNumbers([3, 1, 3].map((page) => ({ page, text: "" }))), [1, 3]);
+  const pagesOf = (n) => Array.from({ length: n }, (_, i) => ({ page: i + 1, text: "" }));
+  assert.equal(leafletPageNumbers(pagesOf(60)).length, 60);
+  assert.throws(() => leafletPageNumbers(pagesOf(61)), /implausible page count/);
 });
 
 // ---- coords XML reconstruction (Pattern 2, Pitfalls 3/5/8) --------------------

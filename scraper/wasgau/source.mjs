@@ -23,7 +23,8 @@
 // attempt has a fresh 10 s timeout (withRetry), every request of the run shares
 // ONE WASGAU_DEADLINE_MS deadline, and a decoded body above MAX_BODY_CHARS is
 // refused (RESEARCH Pitfall 11's 5 MB guideline; a homepage, index or per-page
-// coords XML is plain text and expected to stay well below it).
+// coords XML is plain text and expected to stay well below it — the largest
+// coords page seen so far is ~2.1 M chars, 2026-10-26 page 14).
 //
 // SECURITY (T-05-04 / T-05-15): the homepage HTML carries a third-party Mapbox
 // token. It must never be logged or persisted; this module returns the body to
@@ -31,15 +32,22 @@
 // host (or a refusal reason), never the body.
 //
 // GOOD CITIZEN (D-09, SC4): the shared User-Agent from fetch.mjs, at most 3
-// attempts per request, strictly sequential callers, Cola pages only.
+// attempts per request, strictly sequential callers, every leaflet page once per
+// NEW leaflet id (the index text is truncated for some pages, see build.mjs),
+// the homepage only while the id is unchanged.
 //
 // Node 22+ (native fetch decodes gzip). No dependencies.
 
 import { UA, withRetry } from "../fetch.mjs";
 import { HOMEPAGE_URL, LEAFLET_HOST } from "./leaflet.mjs";
 
-// Wall-clock cap for every Wasgau request of one run, retries included.
-export const WASGAU_DEADLINE_MS = 60_000;
+// Wall-clock cap for every Wasgau request of one run, retries included. Raised
+// from 60 s on 2026-10-26 when discovery moved to every leaflet page: a new
+// leaflet now costs ~30 sequential requests (measured: 28 coords pages,
+// 0.16-2.1 MB each, ~2.6 s total from a German line). 120 s leaves headroom for
+// slower runner networks and a few retried attempts (each attempt may take up
+// to the 10 s per-attempt timeout) while still bounding a hung host.
+export const WASGAU_DEADLINE_MS = 120_000;
 
 // The only hosts the Wasgau source may ever talk to (exact match).
 export const ALLOWED_HOSTS = new Set([new URL(HOMEPAGE_URL).host, LEAFLET_HOST]);

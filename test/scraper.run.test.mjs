@@ -53,7 +53,12 @@ const WASGAU_FIXTURES = join(ROOT, "test", "fixtures", "wasgau");
 const LEAFLET_ROOT = "https://wasgau-dlog.1kcloud.com/ep1rP1V0/";
 const HOMEPAGE = "https://www.wasgau.de/";
 const wasgauFixture = (name) => readFileSync(join(WASGAU_FIXTURES, name), "utf8");
-function wasgauStub(pages = { 17: "page_17.positive.xml", 26: "page_26.xml" }, overrides = {}) {
+// The index fixture lists pages 1, 2, 17, 26 and every listed page is fetched;
+// page 2 has no captured XML, so the real no-Cola p24 capture stands in.
+function wasgauStub(
+  pages = { 1: "page_1.xml", 2: "page_24.xml", 17: "page_17.positive.xml", 26: "page_26.xml" },
+  overrides = {},
+) {
   const calls = [];
   const fixture = wasgauFixture;
   const fetchText = async (url) => {
@@ -312,20 +317,22 @@ test("every run sets file-level lastUpdated on both files to the injected now (D
   }
 });
 
-// --- Case H (Phase 5 tracer): wasgau.de homepage -> 1kcloud index -> Cola pages
+// --- Case H (Phase 5 tracer): wasgau.de homepage -> 1kcloud index -> every leaflet page
 //     -> needsReview Wasgau offer + schema-valid wasgau-candidates.json, offline ---
 
-test("Wasgau leaflet end-to-end: 4 sequential requests -> needsReview offer + candidates file (P5-SC1, SC4, D-12)", async () => {
+test("Wasgau leaflet end-to-end: 6 sequential requests -> needsReview offer + candidates file (P5-SC1, SC4, D-12)", async () => {
   const d = await freshDir();
   try {
     const stub = wasgauStub();
     // Default WASGAU_CONFIG (no config override): proves probation defaults ON.
     await run({ now: WASGAU_NOW, dataDir: d, wasgau: { fetchText: stub.fetchText }, fetchOffers: async () => [] });
 
-    // Exactly 4 requests, in order: homepage, index, then ONLY Cola pages 17 + 26.
+    // Exactly 6 requests, in order: homepage, index, then every index page 1, 2, 17, 26.
     assert.deepEqual(stub.calls, [
       "https://www.wasgau.de/",
       LEAFLET_ROOT,
+      `${LEAFLET_ROOT}epaper/coords/page_1.xml`,
+      `${LEAFLET_ROOT}epaper/coords/page_2.xml`,
       `${LEAFLET_ROOT}epaper/coords/page_17.xml`,
       `${LEAFLET_ROOT}epaper/coords/page_26.xml`,
     ]);
@@ -538,7 +545,7 @@ test("marktguru total failure sweeps only the 4 marktguru stores; Wasgau success
 test("negatives-only leaflet -> Wasgau no_offer with bumped ts, rejects written for review (D-02, D-10)", async () => {
   const d = await freshDir();
   try {
-    const stub = wasgauStub({ 17: "page_17.xml", 26: "page_26.xml" });
+    const stub = wasgauStub({ 1: "page_1.xml", 2: "page_24.xml", 17: "page_17.xml", 26: "page_26.xml" });
     await run({ now: WASGAU_NOW, dataDir: d, wasgau: { fetchText: stub.fetchText }, fetchOffers: async () => [] });
 
     assert.equal(find(await readCurrent(d), "Wasgau").status, "no_offer");

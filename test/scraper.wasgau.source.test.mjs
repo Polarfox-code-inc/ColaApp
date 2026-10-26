@@ -3,7 +3,7 @@
 // Offline proof that the Wasgau network seam is a good citizen that cannot be
 // steered off wasgau.de / 1kcloud (D-09, SC4, Pitfall 11, T-05-12..T-05-15):
 // host allow-list before the request, redirect re-check after it, body-size cap,
-// UA header, retry count, shared deadline, and strictly sequential Cola-only
+// UA header, retry count, shared deadline, and strictly sequential every-page
 // fetching. Every request goes to an injected fake fetchImpl; nothing touches
 // the network.
 
@@ -43,7 +43,7 @@ test("exports the allow-list, body cap and deadline constants", () => {
   assert.ok(source.ALLOWED_HOSTS instanceof Set, "ALLOWED_HOSTS must be a Set");
   assert.deepEqual([...source.ALLOWED_HOSTS].sort(), ["wasgau-dlog.1kcloud.com", "www.wasgau.de"]);
   assert.equal(source.MAX_BODY_CHARS, 5_000_000);
-  assert.equal(source.WASGAU_DEADLINE_MS, 60_000);
+  assert.equal(source.WASGAU_DEADLINE_MS, 120_000);
 });
 
 test("sends the project User-Agent and resolves the body text", async () => {
@@ -106,9 +106,10 @@ test("the shared deadline bounds a hung host (T-05-13)", async () => {
   assert.ok(Date.now() - start < 2000, "must reject well before the per-attempt timeouts");
 });
 
-test("fetchCandidates fetches strictly one at a time and only Cola pages (D-09, T-05-14)", async () => {
+test("fetchCandidates fetches every index page strictly one at a time, ascending (D-09, T-05-14)", async () => {
   const LEAFLET = "https://wasgau-dlog.1kcloud.com/ep1rP1V0/";
-  const pages = { 17: "page_17.positive.xml", 26: "page_26.xml" };
+  // Page 2 has no captured XML, the real no-Cola p24 capture stands in.
+  const pages = { 1: "page_1.xml", 2: "page_24.xml", 17: "page_17.positive.xml", 26: "page_26.xml" };
   const urls = [];
   let inFlight = 0;
   let maxInFlight = 0;
@@ -134,10 +135,10 @@ test("fetchCandidates fetches strictly one at a time and only Cola pages (D-09, 
   assert.deepEqual(urls, [
     HOMEPAGE_URL,
     LEAFLET,
+    `${LEAFLET}epaper/coords/page_1.xml`,
+    `${LEAFLET}epaper/coords/page_2.xml`,
     `${LEAFLET}epaper/coords/page_17.xml`,
     `${LEAFLET}epaper/coords/page_26.xml`,
   ]);
-  for (const p of [1, 2, 24]) {
-    assert.ok(!urls.some((u) => u.endsWith(`/page_${p}.xml`)), `page_${p} must never be requested`);
-  }
+  assert.ok(!urls.some((u) => u.endsWith("/page_24.xml")), "page_24 (not listed in the index) must never be requested");
 });
