@@ -7,7 +7,10 @@
 // Request budget (D-05, D-09, SC4): a new leaflet costs the homepage, the index
 // and one coords XML per index page (at most MAX_LEAFLET_PAGES; 28 pages /
 // ~12 MB / ~2.6 s measured 2026-10-26), strictly one awaited request at a time.
-// An unchanged leaflet id still costs the homepage only (the prior doc is reused).
+// An unchanged leaflet (same id AND same index title) costs the homepage and
+// the index only (the prior doc is reused). The title is part of the cache key
+// because 1kcloud reuses leaflet ids: ep1rP1V0 served "ab 12.10." and again
+// "ab 26.10." (observed 2026-10-26); an id-only key would keep an expired week.
 // WHY every page: the 1kcloud index text is truncated for some pages. On the
 // 2026-10-26 leaflet, page 1's index text stops before the Coca-Cola 12 x 1 l
 // case, so the old index-text Cola page picker never downloaded page 1 and the
@@ -60,19 +63,21 @@ export async function readCandidates(dataDir) {
 /**
  * Fetch and parse this week's leaflet into a validated candidates doc.
  * @param {{ fetchText: (url: string) => Promise<string>, priorDoc?: object|null }} opts
- * @returns {Promise<object>} candidates doc (the prior one when the id is unchanged)
+ * @returns {Promise<object>} candidates doc (the prior one when id and title are unchanged)
  * @throws on any fetch/parse failure (the caller marks Wasgau "error")
  */
 export async function fetchCandidates({ fetchText, priorDoc }) {
   const html = await fetchText(HOMEPAGE_URL);
   const { id, url } = parseLeafletLink(html);
 
-  // Same leaflet as last run: one request per unchanged week (D-05). Verdicts
-  // are re-computed with the current matcher so the written file stays truthful
-  // (D-06); with an unchanged matcher it is byte-identical (D-11).
-  if (priorDoc?.leafletId === id) return refreshVerdicts(priorDoc);
-
   const index = parseIndex(await fetchText(url));
+
+  // Same leaflet as last run (id AND title, since ids get reused across weeks):
+  // no page downloads (D-05). Verdicts are re-computed with the current matcher
+  // so the written file stays truthful (D-06); with an unchanged matcher it is
+  // byte-identical (D-11).
+  if (priorDoc?.leafletId === id && priorDoc.title === index.title) return refreshVerdicts(priorDoc);
+
   const leafletWindow = leafletWindowFromIndex(index.pages);
 
   // Strictly sequential: one awaited request at a time (D-09), ascending pages,

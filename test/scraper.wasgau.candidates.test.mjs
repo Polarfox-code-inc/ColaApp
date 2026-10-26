@@ -277,7 +277,7 @@ const inDir = (fn) => async () => {
 };
 
 test(
-  "run: unchanged leaflet id costs ONE request, byte-identical candidates file, lastUpdated bumps (D-05/D-06/D-11)",
+  "run: unchanged leaflet (id + title) costs TWO requests, byte-identical candidates file, lastUpdated bumps (D-05/D-06/D-11)",
   inDir(async (d) => {
     const s1 = leafletStub();
     await runW(d, T1, { fetchText: s1.fetchText });
@@ -287,7 +287,7 @@ test(
 
     const s2 = leafletStub();
     await runW(d, T2, { fetchText: s2.fetchText });
-    assert.deepEqual(s2.calls, ["https://www.wasgau.de/"]);
+    assert.deepEqual(s2.calls, [HOME, s2.root]); // homepage + index, no pages
     assert.equal(await readText(d, CANDIDATES_FILE), file1); // byte-identical (string compare)
     assert.deepEqual(await wasgauOffer(d), offer1);
     assert.deepEqual(await wasgauStatus(d), { store: "Wasgau", status: "offer", lastUpdated: "2026-10-14T16:00:00.000Z" });
@@ -321,6 +321,19 @@ test(
       `${s2.root}epaper/coords/page_26.xml`,
     ]);
     assert.equal((await readDoc(d)).leafletId, "ep2NEW99");
+  })
+);
+
+test(
+  "run: a reused leaflet id with a new index title (next week) triggers the full re-download",
+  inDir(async (d) => {
+    await runW(d, T1, { fetchText: leafletStub().fetchText });
+    // 1kcloud reused ep1rP1V0 for "ab 12.10." and "ab 26.10." (observed 2026-10-26).
+    const nextWeek = fx("index.html").replace("WASGAU Prospekt ab 12.10.", "WASGAU Prospekt ab 26.10.");
+    const s2 = leafletStub({ index: nextWeek });
+    await runW(d, T2, { fetchText: s2.fetchText });
+    assert.equal(s2.calls.length, 6, "full download, not the cache hit");
+    assert.equal((await readDoc(d)).title, "WASGAU Prospekt ab 26.10.");
   })
 );
 
@@ -419,7 +432,7 @@ test(
     await runW(d, T1, { fetchText: leafletStub().fetchText, config: { probation: false } });
     const s = leafletStub();
     await runW(d, new Date("2026-10-19T10:00:00Z"), { fetchText: s.fetchText, config: { probation: false } });
-    assert.deepEqual(s.calls, [HOME]);
+    assert.deepEqual(s.calls, [HOME, s.root]);
     assert.equal((await wasgauOffer(d)).status, "no_offer");
   })
 );
