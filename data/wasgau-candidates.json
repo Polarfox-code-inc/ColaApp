@@ -1,83 +1,81 @@
 {
   "version": 2,
-  "leafletId": "ep1rP1V0",
-  "leafletUrl": "https://wasgau-dlog.1kcloud.com/ep1rP1V0/",
-  "title": "WASGAU Prospekt ab 26.10.",
+  "leafletId": "ep16264f89869cea",
+  "leafletUrl": "https://wasgau-dlog.1kcloud.com/ep16264f89869cea/",
+  "title": "WASGAU Prospekt ab 02.11.",
   "leafletWindow": {
-    "from": "2026-10-26",
-    "to": "2026-10-31"
+    "from": "2026-11-02",
+    "to": "2026-11-07"
   },
   "colaPages": [
-    1,
-    20,
     21
   ],
   "candidates": [
     {
-      "page": 1,
-      "box": 31,
+      "page": 21,
+      "box": 9,
       "bbox": [
-        247.8,
-        44.3,
-        332.1,
-        85.7
+        22.7,
+        391.2,
+        69.6,
+        441.7
       ],
-      "text": "Coca-Cola1) verschiedene Sorten, Kiste mit je 12 x 1-l-MW-Flaschen, zzgl. 3.30 Pfand, 1-l-Preis 0.92, 1) koffeinhaltig",
-      "priceCents": 1099,
+      "text": "Coca Cola 1) versch. Sorten, je 2-l-PET-Flasche, zzgl. 0.25 Pfand, 1-l-Preis 0.85, 1) koffeinhaltig",
+      "priceCents": 169,
       "pairing": "clean",
       "adjacentCents": [
-        1799,
-        1099
+        169,
+        99
       ],
-      "unitPriceCents": 92,
-      "litres": 12,
-      "validFrom": "2026-10-26",
-      "validTo": "2026-10-31",
-      "windowSource": "page",
-      "verdict": "accept"
-    },
-    {
-      "page": 20,
-      "box": 6,
-      "bbox": [
-        14,
-        216.2,
-        91,
-        280.6
-      ],
-      "text": "Bacardi & Coca Cola1) oder Absolut Vodka & Sprite je 10% Vol., je 0,33-l-Dose, zzgl. 0.25 Pfand, 1-l-Preis 7.55 1)koffeinhaltig",
-      "priceCents": 249,
-      "pairing": "clean",
-      "adjacentCents": [
-        249,
-        1199
-      ],
-      "unitPriceCents": 755,
-      "litres": 0.33,
-      "validFrom": "2026-10-26",
-      "validTo": "2026-10-31",
+      "unitPriceCents": 85,
+      "litres": 2,
+      "validFrom": "2026-11-02",
+      "validTo": "2026-11-07",
       "windowSource": "leaflet",
       "verdict": "reject"
     },
     {
       "page": 21,
-      "box": 13,
+      "box": 11,
       "bbox": [
-        22.7,
-        216.2,
-        99.4,
-        250.6
+        23,
+        216.1,
+        101.2,
+        259.5
       ],
-      "text": "*Coca-Cola 1) 6 x 0,33-l-PET-Flaschen, zzgl. 1.50 Pfand, 1-l-Preis 2.02 1)koffeinhaltig",
-      "priceCents": 399,
+      "text": "Coca-Cola 1) Friendspack* 10 x 0,33-l-Dosen zzgl. 2.50 Pfand, 1-l-Preis 2.12, 1)koffeinhaltig",
+      "priceCents": 699,
       "pairing": "clean",
       "adjacentCents": [
-        399
+        699
       ],
-      "unitPriceCents": 202,
-      "litres": 1.98,
-      "validFrom": "2026-10-26",
-      "validTo": "2026-10-31",
+      "unitPriceCents": 212,
+      "litres": 3.3,
+      "validFrom": "2026-11-02",
+      "validTo": "2026-11-07",
+      "windowSource": "leaflet",
+      "verdict": "reject"
+    },
+    {
+      "page": 21,
+      "box": 14,
+      "bbox": [
+        176.4,
+        216.1,
+        236.5,
+        273.5
+      ],
+      "text": "*Coca-Cola1) verschiedene Sorten, Kiste mit 24 x 0,33-l-MW-Glasflaschen zzgl. 5.10 Pfand, 1-l-Preis 2.15, 1)koffeinhaltig",
+      "priceCents": 1699,
+      "pairing": "clean",
+      "adjacentCents": [
+        699,
+        1699
+      ],
+      "unitPriceCents": 215,
+      "litres": 7.92,
+      "validFrom": "2026-11-02",
+      "validTo": "2026-11-07",
       "windowSource": "leaflet",
       "verdict": "reject"
     }
