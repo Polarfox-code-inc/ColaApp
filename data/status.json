@@ -1,30 +1,30 @@
 {
-  "lastUpdated": "2026-11-08T20:31:26.811Z",
+  "lastUpdated": "2026-11-09T12:43:55.344Z",
   "stores": [
     {
       "store": "REWE",
       "status": "offer",
-      "lastUpdated": "2026-11-08T20:31:26.811Z"
+      "lastUpdated": "2026-11-09T12:43:55.344Z"
     },
     {
       "store": "Edeka",
       "status": "no_offer",
-      "lastUpdated": "2026-11-08T20:31:26.811Z"
+      "lastUpdated": "2026-11-09T12:43:55.344Z"
     },
     {
       "store": "Lidl",
       "status": "no_offer",
-      "lastUpdated": "2026-11-08T20:31:26.811Z"
+      "lastUpdated": "2026-11-09T12:43:55.344Z"
     },
     {
       "store": "Kaufland",
       "status": "no_offer",
-      "lastUpdated": "2026-11-08T20:31:26.811Z"
+      "lastUpdated": "2026-11-09T12:43:55.344Z"
     },
     {
       "store": "Wasgau",
       "status": "offer",
-      "lastUpdated": "2026-11-08T20:31:26.811Z"
+      "lastUpdated": "2026-11-09T12:43:55.344Z"
     }
   ]
 }
