@@ -1,21 +1,21 @@
 {
-  "lastUpdated": "2026-11-14T20:45:44.229Z",
+  "lastUpdated": "2026-11-15T11:52:21.985Z",
   "stores": [
     {
       "store": "REWE",
       "displayName": "REWE",
+      "status": "no_offer"
+    },
+    {
+      "store": "Edeka",
+      "displayName": "Edeka",
       "status": "offer",
       "needsReview": false,
       "price": 1199,
       "currency": "EUR",
       "pricePerLitre": 100,
-      "validFrom": "2026-11-09",
-      "validTo": "2026-11-14"
-    },
-    {
-      "store": "Edeka",
-      "displayName": "Edeka",
-      "status": "no_offer"
+      "validFrom": "2026-11-16",
+      "validTo": "2026-11-21"
     },
     {
       "store": "Lidl",
@@ -25,18 +25,18 @@
     {
       "store": "Kaufland",
       "displayName": "Kaufland",
-      "status": "no_offer"
+      "status": "offer",
+      "needsReview": false,
+      "price": 1099,
+      "currency": "EUR",
+      "pricePerLitre": 92,
+      "validFrom": "2026-11-16",
+      "validTo": "2026-11-21"
     },
     {
       "store": "Wasgau",
       "displayName": "Wasgau",
-      "status": "offer",
-      "needsReview": false,
-      "price": 1199,
-      "currency": "EUR",
-      "pricePerLitre": 100,
-      "validFrom": "2026-11-09",
-      "validTo": "2026-11-14"
+      "status": "no_offer"
     }
   ]
 }
